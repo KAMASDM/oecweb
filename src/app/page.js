@@ -1,30 +1,25 @@
-// src/app/page.js - Updated complete home page
-import Header from '@/components/sections/Header'
-import Hero from '@/components/sections/Hero'
-import UniversityLogos from '@/components/sections/UniversityLogos'
-import ServicesPreview from '@/components/sections/ServicesPreview'
-import QuickTools from '@/components/sections/QuickTools'
-import CountriesGrid from '@/components/sections/CountriesGrid'
-import TestimonialsSection from '@/components/sections/TestimonialsSection'
-import BlogPreview from '@/components/sections/BlogPreview'
-import CTASection from '@/components/sections/CTASection'
-import Footer from '@/components/sections/Footer'
-import FloatingCTA from '@/components/ui/FloatingCTA'
+import Hero from "@/components/sections/Hero";
+import Universities from "@/components/sections/Universities";
+import Services from "@/components/sections/Services";
+import QuickTools from "@/components/sections/QuickTools";
+import Countries from "@/components/sections/Countries";
+import Testimonials from "@/components/sections/Testimonials";
+import Blogs from "@/components/sections/Blogs";
+import CTA from "@/components/sections/CTA";
+import FloatingCTA from "@/components/ui/FloatingCTA";
 
-export default function HomePage() {
+export default function Home() {
   return (
-    <main className="min-h-screen">
-      <Header />
+    <div>
       <Hero />
-      <UniversityLogos />
-      <ServicesPreview />
+      <Universities />
+      <Services />
       <QuickTools />
-      <CountriesGrid />
-      <TestimonialsSection />
-      <BlogPreview />
-      <CTASection />
-      <Footer />
+      <Countries />
+      <Testimonials />
+      <Blogs />
+      <CTA />
       <FloatingCTA />
-    </main>
-  )
+    </div>
+  );
 }
