@@ -1,25 +1,26 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  ChevronDown,
+  Menu,
+  X,
+  Phone,
+  Mail,
+  GraduationCap,
+  BookOpen,
+  Calendar,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import ConsultationForm from "../forms/ConsultationForm";
-import { Menu, X, Phone, Mail, GraduationCap, ArrowRight } from "lucide-react";
-
-const navigationItems = [
-  { name: "Services", href: "/services" },
-  { name: "Study Destinations", href: "/countries" },
-  { name: "About Us", href: "/about" },
-  { name: "Success Stories", href: "/successStories" },
-  { name: "Resources", href: "/resources" },
-  { name: "Contact", href: "/contact" },
-];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+  const exploreDropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -28,124 +29,426 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
+    const handleClickOutside = (event) => {
+      if (
+        exploreDropdownRef.current &&
+        !exploreDropdownRef.current.contains(event.target)
+      ) {
+        setIsExploreOpen(false);
+      }
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        isMobileMenuOpen
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
+  // Data
+  const exploreCards = [
+    {
+      title: "Explore",
+      subtitle: "universities & colleges abroad",
+      bgColor: "bg-gradient-to-br from-orange-400 to-orange-500",
+      href: "/universities",
+      icon: GraduationCap,
+    },
+    {
+      title: "Blogs",
+      subtitle: "Study abroad articles & more",
+      bgColor: "bg-gradient-to-br from-teal-400 to-teal-500",
+      href: "/blogs",
+      icon: BookOpen,
+    },
+    {
+      title: "Events",
+      subtitle: "Fairs, webinars & meetups",
+      bgColor: "bg-gradient-to-br from-purple-400 to-purple-500",
+      href: "/events",
+      icon: Calendar,
+    },
+  ];
+
+  const menuSections = [
+    {
+      title: "Top Universities",
+      subtitle: "Search colleges & universities by country",
+      items: [
+        { name: "United States", href: "/universities/united-states" },
+        { name: "Canada", href: "/universities/canada" },
+        { name: "United Kingdom", href: "/universities/united-kingdom" },
+        { name: "Germany", href: "/universities/germany" },
+        { name: "Australia", href: "/universities/australia" },
+        { name: "Explore All", href: "/universities" },
+      ],
+    },
+    {
+      title: "Country Guides",
+      subtitle: "What, where, why of education across countries",
+      items: [
+        { name: "United States", href: "/country-guides/united-states" },
+        { name: "Canada", href: "/country-guides/canada" },
+        { name: "United Kingdom", href: "/country-guides/united-kingdom" },
+        { name: "Germany", href: "/country-guides/germany" },
+        { name: "Australia", href: "/country-guides/australia" },
+        { name: "Explore All", href: "/country-guides" },
+      ],
+    },
+    {
+      title: "Popular Courses",
+      subtitle: "Course details, structure, pre-reqs & more...",
+      items: [
+        { name: "Computer Science", href: "/popular-courses/computer-science" },
+        { name: "MBA", href: "/popular-courses/mba" },
+        {
+          name: "Data Science & Analytics",
+          href: "/popular-courses/data-science-analytics",
+        },
+        {
+          name: "Mechanical Engineering",
+          href: "/popular-courses/mechanical-engineering",
+        },
+        {
+          name: "Business Management",
+          href: "/popular-courses/business-management",
+        },
+        { name: "Explore All", href: "/popular-courses" },
+      ],
+    },
+    {
+      title: "University Deadlines",
+      subtitle: "Know all about application deadlines",
+      href: "/deadlines",
+      isDeadlines: true,
+    },
+  ];
+
+  const navigationItems = [
+    { name: "Feed", href: "/feed" },
+    { name: "Explore", hasDropdown: true },
+    { name: "Services", href: "/services" },
+    { name: "Study Destinations", href: "/countries" },
+    { name: "About Us", href: "/about-us" },
+    { name: "Success Stories", href: "/stories" },
+    { name: "Resources", href: "/resources" },
+    { name: "Contact", href: "/contact-us" },
+  ];
 
   return (
-    <>
-      <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/95 backdrop-blur-md shadow-lg"
-            : "bg-white/90 backdrop-blur-sm"
-        }`}
-      >
-        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white py-2 px-4 text-sm">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
-            <div className="flex flex-wrap justify-center md:justify-start items-center gap-4">
-              <a
-                href="tel:+919876543210"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <Phone size={14} />
-                <span>+91 98765 43210</span>
-              </a>
-              <a
-                href="mailto:info@oecindia.com"
-                className="flex items-center gap-2 hover:underline"
-              >
-                <Mail size={14} />
-                <span>info@oecindia.com</span>
-              </a>
-            </div>
-            <div className="hidden md:flex items-center gap-2">
-              <GraduationCap size={16} />
-              <span>Join 2,000+ students studying abroad!</span>
-            </div>
+    <header
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-lg" : "bg-white"
+      }`}
+    >
+      {/* Top Contact Bar */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white py-2 px-4 text-sm">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+          <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 md:gap-6">
+            <Link
+              href="tel:+919876543210"
+              className="flex items-center gap-2 hover:text-indigo-200 transition-colors text-xs md:text-sm"
+            >
+              <Phone size={14} />
+              <span>+91 98765 43210</span>
+            </Link>
+            <Link
+              href="mailto:info@oecindia.com"
+              className="flex items-center gap-2 hover:text-indigo-200 transition-colors text-xs md:text-sm"
+            >
+              <Mail size={14} />
+              <span>info@oecindia.com</span>
+            </Link>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-indigo-100 text-sm">
+            <GraduationCap size={16} />
+            <span>Join 2,000+ students studying abroad!</span>
           </div>
         </div>
+      </div>
 
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="text-2xl font-bold bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">
-                OEC India
-              </div>
-            </Link>
+      {/* Main Navigation */}
+      <nav className="border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 md:h-20">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link
+                href="/"
+                className="flex items-center space-x-2 md:space-x-3"
+              >
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                </div>
+                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  OEC India
+                </div>
+              </Link>
+            </div>
 
-            <div className="hidden lg:flex items-center space-x-8">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
               {navigationItems.map((item) => (
-                <Link
+                <div
                   key={item.name}
-                  href={item.href}
-                  className={`text-gray-700 hover:text-[#667eea] font-medium transition-colors duration-200 ${
-                    pathname === item.href ? "text-[#667eea] font-semibold" : ""
-                  }`}
+                  className="relative"
+                  ref={item.hasDropdown ? exploreDropdownRef : null}
                 >
-                  {item.name}
-                </Link>
+                  {item.hasDropdown ? (
+                    <>
+                      <button
+                        onClick={() => setIsExploreOpen(!isExploreOpen)}
+                        className="flex items-center gap-1 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                      >
+                        {item.name}
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform duration-200 ${
+                            isExploreOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {/* Mega Dropdown */}
+                      {isExploreOpen && (
+                        <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-[90vw] max-w-[900px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+                          <div className="flex flex-col md:flex-row">
+                            {/* Left Column - Explore Cards */}
+                            <div className="w-full md:w-2/5 p-4 md:p-6 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+                                {exploreCards.map((card, index) => (
+                                  <Link
+                                    key={index}
+                                    href={card.href}
+                                    className="group flex items-center gap-3 p-3 bg-white rounded-lg hover:shadow-md transition-all duration-200 border border-gray-200"
+                                  >
+                                    <div
+                                      className={`${card.bgColor} p-2 md:p-3 rounded-lg text-white shadow-sm`}
+                                    >
+                                      <card.icon size={20} />
+                                    </div>
+                                    <div>
+                                      <h3 className="font-bold text-gray-900 text-base md:text-lg">
+                                        {card.title}
+                                      </h3>
+                                      <p className="text-gray-600 text-xs md:text-sm mt-1">
+                                        {card.subtitle}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Middle + Right Columns */}
+                            <div className="w-full md:w-3/5 flex flex-col md:flex-row">
+                              {/* Middle Column - Menu Sections */}
+                              <div className="w-full md:w-1/2 p-4 md:p-6 border-b md:border-b-0 md:border-r border-gray-200">
+                                <div className="space-y-3">
+                                  {menuSections.map((section, index) => (
+                                    <div
+                                      key={index}
+                                      onClick={() => setActiveSection(index)}
+                                      className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                                        activeSection === index
+                                          ? "bg-indigo-50 border border-indigo-100"
+                                          : "hover:bg-gray-50"
+                                      }`}
+                                    >
+                                      <h3 className="font-semibold text-gray-900 text-base md:text-lg">
+                                        {section.title}
+                                      </h3>
+                                      <p className="text-gray-500 text-xs md:text-sm">
+                                        {section.subtitle}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Right Column - Items Panel */}
+                              <div className="w-full md:w-1/2 p-4 md:p-6">
+                                {menuSections[activeSection].isDeadlines ? (
+                                  <div className="h-full flex flex-col justify-center">
+                                    <div className="text-center p-4">
+                                      <p className="text-gray-600 text-sm md:text-base mb-4">
+                                        View all university application
+                                        deadlines
+                                      </p>
+                                      <Link
+                                        href={menuSections[activeSection].href}
+                                        className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
+                                      >
+                                        View Deadlines
+                                      </Link>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="space-y-3">
+                                    <h3 className="font-semibold text-gray-800 text-base md:text-lg">
+                                      {menuSections[activeSection].title}
+                                    </h3>
+                                    <ul className="space-y-2">
+                                      {menuSections[activeSection].items?.map(
+                                        (item, itemIndex) => (
+                                          <li key={itemIndex}>
+                                            <Link
+                                              href={item.href}
+                                              className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-indigo-50 text-gray-700 transition-colors"
+                                            >
+                                              {item.name}
+                                            </Link>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2 text-sm md:text-base"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
 
-            <div className="hidden lg:block">
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-6 py-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2"
-              >
-                Book Free Consultation
-                <ArrowRight size={16} />
-              </button>
-            </div>
-
+            {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+        </div>
 
-          <div
-            className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t transition-all duration-300 overflow-hidden ${
-              isMobileMenuOpen
-                ? "max-h-screen opacity-100"
-                : "max-h-0 opacity-0"
-            }`}
-          >
-            <div className="px-4 py-4 space-y-4">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`block py-2 text-gray-700 hover:text-[#667eea] font-medium ${
-                    pathname === item.href ? "text-[#667eea] font-semibold" : ""
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <button
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white px-4 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-4"
+        {/* Mobile Menu */}
+        <div
+          ref={mobileMenuRef}
+          className={`lg:hidden bg-white overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen
+              ? "max-h-screen opacity-100 shadow-lg"
+              : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="px-4 py-3 space-y-2">
+            {navigationItems.map((item) => (
+              <div
+                key={item.name}
+                className="border-b border-gray-100 last:border-0"
               >
-                Book Free Consultation
-                <ArrowRight size={16} />
-              </button>
-            </div>
+                {item.hasDropdown ? (
+                  <div className="py-3">
+                    <button
+                      onClick={() => setIsExploreOpen(!isExploreOpen)}
+                      className="flex items-center justify-between w-full text-gray-700 font-medium"
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown
+                        size={18}
+                        className={`transition-transform ${
+                          isExploreOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {isExploreOpen && (
+                      <div className="mt-2 pl-4 space-y-3">
+                        {/* Explore Cards */}
+                        <div className="grid grid-cols-1 gap-3">
+                          {exploreCards.map((card, index) => (
+                            <Link
+                              key={index}
+                              href={card.href}
+                              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                            >
+                              <div
+                                className={`${card.bgColor} p-2 rounded-lg text-white`}
+                              >
+                                <card.icon size={18} />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-900">
+                                  {card.title}
+                                </h4>
+                                <p className="text-gray-600 text-xs mt-1">
+                                  {card.subtitle}
+                                </p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+
+                        {/* Menu Sections */}
+                        <div className="space-y-4">
+                          {menuSections.map((section, index) => (
+                            <div key={index} className="pt-2">
+                              <h4 className="font-semibold text-gray-900">
+                                {section.title}
+                              </h4>
+                              <p className="text-gray-600 text-xs mb-2">
+                                {section.subtitle}
+                              </p>
+                              {section.isDeadlines ? (
+                                <Link
+                                  href={section.href}
+                                  className="block w-full px-3 py-2 bg-indigo-600 text-white rounded-lg text-center text-sm"
+                                >
+                                  View Deadlines
+                                </Link>
+                              ) : (
+                                <ul className="space-y-1">
+                                  {section.items?.map((item, itemIndex) => (
+                                    <li key={itemIndex}>
+                                      <Link
+                                        href={item.href}
+                                        className="block px-3 py-2 rounded-lg hover:bg-indigo-50 text-gray-700 text-sm"
+                                      >
+                                        {item.name}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="block py-3 text-gray-700 hover:text-indigo-600 font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+              </div>
+            ))}
           </div>
-        </nav>
-      </header>
-      {isModalOpen && (
-        <ConsultationForm
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-    </>
+        </div>
+      </nav>
+    </header>
   );
 };
 
