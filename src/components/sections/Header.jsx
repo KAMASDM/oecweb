@@ -139,7 +139,7 @@ const Header = () => {
     { name: "About Us", href: "/about-us" },
     { name: "Success Stories", href: "/stories" },
     { name: "Resources", href: "/resources" },
-    { name: "Contact", href: "/contact-us" },
+    { name: "Contact Us", href: "/contact-us" },
   ];
 
   return (
@@ -340,7 +340,7 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Simplified version */}
         <div
           ref={mobileMenuRef}
           className={`lg:hidden bg-white overflow-hidden transition-all duration-300 ease-in-out ${
@@ -372,13 +372,14 @@ const Header = () => {
 
                     {isExploreOpen && (
                       <div className="mt-2 pl-4 space-y-3">
-                        {/* Explore Cards */}
+                        {/* Only show explore cards in mobile menu */}
                         <div className="grid grid-cols-1 gap-3">
                           {exploreCards.map((card, index) => (
                             <Link
                               key={index}
                               href={card.href}
                               className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                              onClick={() => setIsMobileMenuOpen(false)}
                             >
                               <div
                                 className={`${card.bgColor} p-2 rounded-lg text-white`}
@@ -394,41 +395,6 @@ const Header = () => {
                                 </p>
                               </div>
                             </Link>
-                          ))}
-                        </div>
-
-                        {/* Menu Sections */}
-                        <div className="space-y-4">
-                          {menuSections.map((section, index) => (
-                            <div key={index} className="pt-2">
-                              <h4 className="font-semibold text-gray-900">
-                                {section.title}
-                              </h4>
-                              <p className="text-gray-600 text-xs mb-2">
-                                {section.subtitle}
-                              </p>
-                              {section.isDeadlines ? (
-                                <Link
-                                  href={section.href}
-                                  className="block w-full px-3 py-2 bg-indigo-600 text-white rounded-lg text-center text-sm"
-                                >
-                                  View Deadlines
-                                </Link>
-                              ) : (
-                                <ul className="space-y-1">
-                                  {section.items?.map((item, itemIndex) => (
-                                    <li key={itemIndex}>
-                                      <Link
-                                        href={item.href}
-                                        className="block px-3 py-2 rounded-lg hover:bg-indigo-50 text-gray-700 text-sm"
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
                           ))}
                         </div>
                       </div>

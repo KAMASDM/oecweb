@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Users, DollarSign, Clock, Award } from "lucide-react";
@@ -128,7 +129,7 @@ const Countries = () => {
       className="py-20 bg-gray-50"
       aria-labelledby="study-destinations-heading"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2
             id="study-destinations-heading"
@@ -142,104 +143,106 @@ const Countries = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {CountryData.map((country) => (
-            <div
-              key={country.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
-            >
-              <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-6 text-center">
-                <div className="text-4xl mb-2" aria-hidden="true">
-                  {country.flag}
+        <div className="relative w-full overflow-hidden py-4">
+          <div className="flex gap-8 animate-infinite-scroll">
+            {[...CountryData, ...CountryData].map((country, index) => (
+              <div
+                key={`${country.id}-${index}`}
+                className="flex-shrink-0 w-[350px] bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+              >
+                <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-6 text-center">
+                  <div className="text-4xl mb-2" aria-hidden="true">
+                    {country.flag}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">{country.name}</h3>
+                  <p className="text-blue-100">{country.description}</p>
                 </div>
-                <h3 className="text-2xl font-bold mb-2">{country.name}</h3>
-                <p className="text-blue-100">{country.description}</p>
-              </div>
 
-              <div className="p-6">
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-center mb-2">
-                      <Users
-                        className="h-5 w-5 text-primary-500 mr-1"
-                        aria-hidden="true"
-                      />
-                      <span className="text-lg font-bold text-primary-600">
-                        {country.universities}
-                      </span>
+                <div className="p-6">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-center mb-2">
+                        <Users
+                          className="h-5 w-5 text-primary-500 mr-1"
+                          aria-hidden="true"
+                        />
+                        <span className="text-lg font-bold text-primary-600">
+                          {country.universities}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">Universities</p>
                     </div>
-                    <p className="text-sm text-gray-600">Universities</p>
-                  </div>
 
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-center mb-2">
-                      <DollarSign
-                        className="h-5 w-5 text-green-500 mr-1"
-                        aria-hidden="true"
-                      />
-                      <span className="text-lg font-bold text-green-600">
-                        {country.cost}
-                      </span>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-center mb-2">
+                        <DollarSign
+                          className="h-5 w-5 text-green-500 mr-1"
+                          aria-hidden="true"
+                        />
+                        <span className="text-lg font-bold text-green-600">
+                          {country.cost}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">Annual Cost</p>
                     </div>
-                    <p className="text-sm text-gray-600">Annual Cost</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
-                      <Award
-                        className="h-4 w-4 text-yellow-500 mr-2"
-                        aria-hidden="true"
-                      />
-                      Top Universities
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      {country.topUniversities.slice(0, 3).join(", ")}
-                    </p>
                   </div>
 
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
-                      <Clock
-                        className="h-4 w-4 text-blue-500 mr-2"
-                        aria-hidden="true"
-                      />
-                      Work Opportunities
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      {country.workOpportunities}
-                    </p>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <Award
+                          className="h-4 w-4 text-yellow-500 mr-2"
+                          aria-hidden="true"
+                        />
+                        Top Universities
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {country.topUniversities.slice(0, 3).join(", ")}
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <Clock
+                          className="h-4 w-4 text-blue-500 mr-2"
+                          aria-hidden="true"
+                        />
+                        Work Opportunities
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {country.workOpportunities}
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        Key Benefits
+                      </h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        {country.benefits.slice(0, 2).map((benefit, i) => (
+                          <li key={i} className="flex items-start">
+                            <span className="text-green-500 mr-2">✓</span>
+                            {benefit}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">
-                      Key Benefits
-                    </h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      {country.benefits.slice(0, 2).map((benefit, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-green-500 mr-2">✓</span>
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <Link
+                      href={`/countries#${country.id}`}
+                      className="flex items-center justify-center w-full py-2 px-4 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 group-hover:scale-105 transition-transform duration-200"
+                      aria-label={`Learn more about studying in ${country.name}`}
+                    >
+                      Learn More
+                      <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
+                    </Link>
                   </div>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                  <Link
-                    href={`/countries#${country.id}`}
-                    className="flex items-center justify-center w-full py-2 px-4 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 group-hover:scale-105 transition-transform duration-200"
-                    aria-label={`Learn more about studying in ${country.name}`}
-                  >
-                    Learn More
-                    <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-                  </Link>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <div className="text-center mt-12">
@@ -255,6 +258,6 @@ const Countries = () => {
       </div>
     </section>
   );
-}
+};
 
 export default Countries;

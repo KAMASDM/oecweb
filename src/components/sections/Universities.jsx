@@ -32,12 +32,9 @@ const Universities = () => {
           Trusted by top universities worldwide
         </h2>
 
-        <div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center"
-          role="list"
-          aria-label="Partner universities"
-        >
-          {universities.map((uni, index) => (
+        <div className="relative w-full overflow-hidden py-4">
+          <div className="flex gap-8 animate-infinite-scroll">
+          {[...universities, ...universities].map((uni, index) => (
             <div
               key={index}
               className="text-center bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
@@ -58,6 +55,7 @@ const Universities = () => {
               </p>
             </div>
           ))}
+        </div>
         </div>
 
         <div className="mt-12 text-center">
