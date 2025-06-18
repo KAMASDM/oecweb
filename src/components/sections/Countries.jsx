@@ -126,7 +126,7 @@ const CountryData = [
 const Countries = () => {
   return (
     <section
-      className="py-20 bg-gray-50"
+      className="py-10 bg-gray-50"
       aria-labelledby="study-destinations-heading"
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">

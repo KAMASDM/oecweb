@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
-import Link from "next/link";
 
 const testimonials = [
   {
@@ -15,7 +14,6 @@ const testimonials = [
     results:
       "Secured $50,000 scholarship at MIT, Google job with ₹2.5 Cr package, 1500% ROI on education investment",
   },
-
   {
     id: 2,
     name: "Priya Sharma",
@@ -27,7 +25,6 @@ const testimonials = [
     results:
       "40% scholarship at London Business School, McKinsey offer, 300% salary increase post-MBA",
   },
-
   {
     id: 3,
     name: "Rajesh Kumar",
@@ -39,7 +36,6 @@ const testimonials = [
     results:
       "Full scholarship at University of Toronto, Canadian PR in 2 years, successful tech career",
   },
-
   {
     id: 4,
     name: "Sneha Krishnan",
@@ -70,70 +66,77 @@ const Testimonials = () => {
 
   return (
     <section
-      className="py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden"
+      className="py-10 bg-gray-50"
       aria-labelledby="testimonials-heading"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 id="testimonials-heading" className="text-4xl font-bold mb-4">
-            Success Stories That Inspire
+          <h2
+            id="testimonials-heading"
+            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
+          >
+            Premium Student Reviews
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Real stories from real students who achieved their dreams with our
-            guidance
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+            Why are we the best study abroad consultants?
           </p>
         </div>
 
         <div className="relative">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl overflow-hidden">
-              <div className="p-8 md:p-12">
-                <div className="flex flex-col md:flex-row gap-8">
-                  <div className="flex-shrink-0 text-center md:text-left">
-                    <div
-                      className="w-24 h-24 bg-gradient-to-r from-primary-400 to-secondary-400 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto md:mx-0 mb-4"
-                      aria-hidden="true"
-                    >
-                      {currentTestimonial.image}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-1">
-                      {currentTestimonial.name}
-                    </h3>
-                    <p className="text-primary-300 font-medium mb-2">
-                      {currentTestimonial.program}
-                    </p>
-                    <p className="text-sm text-gray-300 mb-4">
-                      {currentTestimonial.outcome}
-                    </p>
-
-                    <div
-                      className="flex justify-center md:justify-start space-x-1 mb-4"
-                      aria-label={`Rating: ${currentTestimonial.rating} out of 5 stars`}
-                    >
-                      {[...Array(currentTestimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-5 w-5 text-yellow-400 fill-current"
-                          aria-hidden="true"
-                        />
-                      ))}
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-200">
+              <div className="p-8 md:p-10">
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                  <div className="flex-shrink-0 w-full lg:w-1/3">
+                    <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
+                      <div
+                        className="w-32 h-32 bg-gradient-to-r from-primary-600 to-primary-400 rounded-full flex items-center justify-center text-3xl font-bold text-white"
+                        aria-hidden="true"
+                      >
+                        {currentTestimonial.image}
+                      </div>
+                      <div className="text-center lg:text-left">
+                        <h3 className="text-2xl font-semibold mb-1 text-primary-900">
+                          {currentTestimonial.name}
+                        </h3>
+                        <p className="text-primary-600 font-medium mb-2">
+                          {currentTestimonial.program}
+                        </p>
+                        <p className="text-sm text-primary-700 mb-4">
+                          {currentTestimonial.outcome}
+                        </p>
+                        <div
+                          className="flex justify-center lg:justify-start space-x-1 mb-4"
+                          aria-label={`Rating: ${currentTestimonial.rating} out of 5 stars`}
+                        >
+                          {[...Array(currentTestimonial.rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="h-6 w-6 text-yellow-400 fill-current"
+                              aria-hidden="true"
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex-1">
-                    <Quote
-                      className="h-8 w-8 text-primary-400 mb-4"
-                      aria-hidden="true"
-                    />
-                    <blockquote className="text-lg leading-relaxed mb-6 italic">
-                      "{currentTestimonial.text}"
-                    </blockquote>
+                  <div className="flex-1 lg:border-l lg:border-primary-200 lg:pl-8">
+                    <div className="relative">
+                      <Quote
+                        className="h-10 w-10 text-primary-400 mb-4 opacity-20"
+                        aria-hidden="true"
+                      />
+                      <blockquote className="text-lg leading-relaxed mb-6 text-gray-700 pl-8 -mt-8">
+                        "{currentTestimonial.text}"
+                      </blockquote>
+                    </div>
 
-                    <div className="bg-green-500/20 border border-green-400/30 rounded-xl p-4">
-                      <h4 className="font-semibold text-green-300 mb-2">
+                    <div className="bg-primary-50 border border-primary-200 rounded-xl p-5">
+                      <h4 className="font-semibold text-primary-800 mb-2">
                         Outstanding Results:
                       </h4>
-                      <p className="text-sm text-green-100">
+                      <p className="text-primary-700">
                         {currentTestimonial.results}
                       </p>
                     </div>
@@ -143,22 +146,22 @@ const Testimonials = () => {
             </div>
           </div>
 
-          <div className="flex justify-center items-center mt-8 space-x-4">
+          <div className="flex justify-center items-center mt-10 space-x-6">
             <button
               onClick={prevTestimonial}
-              className="p-2 border border-white/30 rounded-full text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="p-3 bg-white border border-primary-300 rounded-full text-primary-600 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-6 w-6" />
             </button>
 
-            <div className="flex space-x-2">
+            <div className="flex space-x-3">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none ${
-                    index === currentIndex ? "bg-primary-400" : "bg-white/30"
+                  className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
+                    index === currentIndex ? "bg-primary-600" : "bg-primary-300"
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
@@ -167,27 +170,16 @@ const Testimonials = () => {
 
             <button
               onClick={nextTestimonial}
-              className="p-2 border border-white/30 rounded-full text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="p-3 bg-white border border-primary-300 rounded-full text-primary-600 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
               aria-label="Next testimonial"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-6 w-6" />
             </button>
           </div>
-        </div>
-
-        <div className="text-center mt-12">
-          <Link
-            href="/success-stories"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200"
-            aria-label="View all success stories"
-          >
-            View All Success Stories
-            <ChevronRight className="h-5 w-5 ml-2" aria-hidden="true" />
-          </Link>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default Testimonials;

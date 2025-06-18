@@ -1,25 +1,19 @@
 import Hero from "@/components/sections/Hero";
-import Universities from "@/components/sections/Universities";
-import Services from "@/components/sections/Services";
-import QuickTools from "@/components/sections/QuickTools";
-import Countries from "@/components/sections/Countries";
+import Events from "@/components/sections/Events";
 import Testimonials from "@/components/sections/Testimonials";
-import Blogs from "@/components/sections/Blogs";
-import CTA from "@/components/sections/CTA";
-import FloatingCTA from "@/components/ui/FloatingCTA";
+import Universities from "@/components/sections/Universities";
+import SmartFeatures from "@/components/sections/SmartFeatures";
+import ExplorePremium from "@/components/sections/ExplorePremium";
 
 export default function Home() {
   return (
     <div>
       <Hero />
       <Universities />
-      <Services />
-      <QuickTools />
-      <Countries />
+      <SmartFeatures />
+      <ExplorePremium/>
+      <Events/>
       <Testimonials />
-      <Blogs />
-      <CTA />
-      <FloatingCTA />
     </div>
   );
 }
