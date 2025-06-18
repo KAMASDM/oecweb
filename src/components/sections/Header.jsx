@@ -57,21 +57,21 @@ const Header = () => {
     {
       title: "Explore",
       subtitle: "universities & colleges abroad",
-      bgColor: "bg-gradient-to-br from-orange-400 to-orange-500",
+      bgColor: "bg-gradient-to-br from-secondary-400 to-secondary-500",
       href: "/universities",
       icon: GraduationCap,
     },
     {
       title: "Blogs",
       subtitle: "Study abroad articles & more",
-      bgColor: "bg-gradient-to-br from-teal-400 to-teal-500",
+      bgColor: "bg-gradient-to-br from-gray-400 to-gray-500",
       href: "/blogs",
       icon: BookOpen,
     },
     {
       title: "Events",
       subtitle: "Fairs, webinars & meetups",
-      bgColor: "bg-gradient-to-br from-purple-400 to-purple-500",
+      bgColor: "bg-gradient-to-br from-primary-400 to-primary-500",
       href: "/events",
       icon: Calendar,
     },
@@ -132,13 +132,10 @@ const Header = () => {
   ];
 
   const navigationItems = [
-    { name: "Feed", href: "/feed" },
-    { name: "Explore", hasDropdown: true },
     { name: "Services", href: "/services" },
-    { name: "Study Destinations", href: "/countries" },
-    { name: "About Us", href: "/about-us" },
-    { name: "Success Stories", href: "/stories" },
+    { name: "Explore", hasDropdown: true },
     { name: "Resources", href: "/resources" },
+    { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];
 
@@ -149,25 +146,25 @@ const Header = () => {
       }`}
     >
       {/* Top Contact Bar */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white py-2 px-4 text-sm">
+      <div className="bg-gradient-to-br from-primary-800 via-primary-900 to-secondary-600 text-white py-2 px-4 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 md:gap-6">
             <Link
               href="tel:+919876543210"
-              className="flex items-center gap-2 hover:text-indigo-200 transition-colors text-xs md:text-sm"
+              className="flex items-center gap-2 hover:text-primary-200 transition-colors text-xs md:text-sm"
             >
               <Phone size={14} />
               <span>+91 98765 43210</span>
             </Link>
             <Link
               href="mailto:info@oecindia.com"
-              className="flex items-center gap-2 hover:text-indigo-200 transition-colors text-xs md:text-sm"
+              className="flex items-center gap-2 hover:text-primary-200 transition-colors text-xs md:text-sm"
             >
               <Mail size={14} />
               <span>info@oecindia.com</span>
             </Link>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-indigo-100 text-sm">
+          <div className="hidden md:flex items-center gap-2 text-primary-100 text-sm">
             <GraduationCap size={16} />
             <span>Join 2,000+ students studying abroad!</span>
           </div>
@@ -175,7 +172,7 @@ const Header = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="border-b border-gray-100">
+      <nav className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-20">
             {/* Logo */}
@@ -184,10 +181,10 @@ const Header = () => {
                 href="/"
                 className="flex items-center space-x-2 md:space-x-3"
               >
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-lg flex items-center justify-center">
                   <GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-white" />
                 </div>
-                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">
                   OEC India
                 </div>
               </Link>
@@ -205,7 +202,7 @@ const Header = () => {
                     <>
                       <button
                         onClick={() => setIsExploreOpen(!isExploreOpen)}
-                        className="flex items-center gap-1 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                        className="flex items-center gap-1 text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2"
                       >
                         {item.name}
                         <ChevronDown
@@ -258,7 +255,7 @@ const Header = () => {
                                       onClick={() => setActiveSection(index)}
                                       className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
                                         activeSection === index
-                                          ? "bg-indigo-50 border border-indigo-100"
+                                          ? "bg-primary-50 border border-primary-100"
                                           : "hover:bg-gray-50"
                                       }`}
                                     >
@@ -284,7 +281,7 @@ const Header = () => {
                                       </p>
                                       <Link
                                         href={menuSections[activeSection].href}
-                                        className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
+                                        className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm md:text-base"
                                       >
                                         View Deadlines
                                       </Link>
@@ -301,7 +298,7 @@ const Header = () => {
                                           <li key={itemIndex}>
                                             <Link
                                               href={item.href}
-                                              className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-indigo-50 text-gray-700 transition-colors"
+                                              className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
                                             >
                                               {item.name}
                                             </Link>
@@ -320,7 +317,7 @@ const Header = () => {
                   ) : (
                     <Link
                       href={item.href}
-                      className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2 text-sm md:text-base"
+                      className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2 text-sm md:text-base"
                     >
                       {item.name}
                     </Link>
@@ -403,7 +400,7 @@ const Header = () => {
                 ) : (
                   <Link
                     href={item.href}
-                    className="block py-3 text-gray-700 hover:text-indigo-600 font-medium"
+                    className="block py-3 text-gray-700 hover:text-primary-600 font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
