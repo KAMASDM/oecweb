@@ -12,7 +12,7 @@ const events = [
     description:
       "Meet top Canadian universities and get application tips directly from admission officers.",
     image:
-      "https://images.unsplash.com/photo-1574643156929-51fa098b0394?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     id: 2,
@@ -40,12 +40,12 @@ const events = [
 
 const Events = () => {
   return (
-    <section className="py-10 bg-gray-50" aria-labelledby="services-heading">
+    <section className="py-20 bg-gray-100" aria-labelledby="services-heading">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
           <h2
             id="services-heading"
-            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
+            className="text-3xl sm:text-4xl font-bold text-primary-800 mb-4"
           >
             What's happening with overseas education
           </h2>
@@ -78,7 +78,7 @@ const Events = () => {
               <div className="p-6 flex-grow flex flex-col">
                 <div className="flex flex-col space-y-4">
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Calendar className="h-5 w-5 text-primary-600" />
+                    <Calendar className="h-5 w-5 text-secondary-500" />
                     <span>
                       {new Date(event.date).toLocaleDateString("en-US", {
                         weekday: "short",
@@ -90,12 +90,12 @@ const Events = () => {
                   </div>
 
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Clock className="h-5 w-5 text-primary-600" />
+                    <Clock className="h-5 w-5 text-secondary-500" />
                     <span>{event.time}</span>
                   </div>
 
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <MapPin className="h-5 w-5 text-primary-600" />
+                    <MapPin className="h-5 w-5 text-secondary-500" />
                     <span>{event.location}</span>
                   </div>
                 </div>
@@ -111,7 +111,7 @@ const Events = () => {
         <div className="text-center mt-12">
           <Link
             href="/events"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-500 to-secondary-500 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-800 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             aria-label="Explore all study destinations"
           >
             Explore All Events

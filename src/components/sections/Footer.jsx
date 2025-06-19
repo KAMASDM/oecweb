@@ -62,7 +62,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-600 text-white"
+      className="bg-primary-800 text-white"
       aria-labelledby="footer-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -76,9 +76,8 @@ const Footer = () => {
               <img
                 src="/oec.png"
                 alt="Overseas Education Consultants"
-                className="h-12 w-auto"
                 width={120}
-                height={48}
+                height={120}
               />
             </div>
             <p className="text-white mb-4 text-sm">
@@ -104,7 +103,7 @@ const Footer = () => {
                 <a
                   key={social.name}
                   href={social.href}
-                  className="text-white hover:text-white transition-colors duration-200"
+                  className="text-secondary-500 hover:text-white transition-colors duration-200"
                   aria-label={`Follow us on ${social.name}`}
                 >
                   <social.icon size={20} aria-hidden="true" />
@@ -206,10 +205,10 @@ const Footer = () => {
                 </a>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone size={16} className="text-red-400" aria-hidden="true" />
+                <Phone size={16} className="text-secondary-500" aria-hidden="true" />
                 <a
                   href="tel:+919876543212"
-                  className="font-medium text-red-400 hover:underline"
+                  className="font-medium text-secondary-500 hover:underline"
                 >
                   Emergency: +91 98765 43212
                 </a>
@@ -231,7 +230,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-white">
+        <div className="border-t border-secondary-500 mt-12 pt-8 text-center text-sm text-white">
           <p>
             &copy; {currentYear} OEC India. All rights reserved. |{" "}
             <Link href="/privacy" className="hover:text-white underline">

@@ -31,7 +31,7 @@ const FloatingCTA = () => {
             </button>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full p-2">
+              <div className="bg-primary-800 rounded-full p-2">
                 <MessageCircle className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
@@ -42,7 +42,7 @@ const FloatingCTA = () => {
                 </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-primary-600 hover:to-secondary-600 transition-all duration-200 hover:scale-105"
+                  className="inline-flex items-center justify-center bg-primary-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-primary-600 hover:to-secondary-600 transition-all duration-200 hover:scale-105"
                 >
                   Book Free Consultation
                 </button>
@@ -52,7 +52,7 @@ const FloatingCTA = () => {
         ) : (
           <button
             onClick={() => setIsMinimized(false)}
-            className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200"
+            className="bg-primary-800 text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200"
           >
             <MessageCircle className="h-6 w-6" />
           </button>

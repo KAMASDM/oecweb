@@ -5,10 +5,10 @@ import { Phone, Mail, Clock, MessageCircle } from "lucide-react";
 const ContactUs = () => {
   return (
     <div>
-      <section className="bg-gradient-to-br from-primary-500 to-secondary-600 text-white mt-20 py-20 md:py-32">
+      <section className="bg-primary-800 text-white mt-20 py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold mb-4">Contact Us</h1>
-          <p className="text-xl text-blue-100 max-w-4xl mx-auto">
+          <p className="text-secondary-500 text-xl max-w-4xl mx-auto">
             Ready to start your international education journey? Get in touch
             with our expert counselors for personalized guidance
           </p>
@@ -55,11 +55,11 @@ const ContactUs = () => {
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md text-center">
-              <Clock className="h-8 w-8 text-purple-500 mx-auto mb-4" />
+              <Clock className="h-8 w-8 text-primary-500 mx-auto mb-4" />
               <h3 className="font-semibold mb-2">Emergency</h3>
               <a
                 href="tel:+919876543212"
-                className="text-gray-600 text-sm mb-2 hover:text-purple-600"
+                className="text-gray-600 text-sm mb-2 hover:text-primary-600"
               >
                 +91 98765 43212
               </a>
@@ -72,7 +72,7 @@ const ContactUs = () => {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-primary-800 mb-4">
               Book Your Free Consultation
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">

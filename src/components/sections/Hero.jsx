@@ -67,7 +67,7 @@ const Hero = () => {
     <>
       <section
         id="hero-section"
-        className="relative overflow-hidden bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-600 text-white"
+        className="relative overflow-hidden bg-primary-800  text-white"
         aria-labelledby="hero-heading"
       >
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-32 pb-40">
@@ -78,7 +78,7 @@ const Hero = () => {
                 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
               >
                 <span className="block">From Application to Graduation:</span>
-                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                <span className="bg-secondary-500 bg-clip-text text-transparent">
                   Your Trusted Partner
                 </span>
                 <span className="block">for World-Class Education</span>
@@ -97,7 +97,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-white text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
+                className="flex items-center gap-2 bg-white text-primary-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
                 aria-label="Book free consultation"
               >
                 Book Your Free Consultation Today
@@ -119,7 +119,7 @@ const Hero = () => {
               >
                 <div className="flex items-center justify-center mb-2">
                   <Users
-                    className="h-8 w-8 text-yellow-400 mr-2"
+                    className="h-8 w-8 text-secondary-500 mr-2"
                     aria-hidden="true"
                   />
                   <span className="text-4xl md:text-5xl font-bold">
@@ -135,7 +135,7 @@ const Hero = () => {
               >
                 <div className="flex items-center justify-center mb-2">
                   <Award
-                    className="h-8 w-8 text-yellow-400 mr-2"
+                    className="h-8 w-8 text-secondary-500 mr-2"
                     aria-hidden="true"
                   />
                   <span className="text-4xl md:text-5xl font-bold">
@@ -151,7 +151,7 @@ const Hero = () => {
               >
                 <div className="flex items-center justify-center mb-2">
                   <Globe
-                    className="h-8 w-8 text-yellow-400 mr-2"
+                    className="h-8 w-8 text-secondary-500 mr-2"
                     aria-hidden="true"
                   />
                   <span className="text-4xl md:text-5xl font-bold">
@@ -167,7 +167,7 @@ const Hero = () => {
               >
                 <div className="flex items-center justify-center mb-2">
                   <Clock
-                    className="h-8 w-8 text-yellow-400 mr-2"
+                    className="h-8 w-8 text-secondary-500 mr-2"
                     aria-hidden="true"
                   />
                   <span className="text-4xl md:text-5xl font-bold">
@@ -189,7 +189,7 @@ const Hero = () => {
           >
             <path
               d="M0 120L1440 120L1440 0C1440 0 1140 60 720 60C300 60 0 0 0 0L0 120Z"
-              fill="white"
+              fill="#e2e2e2"
             />
           </svg>
         </div>

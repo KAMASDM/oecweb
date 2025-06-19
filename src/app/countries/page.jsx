@@ -129,12 +129,12 @@ const comparisonData = [
 const Countries = () => {
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white mt-20 py-20 md:py-32 text-center">
+      <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Study Destinations
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-lg md:text-xl max-w-3xl mx-auto">
             Explore world-class education opportunities across 15+ countries
             with detailed insights on universities, costs, visa requirements,
             and career prospects
@@ -150,7 +150,7 @@ const Countries = () => {
                 key={country.name}
                 className="country-card bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="country-header bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white p-8 text-center">
+                <div className="country-header bg-primary-800 text-white p-8 text-center">
                   <h3 className="text-3xl font-bold mb-2">
                     {country.flag} {country.name}
                   </h3>
@@ -158,21 +158,21 @@ const Countries = () => {
                 </div>
                 <div className="country-content p-6 md:p-8 flex-grow flex flex-col space-y-4">
                   <div className="grid grid-cols-2 gap-4 text-center">
-                    <div className="stat-item bg-gray-50 p-4 rounded-lg">
-                      <span className="stat-number block text-2xl font-bold text-purple-600">
+                    <div className="stat-item bg-gray-50 p-4 border border-gray-500 rounded-lg">
+                      <span className="stat-number block text-2xl font-bold text-primary-800">
                         {country.stats.universities}
                       </span>
-                      <span className="stat-label text-sm text-gray-500">
+                      <strong className="stat-label text-sm text-gray-500">
                         Universities
-                      </span>
+                      </strong>
                     </div>
-                    <div className="stat-item bg-gray-50 p-4 rounded-lg">
-                      <span className="stat-number block text-2xl font-bold text-purple-600">
+                    <div className="stat-item bg-gray-50 p-4 border border-gray-500 rounded-lg">
+                      <span className="stat-number block text-2xl font-bold text-primary-800">
                         {country.stats.cost}
                       </span>
-                      <span className="stat-label text-sm text-gray-500">
+                      <strong className="stat-label text-sm text-gray-500">
                         Annual Cost
-                      </span>
+                      </strong>
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 space-y-2">
@@ -202,7 +202,7 @@ const Countries = () => {
       <section className="section bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Detailed Country Comparison
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -211,7 +211,7 @@ const Countries = () => {
           </div>
           <div className="overflow-x-auto shadow-xl rounded-2xl">
             <table className="w-full text-sm text-left text-gray-700">
-              <thead className="text-xs text-white uppercase bg-gradient-to-r from-[#667eea] to-[#764ba2]">
+              <thead className="text-xs text-white uppercase bg-primary-800">
                 <tr>
                   <th scope="col" className="px-6 py-4">
                     Country
@@ -262,7 +262,7 @@ const Countries = () => {
       <section className="section py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Application Requirements by Country
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">

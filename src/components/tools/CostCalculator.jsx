@@ -90,8 +90,8 @@ const CostCalculator = () => {
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-primary-100 p-2 rounded-lg">
-            <Calculator className="h-6 w-6 text-primary-600" />
+          <div className="bg-secondary-500 p-2 rounded-lg">
+            <Calculator className="h-6 w-6 text-white" />
           </div>
           <h3 className="text-xl font-semibold text-gray-900">
             Study Abroad Cost Calculator
@@ -138,7 +138,7 @@ const CostCalculator = () => {
           <button
             onClick={handleCalculate}
             disabled={!formData.country || !formData.program || loading}
-            className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-secondary-500 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${
+            className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-800 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${
               loading ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >

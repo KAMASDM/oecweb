@@ -114,14 +114,14 @@ const ConsultationForm = ({ isOpen, onClose }) => {
                   setIsSubmitted(false);
                   reset();
                 }}
-                className="px-8 py-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold rounded-lg hover:opacity-90 transition-opacity duration-200"
+                className="px-8 py-3 bg-primary-800 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity duration-200"
               >
                 Submit Another Request
               </button>
             </div>
           ) : (
             <>
-              <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white p-6 md:p-8">
+              <div className="bg-primary-800 text-white p-6 md:p-8">
                 <h2 className="text-2xl md:text-3xl font-bold mb-2">
                   Book Your Free Consultation
                 </h2>
@@ -437,7 +437,7 @@ const ConsultationForm = ({ isOpen, onClose }) => {
                     className={`w-full px-6 py-4 rounded-lg text-white font-semibold flex items-center justify-center transition-all duration-200 ${
                       loading
                         ? "bg-[#9fa8da] cursor-not-allowed"
-                        : "bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:opacity-90"
+                        : "bg-primary-800 hover:opacity-90"
                     }`}
                   >
                     {loading ? (

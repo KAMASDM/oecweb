@@ -66,14 +66,14 @@ const Testimonials = () => {
 
   return (
     <section
-      className="py-10 bg-gray-50"
+      className="py-20 bg-gray-50"
       aria-labelledby="testimonials-heading"
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2
             id="testimonials-heading"
-            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
+            className="text-3xl sm:text-4xl font-bold text-primary-800 mb-4"
           >
             Premium Student Reviews
           </h2>
@@ -84,13 +84,13 @@ const Testimonials = () => {
 
         <div className="relative">
           <div className="max-w-6xl mx-auto">
-            <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-200">
+            <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-800">
               <div className="p-8 md:p-10">
                 <div className="flex flex-col lg:flex-row gap-8 items-start">
                   <div className="flex-shrink-0 w-full lg:w-1/3">
                     <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
                       <div
-                        className="w-32 h-32 bg-gradient-to-r from-primary-600 to-primary-400 rounded-full flex items-center justify-center text-3xl font-bold text-white"
+                        className="w-32 h-32 bg-gradient-to-r from-secondary-600 to-secondary-400 rounded-full flex items-center justify-center text-3xl font-bold text-white"
                         aria-hidden="true"
                       >
                         {currentTestimonial.image}
@@ -99,7 +99,7 @@ const Testimonials = () => {
                         <h3 className="text-2xl font-semibold mb-1 text-primary-900">
                           {currentTestimonial.name}
                         </h3>
-                        <p className="text-primary-600 font-medium mb-2">
+                        <p className="text-primary-700 mb-2">
                           {currentTestimonial.program}
                         </p>
                         <p className="text-sm text-primary-700 mb-4">
@@ -121,10 +121,10 @@ const Testimonials = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 lg:border-l lg:border-primary-200 lg:pl-8">
+                  <div className="flex-1 lg:border-l lg:border-primary-800 lg:pl-8">
                     <div className="relative">
                       <Quote
-                        className="h-10 w-10 text-primary-400 mb-4 opacity-20"
+                        className="h-10 w-10 text-primary-800 mb-4 opacity-20"
                         aria-hidden="true"
                       />
                       <blockquote className="text-lg leading-relaxed mb-6 text-gray-700 pl-8 -mt-8">
@@ -132,7 +132,7 @@ const Testimonials = () => {
                       </blockquote>
                     </div>
 
-                    <div className="bg-primary-50 border border-primary-200 rounded-xl p-5">
+                    <div className="bg-primary-50 border border-primary-800 rounded-xl p-5">
                       <h4 className="font-semibold text-primary-800 mb-2">
                         Outstanding Results:
                       </h4>
@@ -149,7 +149,7 @@ const Testimonials = () => {
           <div className="flex justify-center items-center mt-10 space-x-6">
             <button
               onClick={prevTestimonial}
-              className="p-3 bg-white border border-primary-300 rounded-full text-primary-600 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
+              className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
               aria-label="Previous testimonial"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -161,7 +161,7 @@ const Testimonials = () => {
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
-                    index === currentIndex ? "bg-primary-600" : "bg-primary-300"
+                    index === currentIndex ? "bg-secondary-500" : "bg-secondary-300"
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
@@ -170,7 +170,7 @@ const Testimonials = () => {
 
             <button
               onClick={nextTestimonial}
-              className="p-3 bg-white border border-primary-300 rounded-full text-primary-600 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
+              className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
               aria-label="Next testimonial"
             >
               <ChevronRight className="h-6 w-6" />

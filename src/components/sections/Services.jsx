@@ -94,7 +94,7 @@ const Services = () => {
         <div className="text-center mb-16">
           <h2
             id="services-heading"
-            className="text-4xl font-bold text-gray-900 mb-4"
+            className="text-4xl font-bold text-primary-800 mb-4"
           >
             Comprehensive Support for Your Study Abroad Journey
           </h2>
@@ -113,7 +113,7 @@ const Services = () => {
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-full flex flex-col border border-gray-100"
               >
                 <div className="p-6 flex-grow">
-                  <div className="service-icon w-16 h-16 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-xl flex items-center justify-center text-white mb-6">
+                  <div className="service-icon w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center text-white mb-6">
                     {service.icon}
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -135,7 +135,7 @@ const Services = () => {
                 <div className="px-6 pb-6">
                   <Link
                     href="/services"
-                    className="text-primary-500 font-medium hover:text-primary-600 inline-flex items-center"
+                    className="text-primary-800 font-medium hover:text-primary-500 inline-flex items-center"
                     aria-label={`Learn more about ${service.title}`}
                   >
                     Learn more
@@ -163,7 +163,7 @@ const Services = () => {
         <div className="text-center mt-12">
           <Link
             href="/services"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-500 to-secondary-500 hover:opacity-90 transition-opacity"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-800 hover:opacity-90 transition-opacity"
             aria-label="View all services"
           >
             View All Services

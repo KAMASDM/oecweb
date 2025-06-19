@@ -133,7 +133,7 @@ const Countries = () => {
         <div className="text-center mb-16">
           <h2
             id="study-destinations-heading"
-            className="text-4xl font-bold text-gray-900 mb-4"
+            className="text-4xl font-bold text-primary-800 mb-4"
           >
             Study Destinations
           </h2>
@@ -150,7 +150,7 @@ const Countries = () => {
                 key={`${country.id}-${index}`}
                 className="flex-shrink-0 w-[350px] bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
               >
-                <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white p-6 text-center">
+                <div className="bg-primary-800 text-white p-6 text-center">
                   <div className="text-4xl mb-2" aria-hidden="true">
                     {country.flag}
                   </div>
@@ -160,26 +160,26 @@ const Countries = () => {
 
                 <div className="p-6">
                   <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-center p-3 bg-gray-50 border border-gray-500 rounded-lg">
                       <div className="flex items-center justify-center mb-2">
                         <Users
-                          className="h-5 w-5 text-primary-500 mr-1"
+                          className="h-5 w-5 text-secondary-500 mr-1"
                           aria-hidden="true"
                         />
-                        <span className="text-lg font-bold text-primary-600">
+                        <span className="text-lg font-bold text-primary-800">
                           {country.universities}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">Universities</p>
                     </div>
 
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-center p-3 bg-gray-50 border border-gray-500 rounded-lg">
                       <div className="flex items-center justify-center mb-2">
                         <DollarSign
-                          className="h-5 w-5 text-green-500 mr-1"
+                          className="h-5 w-5 text-secondary-500 mr-1"
                           aria-hidden="true"
                         />
-                        <span className="text-lg font-bold text-green-600">
+                        <span className="text-lg font-bold text-primary-800">
                           {country.cost}
                         </span>
                       </div>
@@ -191,7 +191,7 @@ const Countries = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
                         <Award
-                          className="h-4 w-4 text-yellow-500 mr-2"
+                          className="h-4 w-4 text-secondary-500 mr-2"
                           aria-hidden="true"
                         />
                         Top Universities
@@ -204,7 +204,7 @@ const Countries = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
                         <Clock
-                          className="h-4 w-4 text-blue-500 mr-2"
+                          className="h-4 w-4 text-secondary-500 mr-2"
                           aria-hidden="true"
                         />
                         Work Opportunities
@@ -221,7 +221,7 @@ const Countries = () => {
                       <ul className="text-sm text-gray-600 space-y-1">
                         {country.benefits.slice(0, 2).map((benefit, i) => (
                           <li key={i} className="flex items-start">
-                            <span className="text-green-500 mr-2">✓</span>
+                            <span className="text-secondary-500 mr-2">✓</span>
                             {benefit}
                           </li>
                         ))}
@@ -248,7 +248,7 @@ const Countries = () => {
         <div className="text-center mt-12">
           <Link
             href="/countries"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-500 to-secondary-500 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-800 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             aria-label="Explore all study destinations"
           >
             Explore All Destinations

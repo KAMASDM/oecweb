@@ -4,12 +4,12 @@ import { Handshake, ShieldCheck, Clock, GraduationCap } from "lucide-react";
 const AboutUs = () => {
   return (
     <div>
-      <section className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white mt-20 py-20 md:py-32">
+      <section className="bg-primary-800 text-white mt-20 py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             About OEC India
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-lg md:text-xl max-w-3xl mx-auto">
             Your trusted partner in international education with a decade of
             expertise, 2,000+ successful placements, and an unwavering
             commitment to student success.
@@ -145,7 +145,7 @@ const AboutUs = () => {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Certifications
                 </h3>
-                <ul className="divide-y divide-gray-200 text-purple-700">
+                <ul className="divide-y divide-gray-200 text-primary-700">
                   {[
                     "ICEF Agency Certified",
                     "British Council Trained",
@@ -164,7 +164,7 @@ const AboutUs = () => {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Awards & Recognition
                 </h3>
-                <ul className="divide-y divide-gray-200 text-purple-700">
+                <ul className="divide-y divide-gray-200 text-primary-700">
                   {[
                     "Best Education Consultant 2023",
                     "Student Choice Award 2022",
@@ -185,7 +185,7 @@ const AboutUs = () => {
       <section className="bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Meet Our Expert Team
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -248,7 +248,7 @@ const AboutUs = () => {
                 className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
               >
                 <div
-                  className="w-24 h-24 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6"
+                  className="w-24 h-24 bg-secondary-500 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6"
                   aria-hidden="true"
                 >
                   {member.initials}
@@ -256,13 +256,13 @@ const AboutUs = () => {
                 <h3 className="text-xl lg:text-2xl font-bold text-gray-800 text-center">
                   {member.name}
                 </h3>
-                <p className="text-purple-600 font-semibold text-center mb-4">
+                <p className="text-primary-600 font-semibold text-center mb-4">
                   {member.role}
                 </p>
                 <p className="text-gray-600 mb-4 text-sm lg:text-base">
                   {member.bio}
                 </p>
-                <div className="bg-gray-100 p-3 rounded-lg border-l-4 border-purple-600">
+                <div className="bg-gray-100 p-3 rounded-lg border-l-4 border-primary-600">
                   <p className="text-sm font-medium">
                     <strong>Expertise:</strong> {member.expertise}
                   </p>
@@ -276,7 +276,7 @@ const AboutUs = () => {
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Our Commitment to You
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -316,7 +316,7 @@ const AboutUs = () => {
                 key={index}
                 className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 h-full"
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-lg flex items-center justify-center text-white mb-6">
+                <div className="w-16 h-16 bg-secondary-500 rounded-lg flex items-center justify-center text-white mb-6">
                   <item.icon size={24} aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-4">

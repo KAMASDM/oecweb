@@ -126,7 +126,7 @@ const Header = () => {
     {
       title: "University Deadlines",
       subtitle: "Know all about application deadlines",
-      href: "/deadlines",
+      href: "/university-deadlines",
       isDeadlines: true,
     },
   ];
@@ -142,11 +142,10 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-lg" : "bg-white"
+        isScrolled ? "bg-gray-100 shadow-lg" : "bg-white"
       }`}
     >
-      {/* Top Contact Bar */}
-      <div className="bg-gradient-to-br from-primary-800 via-primary-900 to-secondary-600 text-white py-2 px-4 text-sm">
+      <div className="bg-primary-800 text-white py-2 px-4 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 md:gap-6">
             <Link
@@ -171,26 +170,21 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Navigation */}
       <nav className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-20">
-            {/* Logo */}
             <div className="flex-shrink-0">
-              <Link
-                href="/"
-                className="flex items-center space-x-2 md:space-x-3"
-              >
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-lg flex items-center justify-center">
-                  <GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-white" />
-                </div>
-                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">
-                  OEC India
+              <Link href="/" className="flex items-center">
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden">
+                  <img
+                    src="/oec.png"
+                    alt="OEC Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
               {navigationItems.map((item) => (
                 <div
@@ -202,7 +196,7 @@ const Header = () => {
                     <>
                       <button
                         onClick={() => setIsExploreOpen(!isExploreOpen)}
-                        className="flex items-center gap-1 text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2"
+                        className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2"
                       >
                         {item.name}
                         <ChevronDown
@@ -213,11 +207,9 @@ const Header = () => {
                         />
                       </button>
 
-                      {/* Mega Dropdown */}
                       {isExploreOpen && (
                         <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-[90vw] max-w-[900px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
                           <div className="flex flex-col md:flex-row">
-                            {/* Left Column - Explore Cards */}
                             <div className="w-full md:w-2/5 p-4 md:p-6 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200">
                               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
                                 {exploreCards.map((card, index) => (
@@ -244,9 +236,7 @@ const Header = () => {
                               </div>
                             </div>
 
-                            {/* Middle + Right Columns */}
                             <div className="w-full md:w-3/5 flex flex-col md:flex-row">
-                              {/* Middle Column - Menu Sections */}
                               <div className="w-full md:w-1/2 p-4 md:p-6 border-b md:border-b-0 md:border-r border-gray-200">
                                 <div className="space-y-3">
                                   {menuSections.map((section, index) => (
@@ -270,7 +260,6 @@ const Header = () => {
                                 </div>
                               </div>
 
-                              {/* Right Column - Items Panel */}
                               <div className="w-full md:w-1/2 p-4 md:p-6">
                                 {menuSections[activeSection].isDeadlines ? (
                                   <div className="h-full flex flex-col justify-center">
@@ -281,7 +270,7 @@ const Header = () => {
                                       </p>
                                       <Link
                                         href={menuSections[activeSection].href}
-                                        className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm md:text-base"
+                                        className="inline-block px-4 py-2 bg-primary-800 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm md:text-base"
                                       >
                                         View Deadlines
                                       </Link>
@@ -317,7 +306,7 @@ const Header = () => {
                   ) : (
                     <Link
                       href={item.href}
-                      className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200 py-2 text-sm md:text-base"
+                      className="text-gray-700 hover:text-primary-800 font-medium transition-colors duration-200 py-2 text-sm md:text-base"
                     >
                       {item.name}
                     </Link>
@@ -326,7 +315,6 @@ const Header = () => {
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -337,7 +325,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu - Simplified version */}
         <div
           ref={mobileMenuRef}
           className={`lg:hidden bg-white overflow-hidden transition-all duration-300 ease-in-out ${
@@ -369,7 +356,6 @@ const Header = () => {
 
                     {isExploreOpen && (
                       <div className="mt-2 pl-4 space-y-3">
-                        {/* Only show explore cards in mobile menu */}
                         <div className="grid grid-cols-1 gap-3">
                           {exploreCards.map((card, index) => (
                             <Link
@@ -400,7 +386,7 @@ const Header = () => {
                 ) : (
                   <Link
                     href={item.href}
-                    className="block py-3 text-gray-700 hover:text-primary-600 font-medium"
+                    className="block py-3 text-gray-700 hover:text-primary-800 font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}

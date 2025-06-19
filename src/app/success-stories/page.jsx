@@ -101,12 +101,12 @@ const parentTestimonials = [
 const SuccessStories = () => {
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white mt-20 py-20 md:py-32 text-center">
+      <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Success Stories
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-lg md:text-xl max-w-3xl mx-auto">
             Real journeys, real outcomes - discover how our students achieved
             their international education dreams and built successful careers
           </p>
@@ -122,7 +122,7 @@ const SuccessStories = () => {
                 className="testimonial bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="testimonial-header flex items-center mb-4">
-                  <div className="testimonial-avatar w-14 h-14 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4 shrink-0">
+                  <div className="testimonial-avatar w-14 h-14 bg-secondary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4 shrink-0">
                     {testimonial.avatar}
                   </div>
                   <div className="testimonial-info">
@@ -136,7 +136,7 @@ const SuccessStories = () => {
                   {testimonial.story}
                 </div>
                 <div className="testimonial-outcome mt-auto pt-6 border-t border-gray-200">
-                  <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg border-l-4 border-emerald-400 text-sm">
+                  <div className="p-4 bg-primary-50 text-primary-800 rounded-lg border-l-4 border-primary-400 text-sm">
                     <strong>Outcome:</strong> {testimonial.outcome}
                   </div>
                 </div>
@@ -149,7 +149,7 @@ const SuccessStories = () => {
       <section className="section bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Success by Numbers
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -162,7 +162,7 @@ const SuccessStories = () => {
                 key={index}
                 className="service-card bg-white p-8 rounded-2xl shadow-lg text-center border"
               >
-                <div className="service-icon w-16 h-16 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-xl flex items-center justify-center text-white text-3xl mb-6 mx-auto">
+                <div className="service-icon w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center text-white text-3xl mb-6 mx-auto">
                   {metric.icon}
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -178,7 +178,7 @@ const SuccessStories = () => {
       <section className="section py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Parent Testimonials
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -192,7 +192,7 @@ const SuccessStories = () => {
                 className="testimonial bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col"
               >
                 <div className="testimonial-header flex items-center mb-4">
-                  <div className="testimonial-avatar w-14 h-14 bg-gradient-to-r from-slate-400 to-slate-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4 shrink-0">
+                  <div className="testimonial-avatar w-14 h-14 bg-secondary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4 shrink-0">
                     {testimonial.avatar}
                   </div>
                   <div className="testimonial-info">
@@ -206,7 +206,7 @@ const SuccessStories = () => {
                   {testimonial.story}
                 </div>
                 <div className="testimonial-outcome mt-auto pt-6 border-t border-gray-200">
-                  <div className="p-4 bg-sky-50 text-sky-800 rounded-lg border-l-4 border-sky-400 text-sm">
+                  <div className="p-4 bg-primary-50 text-primary-800 rounded-lg border-l-4 border-primary-400 text-sm">
                     <strong>Parent Satisfaction:</strong> {testimonial.outcome}
                   </div>
                 </div>

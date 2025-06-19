@@ -121,7 +121,7 @@ const MultiStepForm = () => {
                       isCompleted
                         ? "bg-green-500 text-white"
                         : isCurrent
-                        ? "bg-primary-500 text-white"
+                        ? "bg-secondary-500 text-white"
                         : "bg-gray-200 text-gray-500"
                     }`}
                   >
@@ -134,12 +134,12 @@ const MultiStepForm = () => {
                   <div className="mt-2 text-center">
                     <p
                       className={`text-sm font-medium ${
-                        isCurrent ? "text-primary-600" : "text-gray-500"
+                        isCurrent ? "text-primary-800" : "text-gray-500"
                       }`}
                     >
                       {step.title}
                     </p>
-                    <p className="text-xs text-gray-400 hidden sm:block">
+                    <p className="text-xs text-gray-600 hidden sm:block">
                       {step.description}
                     </p>
                   </div>
