@@ -49,11 +49,11 @@ const smartFeatures = [
 const SmartFeatures = () => {
   return (
     <section className="py-10 bg-gray-50" aria-labelledby="services-heading">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2
             id="services-heading"
-            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
+            className="text-3xl sm:text-4xl font-bold text-primary-800 mb-4"
           >
             All-Tech For Studying Abroad
           </h2>
@@ -72,7 +72,7 @@ const SmartFeatures = () => {
                 className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col border border-gray-200 hover:border-primary-600 hover:ring-1 hover:ring-primary-600"
               >
                 <div className="p-6 flex-grow">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary-700 transition-colors">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary-800 transition-colors">
                     {service.title}
                   </h3>
                   <p className="text-gray-600 text-sm sm:text-base mb-4">

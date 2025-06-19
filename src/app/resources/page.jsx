@@ -170,12 +170,12 @@ const Resources = () => {
 
   return (
     <div>
-      <div className="page-header bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white mt-20 py-20 md:py-32 text-center">
+      <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Resources & Insights
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-lg md:text-xl max-w-3xl mx-auto">
             Comprehensive guides, latest updates, and expert insights to help
             you make informed decisions about your international education
             journey
@@ -185,15 +185,6 @@ const Resources = () => {
 
       <section className="content-section py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Latest Articles & Guides
-            </h2>
-            <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
-              Stay updated with the latest trends, requirements, and
-              opportunities in international education
-            </p>
-          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articlesData.map((article, index) => (
               <div
@@ -203,10 +194,15 @@ const Resources = () => {
                 <div className="blog-header bg-gray-50 p-6 border-b">
                   <div className="blog-meta flex items-center gap-4 text-sm text-gray-500 mb-4">
                     <span className="flex items-center gap-2">
-                      <Calendar size={16} /> {article.date}
+                      <Calendar
+                        size={16}
+                        className="h-5 w-5 text-secondary-500"
+                      />{" "}
+                      {article.date}
                     </span>
                     <span className="flex items-center gap-2">
-                      <User size={16} /> {article.author}
+                      <User size={16} className="h-5 w-5 text-secondary-500" />{" "}
+                      {article.author}
                     </span>
                   </div>
                   <h3 className="text-lg font-bold text-gray-800 mb-2">
@@ -221,7 +217,7 @@ const Resources = () => {
                     {article.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="tag bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"
+                        className="tag bg-primary-100 text-primary-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"
                       >
                         {tag}
                       </span>
@@ -237,7 +233,7 @@ const Resources = () => {
       <section className="section bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Downloadable Resources
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -251,7 +247,7 @@ const Resources = () => {
                 key={index}
                 className="service-card bg-white p-8 rounded-2xl shadow-lg border flex flex-col text-center"
               >
-                <div className="service-icon w-16 h-16 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-xl flex items-center justify-center text-white text-3xl mb-6 mx-auto">
+                <div className="service-icon w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center text-white text-3xl mb-6 mx-auto">
                   {resource.icon}
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -260,7 +256,7 @@ const Resources = () => {
                 <p className="text-gray-600 mb-6 flex-grow">
                   {resource.description}
                 </p>
-                <button className="calculate-btn bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity mt-auto">
+                <button className="calculate-btn bg-primary-800 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity mt-auto">
                   {resource.buttonText}
                 </button>
               </div>
@@ -348,7 +344,7 @@ const Resources = () => {
                     <li>
                       <a
                         href="#services"
-                        className="flex items-center text-purple-600 hover:text-purple-800 transition"
+                        className="flex items-center text-primary-600 hover:text-primary-800 transition"
                       >
                         <span className="mr-2">💼</span> Our Services
                       </a>
@@ -356,7 +352,7 @@ const Resources = () => {
                     <li>
                       <a
                         href="#countries"
-                        className="flex items-center text-purple-600 hover:text-purple-800 transition"
+                        className="flex items-center text-primary-600 hover:text-primary-800 transition"
                       >
                         <span className="mr-2">🌍</span> Study Destinations
                       </a>
@@ -364,7 +360,7 @@ const Resources = () => {
                     <li>
                       <a
                         href="#success"
-                        className="flex items-center text-purple-600 hover:text-purple-800 transition"
+                        className="flex items-center text-primary-600 hover:text-primary-800 transition"
                       >
                         <span className="mr-2">🎯</span> Success Stories
                       </a>
@@ -372,7 +368,7 @@ const Resources = () => {
                     <li>
                       <a
                         href="#contact"
-                        className="flex items-center text-purple-600 hover:text-purple-800 transition"
+                        className="flex items-center text-primary-600 hover:text-primary-800 transition"
                       >
                         <span className="mr-2">📅</span> Book Consultation
                       </a>
@@ -390,14 +386,14 @@ const Resources = () => {
                       <br />
                       <a
                         href="tel:+919876543210"
-                        className="text-purple-600 hover:underline"
+                        className="text-primary-600 hover:underline"
                       >
                         📞 +91 98765 43210
                       </a>
                       <br />
                       <a
                         href="mailto:info@oecindia.com"
-                        className="text-purple-600 hover:underline"
+                        className="text-primary-600 hover:underline"
                       >
                         📧 info@oecindia.com
                       </a>
@@ -407,14 +403,14 @@ const Resources = () => {
                       <br />
                       <a
                         href="tel:+919876543211"
-                        className="text-purple-600 hover:underline"
+                        className="text-primary-600 hover:underline"
                       >
                         📞 +91 98765 43211
                       </a>
                       <br />
                       <a
                         href="mailto:counseling@oecindia.com"
-                        className="text-purple-600 hover:underline"
+                        className="text-primary-600 hover:underline"
                       >
                         📧 counseling@oecindia.com
                       </a>

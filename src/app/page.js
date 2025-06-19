@@ -4,6 +4,7 @@ import Testimonials from "@/components/sections/Testimonials";
 import Universities from "@/components/sections/Universities";
 import SmartFeatures from "@/components/sections/SmartFeatures";
 import ExplorePremium from "@/components/sections/ExplorePremium";
+import FloatingCTA from "@/components/ui/FloatingCTA";
 
 export default function Home() {
   return (
@@ -11,9 +12,10 @@ export default function Home() {
       <Hero />
       <Universities />
       <SmartFeatures />
-      <ExplorePremium/>
-      <Events/>
+      <ExplorePremium />
+      <Events />
       <Testimonials />
+      <FloatingCTA />
     </div>
   );
 }

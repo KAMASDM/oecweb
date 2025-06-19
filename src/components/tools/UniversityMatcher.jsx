@@ -85,7 +85,7 @@ const UniversityMatcher = () => {
               value={gpa}
               onChange={(e) => setGpa(e.target.value)}
               placeholder="Enter your academic score"
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
@@ -97,7 +97,7 @@ const UniversityMatcher = () => {
               value={testScore}
               onChange={(e) => setTestScore(e.target.value)}
               placeholder="Enter your test score"
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
@@ -107,7 +107,7 @@ const UniversityMatcher = () => {
             <select
               value={field}
               onChange={(e) => setField(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select Field</option>
               <option value="engineering">Engineering</option>
@@ -125,7 +125,7 @@ const UniversityMatcher = () => {
             <select
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select Budget</option>
               <option value="10-20">10-20 Lakhs INR</option>
@@ -136,7 +136,7 @@ const UniversityMatcher = () => {
           </div>
           <button
             onClick={matchUniversities}
-            className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+            className="w-full bg-primary-800 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
           >
             Find Perfect Matches
           </button>

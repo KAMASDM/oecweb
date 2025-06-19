@@ -109,12 +109,12 @@ const services = [
 const Services = () => {
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white mt-20 py-20 md:py-32 text-center">
+      <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Comprehensive Study Abroad Services
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-lg md:text-xl max-w-3xl mx-auto">
             End-to-end support for your international education journey, backed
             by 10 years of expertise and a 95% success rate
           </p>
@@ -129,7 +129,7 @@ const Services = () => {
                 key={index}
                 className="service-card bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="service-icon w-16 h-16 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-xl flex items-center justify-center text-white mb-6">
+                <div className="service-icon w-16 h-16 bg-secondary-500 rounded-xl flex items-center justify-center text-white mb-6">
                   {service.icon}
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
@@ -147,7 +147,7 @@ const Services = () => {
                   ))}
                 </ul>
                 <div className="mt-auto pt-6">
-                  <div className="p-4 bg-sky-50 text-sky-800 rounded-lg border-l-4 border-sky-400">
+                  <div className="p-4 bg-primary-50 text-primary-800 rounded-lg border-l-4 border-primary-400">
                     <strong>{service.included.split(":")[0]}:</strong>
                     {service.included.substring(
                       service.included.indexOf(":") + 1
@@ -163,7 +163,7 @@ const Services = () => {
       <section className="section bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary-800">
               Why Choose OEC India's Services?
             </h2>
             <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
@@ -299,14 +299,14 @@ const Services = () => {
                     <br />
                     <a
                       href="tel:+919876543210"
-                      className="text-purple-600 hover:underline"
+                      className="text-primary-600 hover:underline"
                     >
                       📞 +91 98765 43210
                     </a>
                     <br />
                     <a
                       href="mailto:services@oecindia.com"
-                      className="text-purple-600 hover:underline"
+                      className="text-primary-600 hover:underline"
                     >
                       📧 services@oecindia.com
                     </a>
@@ -316,14 +316,14 @@ const Services = () => {
                     <br />
                     <a
                       href="tel:+919876543211"
-                      className="text-purple-600 hover:underline"
+                      className="text-primary-600 hover:underline"
                     >
                       📞 +91 98765 43211
                     </a>
                     <br />
                     <a
                       href="mailto:emergency@oecindia.com"
-                      className="text-purple-600 hover:underline"
+                      className="text-primary-600 hover:underline"
                     >
                       📧 emergency@oecindia.com
                     </a>

@@ -50,7 +50,7 @@ const ROICalculator = () => {
               value={totalCost}
               onChange={(e) => setTotalCost(e.target.value)}
               placeholder="Enter total cost"
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
@@ -62,7 +62,7 @@ const ROICalculator = () => {
               value={currentSalary}
               onChange={(e) => setCurrentSalary(e.target.value)}
               placeholder="Enter current salary"
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ const ROICalculator = () => {
               value={expectedSalary}
               onChange={(e) => setExpectedSalary(e.target.value)}
               placeholder="Enter expected salary"
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
@@ -84,7 +84,7 @@ const ROICalculator = () => {
             <select
               value={careerField}
               onChange={(e) => setCareerField(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select Field</option>
               <option value="technology">Technology</option>
@@ -96,7 +96,7 @@ const ROICalculator = () => {
           </div>
           <button
             onClick={calculateROI}
-            className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+            className="w-full bg-primary-800 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
           >
             Calculate ROI
           </button>

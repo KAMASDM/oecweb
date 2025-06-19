@@ -9,7 +9,7 @@ const CTA = () => {
   return (
     <>
       <section
-        className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600 text-white relative overflow-hidden"
+        className="py-20 bg-primary-800 text-white relative overflow-hidden"
         aria-labelledby="cta-heading"
       >
         <div
@@ -50,7 +50,7 @@ const CTA = () => {
               ].map((feature, index) => (
                 <div key={index} className="text-center">
                   <div
-                    className="bg-white/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
+                    className="bg-secondary-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
                     aria-hidden="true"
                   >
                     <feature.icon className="h-8 w-8" />
@@ -91,7 +91,7 @@ const CTA = () => {
               ].map((badge, index) => (
                 <span
                   key={index}
-                  className="text-sm text-blue-200 flex items-center"
+                  className="text-sm text-white flex items-center"
                   aria-hidden="true"
                 >
                   {badge}

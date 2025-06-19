@@ -68,7 +68,7 @@ const TimelineGenerator = () => {
             <select
               value={intake}
               onChange={(e) => setIntake(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select Intake</option>
               <option value="fall-2025">Fall 2025</option>
@@ -83,7 +83,7 @@ const TimelineGenerator = () => {
             <select
               value={programLevel}
               onChange={(e) => setProgramLevel(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select Level</option>
               <option value="undergraduate">Undergraduate</option>
@@ -103,7 +103,7 @@ const TimelineGenerator = () => {
                   Array.from(e.target.selectedOptions, (option) => option.value)
                 )
               }
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="usa">United States</option>
               <option value="uk">United Kingdom</option>
@@ -114,7 +114,7 @@ const TimelineGenerator = () => {
           </div>
           <button
             onClick={generateTimeline}
-            className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+            className="w-full bg-primary-800 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
           >
             Generate Timeline
           </button>
