@@ -216,6 +216,7 @@ const Header = () => {
                                   <Link
                                     key={index}
                                     href={card.href}
+                                    onClick={() => setIsExploreOpen(false)}
                                     className="group flex items-center gap-3 p-3 bg-white rounded-lg hover:shadow-md transition-all duration-200 border border-gray-200"
                                   >
                                     <div
@@ -270,6 +271,7 @@ const Header = () => {
                                       </p>
                                       <Link
                                         href={menuSections[activeSection].href}
+                                        onClick={() => setIsExploreOpen(false)}
                                         className="inline-block px-4 py-2 bg-primary-800 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm md:text-base"
                                       >
                                         View Deadlines
@@ -287,6 +289,9 @@ const Header = () => {
                                           <li key={itemIndex}>
                                             <Link
                                               href={item.href}
+                                              onClick={() =>
+                                                setIsExploreOpen(false)
+                                              }
                                               className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
                                             >
                                               {item.name}
