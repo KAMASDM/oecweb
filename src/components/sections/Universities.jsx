@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Bookmark, Crown, Gift } from "lucide-react";
+import { Bookmark, Crown, Gift } from "lucide-react";
 
 const universities = [
   {
@@ -122,23 +122,20 @@ const Universities = () => {
                   </div>
                 </div>
                 <div className="bg-primary-50 p-4 rounded-b-2xl border-t border-primary-100">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={university.studentImage}
-                        alt={university.studentName}
-                        className="w-10 h-10 rounded-full object-cover ring-2 ring-white"
-                      />
-                      <div>
-                        <p className="font-semibold text-sm text-gray-800">
-                          {university.studentName}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {university.intake}
-                        </p>
-                      </div>
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={university.studentImage}
+                      alt={university.studentName}
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-white"
+                    />
+                    <div>
+                      <p className="font-semibold text-sm text-gray-800">
+                        {university.studentName}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {university.intake}
+                      </p>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-secondary-500" />
                   </div>
                 </div>
               </div>

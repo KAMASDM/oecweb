@@ -72,13 +72,16 @@ const Footer = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-1">
-            <div className="mb-2">
-              <img
-                src="/oec.png"
-                alt="Overseas Education Consultants"
-                width={120}
-                height={120}
-              />
+            <div className="flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden">
+                  <img
+                    src="/oec.png"
+                    alt="OEC"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </Link>
             </div>
             <p className="text-white mb-4 text-sm">
               Your trusted partner for international education with 10 years of
@@ -205,7 +208,11 @@ const Footer = () => {
                 </a>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone size={16} className="text-secondary-500" aria-hidden="true" />
+                <Phone
+                  size={16}
+                  className="text-secondary-500"
+                  aria-hidden="true"
+                />
                 <a
                   href="tel:+919876543212"
                   className="font-medium text-secondary-500 hover:underline"

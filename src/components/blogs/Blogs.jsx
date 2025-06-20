@@ -161,7 +161,7 @@ const Blogs = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Study Abroad Blogs
           </h1>
-          <p className="text-secondary-500 text-xl md:text-2xl max-w-3xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-5xl mx-auto">
             Expert advice, guides, and latest updates for your international
             education journey
           </p>
@@ -212,30 +212,30 @@ const Blogs = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex items-center gap-2 p-1 bg-gray-100 rounded-full">
+              <div className="flex items-center gap-2 p-1 bg-gray-300 rounded-full">
                 <button
                   onClick={() => setViewMode("grid")}
                   aria-pressed={viewMode === "grid"}
                   className={`p-2 rounded-full transition-colors duration-200 ${
                     viewMode === "grid"
-                      ? "bg-white text-primary-600 shadow"
+                      ? "bg-white text-secondary-500 shadow"
                       : "text-gray-500 hover:text-gray-800"
                   }`}
                   aria-label="Grid view"
                 >
-                  <Grid className="h-5 w-5 text-secondary-500" />
+                  <Grid className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
                   aria-pressed={viewMode === "list"}
                   className={`p-2 rounded-full transition-colors duration-200 ${
                     viewMode === "list"
-                      ? "bg-white text-primary-600 shadow"
+                      ? "bg-white text-secondary-500 shadow"
                       : "text-gray-500 hover:text-gray-800"
                   }`}
                   aria-label="List view"
                 >
-                  <List className="h-5 w-5 text-secondary-500" />
+                  <List className="h-5 w-5" />
                 </button>
               </div>
             </div>

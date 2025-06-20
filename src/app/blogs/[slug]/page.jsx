@@ -1,5 +1,5 @@
 import React from "react";
-import BlogDetails from "@/components/blog/BlogDetails";
+import BlogDetails from "@/components/blogs/BlogDetails";
 
 const BlogDetail = async ({ params }) => {
   const resolvedParams = await params;
