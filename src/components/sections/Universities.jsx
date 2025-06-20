@@ -66,10 +66,10 @@ const Universities = () => {
             id="study-destinations-heading"
             className="text-4xl font-bold text-primary-800 mb-4"
           >
-            TOP PREMIUM ADMITS
+            Our Students Admitted To Top Universities
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Gateway to the IVY Leagues
+            Gateway to your Overseas Education{" "}
           </p>
         </div>
 

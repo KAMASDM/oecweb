@@ -508,7 +508,7 @@ const Events = () => {
 
                             <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                               <div className="flex items-center gap-2 text-gray-600">
-                                <CalendarIcon className="h-4 w-4 text-secondary-500" />
+                                <Calendar className="h-4 w-4 text-secondary-500" />
                                 {moment(event.date).format("MMMM D, YYYY")}
                               </div>
                               <div className="flex items-center gap-2 text-gray-600">
