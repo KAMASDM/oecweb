@@ -109,16 +109,16 @@ const Header = () => {
         { name: "Computer Science", href: "/popular-courses/computer-science" },
         { name: "MBA", href: "/popular-courses/mba" },
         {
-          name: "Data Science & Analytics",
-          href: "/popular-courses/data-science-analytics",
+          name: "Data Science",
+          href: "/popular-courses/data-science",
         },
         {
-          name: "Mechanical Engineering",
-          href: "/popular-courses/mechanical-engineering",
+          name: "Engineering",
+          href: "/popular-courses/engineering",
         },
         {
-          name: "Business Management",
-          href: "/popular-courses/business-management",
+          name: "Business",
+          href: "/popular-courses/business",
         },
         { name: "Explore All", href: "/popular-courses" },
       ],
@@ -177,8 +177,8 @@ const Header = () => {
               <Link href="/" className="flex items-center">
                 <div className="w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden">
                   <img
-                    src="/oec.png"
-                    alt="OEC Logo"
+                    src="/OEC.png"
+                    alt="OEC"
                     className="w-full h-full object-contain"
                   />
                 </div>

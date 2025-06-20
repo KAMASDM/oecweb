@@ -31,7 +31,7 @@ const FloatingCTA = () => {
             </button>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-primary-800 rounded-full p-2">
+              <div className="bg-secondary-500 rounded-full p-2">
                 <MessageCircle className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
@@ -52,7 +52,7 @@ const FloatingCTA = () => {
         ) : (
           <button
             onClick={() => setIsMinimized(false)}
-            className="bg-primary-800 text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200"
+            className="bg-secondary-500 text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200"
           >
             <MessageCircle className="h-6 w-6" />
           </button>

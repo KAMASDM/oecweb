@@ -1,8 +1,8 @@
 import React from "react";
-import Blogs from "@/components/sections/Blogs";
+import Blogs from "@/components/blogs/Blogs";
 
-const Blog = () => {
+const BlogsPage = () => {
   return <Blogs />;
 };
 
-export default Blog;
+export default BlogsPage;
