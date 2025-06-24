@@ -1,62 +1,58 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import ajaxCall from "@/helpers/ajaxCall";
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Arjun Patel",
-    program: "Computer Science, MIT",
-    outcome: "Software Engineer at Google",
-    image: "AP",
-    rating: 5,
-    text: "Coming from a middle-class family in Ahmedabad, studying at MIT seemed impossible. OEC India not only helped me secure admission but also guided me through a $50,000 scholarship application. Their essay coaching was phenomenal - they helped me articulate my passion for AI in a way that resonated with admissions committees.",
-    results:
-      "Secured $50,000 scholarship at MIT, Google job with ₹2.5 Cr package, 1500% ROI on education investment",
-  },
-  {
-    id: 2,
-    name: "Priya Sharma",
-    program: "MBA, London Business School",
-    outcome: "Management Consultant at McKinsey",
-    image: "PS",
-    rating: 5,
-    text: "As a working professional with 4 years of experience, I needed expert guidance to transition from engineering to business. OEC India's team helped me identify the perfect MBA programs that aligned with my consulting aspirations. Their interview coaching was exceptional.",
-    results:
-      "40% scholarship at London Business School, McKinsey offer, 300% salary increase post-MBA",
-  },
-  {
-    id: 3,
-    name: "Rajesh Kumar",
-    program: "Engineering, University of Toronto",
-    outcome: "Canadian Permanent Resident",
-    image: "RK",
-    rating: 5,
-    text: "Being from a small town in Rajasthan, I had limited exposure to international education opportunities. OEC India's counselors patiently explained every step of the Canadian education system and immigration process.",
-    results:
-      "Full scholarship at University of Toronto, Canadian PR in 2 years, successful tech career",
-  },
-  {
-    id: 4,
-    name: "Sneha Krishnan",
-    program: "Medicine, University of Melbourne",
-    outcome: "Practicing Physician in Australia",
-    image: "SK",
-    rating: 5,
-    text: "My dream was to become a doctor, but the competition in India was intense. OEC India opened my eyes to opportunities in Australia, where the medical education system is excellent and there's a clear pathway to practice.",
-    results:
-      "Admission to University of Melbourne Medicine, successful medical practice in Australia",
-  },
-];
-
 const Testimonials = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall("/testimonials/testimonials/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          const formattedData = response.data.results.map((item) => ({
+            id: item.id,
+            name: item.name,
+            program: item.designation,
+            outcome: item.company,
+            image: item.name
+              .split(" ")
+              .map((n) => n[0])
+              .join(""),
+            rating: item.rating,
+            text: item.content,
+            results:
+              "OEC India's guidance was crucial for my success story, leading to outstanding academic and career achievements.",
+          }));
+          setTestimonials(formattedData);
+        } else {
+          setTestimonials([]);
+        }
+      } catch (error) {
+        console.log("Error fetching testimonials:", error);
+        setTestimonials([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
 
   const nextTestimonial = () => {
+    if (testimonials.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
+    if (testimonials.length === 0) return;
     setCurrentIndex(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
@@ -82,101 +78,159 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="relative">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-800">
-              <div className="p-8 md:p-10">
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
-                  <div className="flex-shrink-0 w-full lg:w-1/3">
-                    <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
-                      <div
-                        className="w-32 h-32 bg-gradient-to-r from-secondary-600 to-secondary-400 rounded-full flex items-center justify-center text-3xl font-bold text-white"
-                        aria-hidden="true"
-                      >
-                        {currentTestimonial.image}
-                      </div>
-                      <div className="text-center lg:text-left">
-                        <h3 className="text-2xl font-semibold mb-1 text-primary-900">
-                          {currentTestimonial.name}
-                        </h3>
-                        <p className="text-primary-700 mb-2">
-                          {currentTestimonial.program}
-                        </p>
-                        <p className="text-sm text-primary-700 mb-4">
-                          {currentTestimonial.outcome}
-                        </p>
-                        <div
-                          className="flex justify-center lg:justify-start space-x-1 mb-4"
-                          aria-label={`Rating: ${currentTestimonial.rating} out of 5 stars`}
-                        >
-                          {[...Array(currentTestimonial.rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-6 w-6 text-yellow-400 fill-current"
-                              aria-hidden="true"
-                            />
-                          ))}
+        {isLoading ? (
+          <div className="relative animate-pulse">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
+                <div className="p-8 md:p-10">
+                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    <div className="flex-shrink-0 w-full lg:w-1/3">
+                      <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
+                        <div className="w-32 h-32 bg-gray-200 rounded-full"></div>
+                        <div className="text-center lg:text-left w-full">
+                          <div className="h-7 bg-gray-200 rounded w-1/2 mx-auto lg:mx-0 mb-2"></div>
+                          <div className="h-5 bg-gray-200 rounded w-3/4 mx-auto lg:mx-0 mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto lg:mx-0 mb-4"></div>
+                          <div className="flex justify-center lg:justify-start space-x-1 mb-4">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="h-6 w-6 bg-gray-200 rounded-full"
+                              ></div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="flex-1 lg:border-l lg:border-primary-800 lg:pl-8">
-                    <div className="relative">
-                      <Quote
-                        className="h-10 w-10 text-primary-800 mb-4 opacity-20"
-                        aria-hidden="true"
-                      />
-                      <blockquote className="text-lg leading-relaxed mb-6 text-gray-700 pl-8 -mt-8">
-                        "{currentTestimonial.text}"
-                      </blockquote>
-                    </div>
-
-                    <div className="bg-primary-50 border border-primary-800 rounded-xl p-5">
-                      <h4 className="font-semibold text-primary-800 mb-2">
-                        Outstanding Results:
-                      </h4>
-                      <p className="text-primary-700">
-                        {currentTestimonial.results}
-                      </p>
+                    <div className="flex-1 lg:border-l lg:border-gray-200 lg:pl-8 w-full">
+                      <div className="h-10 w-10 bg-gray-200 rounded-lg mb-4"></div>
+                      <div className="space-y-2 pl-8 -mt-8">
+                        <div className="h-5 bg-gray-200 rounded w-full"></div>
+                        <div className="h-5 bg-gray-200 rounded w-full"></div>
+                        <div className="h-5 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                      <div className="bg-gray-100 rounded-xl p-5 mt-6">
+                        <div className="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
+                        <div className="h-4 bg-gray-200 rounded w-full"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        ) : !currentTestimonial ? (
+          <div className="text-center text-gray-600">
+            No testimonials available at the moment.
+          </div>
+        ) : (
+          <div className="relative">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-800">
+                <div className="p-8 md:p-10">
+                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    <div className="flex-shrink-0 w-full lg:w-1/3">
+                      <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
+                        <div
+                          className="w-32 h-32 bg-secondary-500 rounded-full flex items-center justify-center text-3xl font-bold text-white"
+                          aria-hidden="true"
+                        >
+                          {currentTestimonial.image}
+                        </div>
+                        <div className="text-center lg:text-left">
+                          <h3 className="text-2xl font-semibold mb-1 text-primary-900">
+                            {currentTestimonial.name}
+                          </h3>
+                          <p className="text-primary-700 mb-2">
+                            {currentTestimonial.program}
+                          </p>
+                          <p className="text-sm text-primary-700 mb-4">
+                            {currentTestimonial.outcome}
+                          </p>
+                          <div
+                            className="flex justify-center lg:justify-start space-x-1 mb-4"
+                            aria-label={`Rating: ${currentTestimonial.rating} out of 5 stars`}
+                          >
+                            {[...Array(currentTestimonial.rating)].map(
+                              (_, i) => (
+                                <Star
+                                  key={i}
+                                  className="h-6 w-6 text-yellow-400 fill-current"
+                                  aria-hidden="true"
+                                />
+                              )
+                            )}
+                            {[...Array(5 - currentTestimonial.rating)].map(
+                              (_, i) => (
+                                <Star
+                                  key={i}
+                                  className="h-6 w-6 text-gray-300"
+                                />
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-          <div className="flex justify-center items-center mt-10 space-x-6">
-            <button
-              onClick={prevTestimonial}
-              className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
+                    <div className="flex-1 lg:border-l lg:border-primary-800 lg:pl-8">
+                      <div className="relative">
+                        <Quote
+                          className="h-10 w-10 text-primary-800 mb-4 opacity-20"
+                          aria-hidden="true"
+                        />
+                        <blockquote className="text-lg leading-relaxed mb-6 text-gray-700 pl-8 -mt-8">
+                          "{currentTestimonial.text}"
+                        </blockquote>
+                      </div>
 
-            <div className="flex space-x-3">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
-                    index === currentIndex ? "bg-secondary-500" : "bg-secondary-300"
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
+                      <div className="bg-primary-50 border border-primary-800 rounded-xl p-5">
+                        <p className="text-primary-700">
+                          {currentTestimonial.results}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <button
-              onClick={nextTestimonial}
-              className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+            <div className="flex justify-center items-center mt-10 space-x-6">
+              <button
+                onClick={prevTestimonial}
+                className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50"
+                aria-label="Previous testimonial"
+                disabled={testimonials.length < 2}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              <div className="flex space-x-3">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
+                      index === currentIndex
+                        ? "bg-secondary-500 scale-125"
+                        : "bg-secondary-300"
+                    }`}
+                    aria-label={`Go to testimonial ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={nextTestimonial}
+                className="p-3 bg-white border border-primary-800 rounded-full text-secondary-500 hover:bg-primary-50 transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50"
+                aria-label="Next testimonial"
+                disabled={testimonials.length < 2}
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

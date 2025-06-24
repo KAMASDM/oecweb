@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import ajaxCall from "@/helpers/ajaxCall";
 import {
   ChevronDown,
   Menu,
@@ -10,17 +12,36 @@ import {
   BookOpen,
   Calendar,
 } from "lucide-react";
-import Link from "next/link";
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isExploreOpen, setIsExploreOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState(0);
-  const exploreDropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const exploreDropdownRef = useRef(null);
+  const [countries, setCountries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Handle scroll effect
+  const handleExploreOpen = async () => {
+    if (countries.length === 0 && !isLoading) {
+      try {
+        setIsLoading(true);
+        const response = await ajaxCall("/academics/academics/countries/", {
+          method: "GET",
+        });
+        if (response?.data?.results?.length > 0) {
+          setCountries(response.data.results);
+        }
+      } catch (error) {
+        console.error("Failed to fetch countries:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    setIsExploreOpen(true);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -52,84 +73,87 @@ const Header = () => {
     };
   }, [isMobileMenuOpen]);
 
-  // Data
   const exploreCards = [
     {
       title: "Explore",
       subtitle: "universities & colleges abroad",
-      bgColor: "bg-gradient-to-br from-secondary-400 to-secondary-500",
+      bgColor: "bg-secondary-500",
       href: "/universities",
       icon: GraduationCap,
     },
     {
       title: "Blogs",
       subtitle: "Study abroad articles & more",
-      bgColor: "bg-gradient-to-br from-gray-400 to-gray-500",
+      bgColor: "bg-gray-500",
       href: "/blogs",
       icon: BookOpen,
     },
     {
       title: "Events",
       subtitle: "Fairs, webinars & meetups",
-      bgColor: "bg-gradient-to-br from-primary-400 to-primary-500",
+      bgColor: "bg-primary-700",
       href: "/events",
       icon: Calendar,
     },
   ];
 
-  const menuSections = [
-    {
-      title: "Top Universities",
-      subtitle: "Search colleges & universities by country",
-      items: [
-        { name: "United States", href: "/universities/united-states" },
-        { name: "Canada", href: "/universities/canada" },
-        { name: "United Kingdom", href: "/universities/united-kingdom" },
-        { name: "Germany", href: "/universities/germany" },
-        { name: "Australia", href: "/universities/australia" },
-        { name: "Explore All", href: "/universities" },
-      ],
-    },
-    {
-      title: "Country Guides",
-      subtitle: "What, where, why of education across countries",
-      items: [
-        { name: "United States", href: "/country-guides/united-states" },
-        { name: "Canada", href: "/country-guides/canada" },
-        { name: "United Kingdom", href: "/country-guides/united-kingdom" },
-        { name: "Germany", href: "/country-guides/germany" },
-        { name: "Australia", href: "/country-guides/australia" },
-        { name: "Explore All", href: "/country-guides" },
-      ],
-    },
-    {
-      title: "Popular Courses",
-      subtitle: "Course details, structure, pre-reqs & more...",
-      items: [
-        { name: "Computer Science", href: "/popular-courses/computer-science" },
-        { name: "MBA", href: "/popular-courses/mba" },
-        {
-          name: "Data Science",
-          href: "/popular-courses/data-science",
-        },
-        {
-          name: "Engineering",
-          href: "/popular-courses/engineering",
-        },
-        {
-          name: "Business",
-          href: "/popular-courses/business",
-        },
-        { name: "Explore All", href: "/popular-courses" },
-      ],
-    },
-    {
-      title: "University Deadlines",
-      subtitle: "Know all about application deadlines",
-      href: "/university-deadlines",
-      isDeadlines: true,
-    },
-  ];
+  const getMenuSections = () => {
+    const topCountries = countries.filter((c) => c.university_count > 0);
+
+    return [
+      {
+        title: "Top Universities",
+        subtitle: "Search colleges & universities by country",
+        items:
+          topCountries.length > 0
+            ? [
+                ...topCountries.map((country) => ({
+                  name: country.name,
+                  href: `/universities/${country.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`,
+                })),
+                { name: "Explore All", href: "/universities" },
+              ]
+            : [{ name: "Loading...", href: "#" }],
+        isLoading: topCountries.length === 0,
+      },
+      {
+        title: "Country Guides",
+        subtitle: "What, where, why of education across countries",
+        items:
+          topCountries.length > 0
+            ? [
+                ...topCountries.map((country) => ({
+                  name: country.name,
+                  href: `/country-guides/${country.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`,
+                })),
+                { name: "Explore All", href: "/country-guides" },
+              ]
+            : [{ name: "Loading...", href: "#" }],
+        isLoading: topCountries.length === 0,
+      },
+      {
+        title: "Popular Courses",
+        subtitle: "Course details, structure, pre-reqs & more...",
+        items: [
+          {
+            name: "Computer Science",
+            href: "/popular-courses/computer-science",
+          },
+          { name: "MBA", href: "/popular-courses/mba" },
+          { name: "Data Science", href: "/popular-courses/data-science" },
+          { name: "Engineering", href: "/popular-courses/engineering" },
+          { name: "Business", href: "/popular-courses/business" },
+          { name: "Explore All", href: "/popular-courses" },
+        ],
+      },
+    ];
+  };
+
+  const menuSections = getMenuSections();
 
   const navigationItems = [
     { name: "Services", href: "/services" },
@@ -195,7 +219,7 @@ const Header = () => {
                   {item.hasDropdown ? (
                     <>
                       <button
-                        onClick={() => setIsExploreOpen(!isExploreOpen)}
+                        onClick={handleExploreOpen}
                         className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2"
                       >
                         {item.name}
@@ -262,46 +286,41 @@ const Header = () => {
                               </div>
 
                               <div className="w-full md:w-1/2 p-4 md:p-6">
-                                {menuSections[activeSection].isDeadlines ? (
-                                  <div className="h-full flex flex-col justify-center">
-                                    <div className="text-center p-4">
-                                      <p className="text-gray-600 text-sm md:text-base mb-4">
-                                        View all university application
-                                        deadlines
-                                      </p>
-                                      <Link
-                                        href={menuSections[activeSection].href}
-                                        onClick={() => setIsExploreOpen(false)}
-                                        className="inline-block px-4 py-2 bg-primary-800 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm md:text-base"
-                                      >
-                                        View Deadlines
-                                      </Link>
+                                <div className="space-y-3">
+                                  <h3 className="font-semibold text-gray-800 text-base md:text-lg">
+                                    {menuSections[activeSection].title}
+                                  </h3>
+                                  {isLoading ? (
+                                    <div className="space-y-2">
+                                      {[...Array(5)].map((_, i) => (
+                                        <div
+                                          key={i}
+                                          className="h-10 bg-gray-100 rounded-lg animate-pulse"
+                                        ></div>
+                                      ))}
                                     </div>
-                                  </div>
-                                ) : (
-                                  <div className="space-y-3">
-                                    <h3 className="font-semibold text-gray-800 text-base md:text-lg">
-                                      {menuSections[activeSection].title}
-                                    </h3>
-                                    <ul className="space-y-2">
-                                      {menuSections[activeSection].items?.map(
-                                        (item, itemIndex) => (
-                                          <li key={itemIndex}>
-                                            <Link
-                                              href={item.href}
-                                              onClick={() =>
-                                                setIsExploreOpen(false)
-                                              }
-                                              className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
-                                            >
-                                              {item.name}
-                                            </Link>
-                                          </li>
-                                        )
-                                      )}
-                                    </ul>
-                                  </div>
-                                )}
+                                  ) : (
+                                    <div className="max-h-[300px] overflow-y-auto scrollable-menu pr-2">
+                                      <ul className="space-y-2">
+                                        {menuSections[activeSection].items?.map(
+                                          (item, itemIndex) => (
+                                            <li key={itemIndex}>
+                                              <Link
+                                                href={item.href}
+                                                onClick={() =>
+                                                  setIsExploreOpen(false)
+                                                }
+                                                className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
+                                              >
+                                                {item.name}
+                                              </Link>
+                                            </li>
+                                          )
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -347,7 +366,7 @@ const Header = () => {
                 {item.hasDropdown ? (
                   <div className="py-3">
                     <button
-                      onClick={() => setIsExploreOpen(!isExploreOpen)}
+                      onClick={handleExploreOpen}
                       className="flex items-center justify-between w-full text-gray-700 font-medium"
                     >
                       <span>{item.name}</span>
@@ -385,6 +404,32 @@ const Header = () => {
                             </Link>
                           ))}
                         </div>
+                        {isLoading ? (
+                          <div className="space-y-2">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="h-10 bg-gray-100 rounded-lg animate-pulse"
+                              ></div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="max-h-[300px] overflow-y-auto scrollable-menu">
+                            <ul className="space-y-2">
+                              {menuSections[0].items?.map((item, itemIndex) => (
+                                <li key={itemIndex}>
+                                  <Link
+                                    href={item.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block px-3 py-2 text-sm rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

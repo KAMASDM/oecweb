@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import ajaxCall from "@/helpers/ajaxCall";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Grid,
   List,
@@ -7,178 +10,300 @@ import {
   ChevronDown,
   Star,
   MapPin,
-  BookOpen,
-  GraduationCap,
+  ChevronLeft,
+  ChevronRight,
   Globe,
-  Calendar,
   Users,
+  Building,
   Award,
-  CircleDollarSign,
-  Clock,
-  Percent,
+  Calendar,
+  PoundSterling,
+  Mail,
+  Phone,
+  ExternalLink,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import OpenAI from "openai";
 
-const Universities = ({ country, course }) => {
+const Universities = ({ country }) => {
   const [viewMode, setViewMode] = useState("grid");
+  const [countries, setCountries] = useState([]);
   const [universities, setUniversities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    degree: "bachelor",
-    country: country ? country : "united-states",
-    course: course ? course : "computer-science",
-    type: "public",
-    rank: "top50",
+    country: country ? country : "all",
+    type: "all",
   });
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUniversities, setTotalUniversities] = useState(0);
+  const universitiesPerPage = 6;
 
-  const getUniversityLogo = (name) => {
-    const initials = name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-    return `https://placehold.co/100x100/2563eb/white?text=${initials}`;
-  };
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall("/academics/academics/universities/", {
+          method: "GET",
+        });
 
-  const fetchUniversities = async () => {
-    setIsLoading(true);
-    setError(null);
-    setUniversities([]);
-
-    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-      setError("OpenAI API key not configured.");
-      setIsLoading(false);
-      return;
-    }
-
-    const openai = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-      dangerouslyAllowBrowser: true,
-    });
-
-    const prompt = `
-      You are an expert university database assistant. Generate a list of 6 fictional but realistic universities based on:
-      - Degree Level: ${filters.degree}
-      - Country: ${filters.country}
-      - Course: ${filters.course}
-      - Type: ${filters.type}
-      - Rank: ${filters.rank}
-
-      Return valid JSON like:
-      {
-        "universities": [
-          {
-            "id": "unique-id",
-            "name": "University Name",
-            "country": "Country",
-            "city": "City",
-            "description": "20-25 word reason to choose this university.",
-            "rank": "Top 50",
-            "type": "Public",
-            "tuition": "$25,000 - $35,000",
-            "courseDuration": "4 years",
-            "intake": "Fall, Spring",
-            "scholarship": "Up to 30%",
-            "acceptanceRate": "35%",
-            "studentPopulation": "15,000",
-            "facultyCount": "1,200",
-            "campusSize": "200 acres",
-            "established": "1890",
-            "accreditation": "Nationally Accredited",
-            "popularCourses": ["Computer Science", "Engineering", "Business"],
-            "facilities": ["Library", "Sports Complex", "Research Labs"],
-            "rankingSources": ["QS World Rankings", "Times Higher Education"]
-          }
-        ]
+        if (response?.data?.results?.length > 0) {
+          setUniversities(response.data.results);
+        } else {
+          setUniversities([]);
+        }
+      } catch (error) {
+        console.log("Error fetching universities:", error);
+      } finally {
+        setIsLoading(false);
       }
-    `;
+    };
 
-    try {
-      const res = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-      });
+    fetchUniversities();
+  }, []);
 
-      const json = JSON.parse(res.choices[0].message.content);
-      const universitiesWithLogos = Array.isArray(json.universities)
-        ? json.universities.map((uni) => ({
-            ...uni,
-            logo: getUniversityLogo(uni.name),
-          }))
-        : [];
-      setUniversities(universitiesWithLogos);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setError("Unable to fetch university data. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await ajaxCall("/academics/academics/countries/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setCountries(response.data.results);
+        } else {
+          setCountries([]);
+        }
+      } catch (error) {
+        console.log("Error fetching countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const filteredUniversities = React.useMemo(() => {
+    return universities.filter((u) => {
+      const matchesSearch =
+        u.name.toLowerCase().includes(search.toLowerCase()) ||
+        u.country_name?.toLowerCase()?.includes(search.toLowerCase()) ||
+        u.city?.toLowerCase()?.includes(search.toLowerCase());
+
+      const matchesCountry =
+        filters.country === "all" ||
+        u.country_name?.toLowerCase() === filters.country.toLowerCase();
+
+      const matchesType =
+        filters.type === "all" ||
+        u.university_type?.toLowerCase() === filters.type.toLowerCase();
+
+      return matchesSearch && matchesCountry && matchesType;
+    });
+  }, [universities, search, filters]);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUniversities();
-    }, 500);
+    setTotalPages(Math.ceil(filteredUniversities.length / universitiesPerPage));
+    setTotalUniversities(filteredUniversities.length);
+    setCurrentPage(1);
+  }, [filteredUniversities.length, search, filters]);
 
-    return () => clearTimeout(timer);
-  }, [filters]);
-
-  const filteredUniversities = universities.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.course?.toLowerCase()?.includes(search.toLowerCase()) ||
-      u.popularCourses?.some((course) =>
-        course.toLowerCase().includes(search.toLowerCase())
-      )
+  const indexOfLastUniversity = currentPage * universitiesPerPage;
+  const indexOfFirstUniversity = indexOfLastUniversity - universitiesPerPage;
+  const currentUniversities = filteredUniversities.slice(
+    indexOfFirstUniversity,
+    indexOfLastUniversity
   );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
   };
 
-  const skeletonCards = Array.from({ length: 6 }).map((_, i) => (
+  const LogoFallback = ({ name, className }) => (
     <div
-      key={`skel-${i}`}
-      className={`bg-white rounded-xl shadow-sm overflow-hidden ${
-        viewMode === "list"
-          ? "flex flex-col md:flex-row w-full"
-          : "flex flex-col"
-      }`}
+      className={`flex items-center justify-center bg-primary-700 text-white font-bold ${className}`}
     >
-      <div className="p-6 w-full">
-        <div className="animate-pulse flex flex-col h-full">
-          <div className="flex items-center mb-4">
-            <div className="h-12 w-12 rounded-full bg-gray-200 mr-3"></div>
-            <div>
-              <div className="h-5 bg-gray-200 rounded w-48 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-32"></div>
+      {name ? name.charAt(0) : "U"}
+    </div>
+  );
+
+  const formatTuitionFee = (min, max) => {
+    if (!min && !max) return "N/A";
+    if (min && max) return `£${min} - £${max}`;
+    return min ? `From £${min}` : `Up to £${max}`;
+  };
+
+  const formatEstablishedYear = (year) => {
+    if (!year) return "";
+    const currentYear = new Date().getFullYear();
+    const yearsOld = currentYear - year;
+    return `Est. ${year} • ${yearsOld}+ years`;
+  };
+
+  const skeletonCards = Array.from({ length: universitiesPerPage }).map(
+    (_, i) => (
+      <div
+        key={`skel-${i}`}
+        className={`bg-white rounded-xl shadow-md overflow-hidden flex flex-col ${
+          viewMode === "list" ? "md:flex-row" : ""
+        }`}
+      >
+        {viewMode === "grid" ? (
+          <>
+            <div className="h-40 w-full bg-gray-200 animate-pulse"></div>
+            <div className="p-6 pt-14 text-center relative">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mb-2 animate-pulse"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mb-4 animate-pulse"></div>
+              <div className="h-10 bg-gray-300 rounded w-full mx-auto animate-pulse"></div>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col md:flex-row items-center w-full">
+            <div className="w-full md:w-1/3 h-48 md:h-full bg-gray-200 animate-pulse flex-shrink-0"></div>
+            <div className="p-6 w-full animate-pulse">
+              <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+              <div className="flex gap-4">
+                <div className="h-5 bg-gray-300 rounded w-1/3"></div>
+                <div className="h-5 bg-gray-300 rounded w-1/3"></div>
+              </div>
             </div>
           </div>
-          <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-5/6 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
-          <div className="flex flex-wrap gap-2 mb-6">
-            <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-            <div className="h-6 bg-gray-200 rounded-full w-20"></div>
-            <div className="h-6 bg-gray-200 rounded-full w-24"></div>
-          </div>
-          <div className="flex justify-between items-center mt-auto">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-10 bg-gray-200 rounded-full w-1/4"></div>
-          </div>
+        )}
+      </div>
+    )
+  );
+
+  const PaginationControls = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+        <div className="text-sm text-gray-600">
+          Showing {totalUniversities > 0 ? indexOfFirstUniversity + 1 : 0} to{" "}
+          {Math.min(indexOfLastUniversity, totalUniversities)} of{" "}
+          {totalUniversities} universities
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className={`p-2 rounded-lg ${
+              currentPage === 1
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="h-5 w-5 text-secondary-500" />
+          </button>
+
+          {startPage > 1 && (
+            <>
+              <button
+                onClick={() => paginate(1)}
+                className={`px-3 py-1 rounded-lg ${
+                  1 === currentPage
+                    ? "bg-secondary-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                1
+              </button>
+              {startPage > 2 && <span className="px-2">...</span>}
+            </>
+          )}
+
+          {pageNumbers.map((number) => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 rounded-lg ${
+                number === currentPage
+                  ? "bg-secondary-500 text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+
+          {endPage < totalPages && (
+            <>
+              {endPage < totalPages - 1 && <span className="px-2">...</span>}
+              <button
+                onClick={() => paginate(totalPages)}
+                className={`px-3 py-1 rounded-lg ${
+                  totalPages === currentPage
+                    ? "bg-secondary-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className={`p-2 rounded-lg ${
+              currentPage === totalPages || totalPages === 0
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            aria-label="Next page"
+          >
+            <ChevronRight className="h-5 w-5 text-secondary-500" />
+          </button>
         </div>
       </div>
+    );
+  };
+
+  const UniversityLogo = ({ uni, isList }) => (
+    <div
+      className={`${
+        isList ? "w-16 h-16" : "w-20 h-20"
+      } bg-white rounded-full p-1 shadow-md border-2 border-primary-800`}
+    >
+      {uni.logo ? (
+        <img
+          src={uni.logo}
+          alt={`${uni.name} logo`}
+          className="w-full h-full object-contain rounded-full"
+        />
+      ) : (
+        <LogoFallback
+          name={uni.name}
+          className={`w-full h-full rounded-full ${
+            isList ? "text-2xl" : "text-3xl"
+          }`}
+        />
+      )}
     </div>
-  ));
+  );
 
   return (
     <div className="bg-gray-100">
@@ -188,15 +313,14 @@ const Universities = ({ country, course }) => {
             Best Colleges & Universities to Study Abroad
           </h1>
           <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
-            All you need to know about university fees, courses, deadlines,
-            scholarships and more.
+            All you need to know about universities worldwide
           </p>
           <div className="mt-8 max-w-2xl mx-auto">
             <div className="relative">
               <Search className="absolute left-4 top-3.5 h-5 w-5 text-secondary-500" />
               <input
                 type="search"
-                placeholder="Search universities, courses, or locations..."
+                placeholder="Search universities, countries, or cities..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="block w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
@@ -209,83 +333,57 @@ const Universities = ({ country, course }) => {
       <main className="py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-            <div className="flex flex-wrap gap-3 w-full">
-              {[
-                {
-                  name: "degree",
-                  options: ["bachelor", "master", "phd"],
-                  icon: <GraduationCap className="h-4 w-4 mr-2" />,
-                },
-                {
-                  name: "country",
-                  options: [
-                    "united-states",
-                    "canada",
-                    "united-kingdom",
-                    "germany",
-                    "australia",
-                  ],
-                  icon: <Globe className="h-4 w-4 mr-2" />,
-                },
-                {
-                  name: "course",
-                  options: [
-                    "computer-science",
-                    "mba",
-                    "data-science",
-                    "engineering",
-                    "business",
-                    "medicine",
-                    "architecture",
-                  ],
-                  icon: <BookOpen className="h-4 w-4 mr-2" />,
-                },
-                {
-                  name: "type",
-                  options: ["public", "private", "community"],
-                  icon: <Users className="h-4 w-4 mr-2" />,
-                },
-                {
-                  name: "rank",
-                  options: ["top30", "top50", "top100", "top200"],
-                  icon: <Star className="h-4 w-4 mr-2" />,
-                },
-              ].map(({ name, options, icon }) => (
-                <div key={name} className="relative flex-1 min-w-[150px]">
-                  <div className="flex items-center text-sm text-secondary-500 mb-1 ml-1">
-                    {icon}
-                    <span className="text-primary-800">
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
-                    </span>
-                  </div>
-                  <select
-                    name={name}
-                    value={filters[name]}
-                    onChange={handleFilterChange}
-                    className="appearance-none w-full pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
-                  >
-                    {options.map((o) => (
-                      <option key={o} value={o}>
-                        {o
-                          .replace(/-/g, " ")
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 bottom-2.5 h-4 w-4 text-gray-500 pointer-events-none" />
+            <div className="flex flex-wrap gap-4 w-full">
+              <div className="relative flex-1 min-w-[180px]">
+                <div className="flex items-center text-sm text-secondary-500 mb-1 ml-1">
+                  <Globe className="h-4 w-4 mr-2" />
+                  <span className="text-primary-800 font-medium">Country</span>
                 </div>
-              ))}
+                <select
+                  name="country"
+                  value={filters.country}
+                  onChange={handleFilterChange}
+                  className="appearance-none w-full pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
+                >
+                  <option value="all">All Countries</option>
+                  {countries.map((country) => (
+                    <option key={country.id} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 bottom-2.5 h-4 w-4 text-gray-500 pointer-events-none" />
+              </div>
+
+              <div className="relative flex-1 min-w-[180px]">
+                <div className="flex items-center text-sm text-secondary-500 mb-1 ml-1">
+                  <Users className="h-4 w-4 mr-2" />
+                  <span className="text-primary-800 font-medium">Type</span>
+                </div>
+                <select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  className="appearance-none w-full pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
+                >
+                  <option value="all">All Types</option>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                  <option value="government">Goverment</option>
+                </select>
+                <ChevronDown className="absolute right-3 bottom-2.5 h-4 w-4 text-gray-500 pointer-events-none" />
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-6 p-1">
+            <div className="flex items-center gap-2 mt-6 p-1 bg-gray-200 rounded-lg">
               {["grid", "list"].map((mode) => (
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className={`p-2 rounded-lg flex items-center ${
+                  className={`p-2 rounded-md flex items-center transition-colors ${
                     viewMode === mode
                       ? "bg-white text-secondary-500 shadow-sm"
-                      : "text-gray-600 hover:bg-gray-200"
+                      : "text-gray-600 hover:bg-gray-300"
                   }`}
                   aria-label={`${mode} view`}
                 >
@@ -309,156 +407,311 @@ const Universities = ({ country, course }) => {
             <AnimatePresence>
               {isLoading ? (
                 skeletonCards
-              ) : error ? (
-                <div className="col-span-full text-center py-10">
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg max-w-2xl mx-auto">
-                    <h3 className="font-bold text-lg mb-1">
-                      Error Loading Data
-                    </h3>
-                    <p>{error}</p>
-                    <button
-                      onClick={fetchUniversities}
-                      className="mt-3 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                </div>
-              ) : filteredUniversities.length === 0 ? (
+              ) : currentUniversities.length === 0 ? (
                 <div className="col-span-full text-center py-16">
                   <div className="bg-primary-50 border border-primary-200 text-primary-800 px-4 py-3 rounded-lg max-w-2xl mx-auto">
                     <h3 className="font-bold text-lg mb-1">
                       No Universities Found
                     </h3>
-                    <p>Try adjusting your filters or search term</p>
+                    <p>Try adjusting your filters or search term.</p>
                   </div>
                 </div>
               ) : (
-                filteredUniversities.map((uni) => (
+                currentUniversities.map((uni) => (
                   <motion.div
                     key={uni.id}
+                    layout
                     variants={cardVariants}
                     initial="hidden"
                     animate="visible"
-                    exit="hidden"
-                    className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden ${
-                      viewMode === "list"
-                        ? "flex flex-col md:flex-row"
-                        : "flex flex-col"
-                    }`}
+                    exit="exit"
+                    whileHover={{
+                      y: -5,
+                      boxShadow:
+                        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                    }}
+                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full"
                   >
-                    <div className="p-6 w-full">
-                      <div className="flex items-start mb-4">
-                        <img
-                          src={uni.logo}
-                          alt={`${uni.name} logo`}
-                          className="h-12 w-12 rounded-full object-contain mr-4 border border-gray-200"
-                        />
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900">
-                            {uni.name}
+                    {viewMode === "grid" ? (
+                      <>
+                        <div className="relative">
+                          {uni.banner_image ? (
+                            <img
+                              src={uni.banner_image}
+                              alt={`${uni.name} banner`}
+                              className="h-40 w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-40 w-full bg-gradient-to-br from-primary-50 to-primary-100"></div>
+                          )}
+                          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+                            <UniversityLogo uni={uni} isList={false} />
+                          </div>
+                          {uni.is_featured && (
+                            <div className="absolute top-3 left-3 bg-primary-800 text-white text-xs font-bold px-2 py-1 rounded">
+                              <Award className="inline mr-1 h-3 w-3 text-secondary-500" />
+                              Featured
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-6 pt-14 text-center flex-grow flex flex-col">
+                          <h3 className="text-xl font-bold text-gray-900 mb-1">
+                            <Link
+                              href={`/university/${uni.slug}`}
+                              className="hover:text-primary-800 hover:underline"
+                            >
+                              {uni.name}
+                            </Link>
                           </h3>
-                          <div className="flex items-center text-sm text-gray-500 mt-1">
-                            <MapPin className="h-4 w-4 mr-1" />
+                          <div className="flex items-center justify-center text-sm text-gray-500 mb-2">
+                            <MapPin className="h-4 w-4 mr-1 text-secondary-500" />
                             <span>
-                              {uni.city}, {uni.country}
+                              {uni.city ? `${uni.city}, ` : ""}
+                              {uni.country_name}
+                              {uni.state ? `, ${uni.state}` : ""}
                             </span>
                           </div>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-700 mb-4">{uni.description}</p>
-
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                          <Star className="h-3 w-3 mr-1" /> {uni.rank}
-                        </span>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          <Users className="h-3 w-3 mr-1" /> {uni.type}
-                        </span>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          <Calendar className="h-3 w-3 mr-1" /> {uni.intake}
-                        </span>
-                        {uni.scholarship && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <Award className="h-3 w-3 mr-1" /> Scholarship:{" "}
-                            {uni.scholarship}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 text-sm mb-6">
-                        <div>
-                          <div className="text-gray-500 flex items-center">
-                            <CircleDollarSign className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Tuition
-                          </div>
-                          <div className="font-medium pl-6">
-                            {uni.tuition}/year
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-gray-500 flex items-center">
-                            <Clock className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Duration
-                          </div>
-                          <div className="font-medium pl-6">
-                            {uni.courseDuration}
-                          </div>
-                        </div>
-                        {uni.acceptanceRate && (
-                          <div>
-                            <div className="text-gray-500 flex items-center">
-                              <Percent className="h-4 w-4 mr-1.5 text-secondary-500" />
-                              Acceptance
-                            </div>
-                            <div className="font-medium pl-6">
-                              {uni.acceptanceRate}
-                            </div>
-                          </div>
-                        )}
-                        {uni.studentPopulation && (
-                          <div>
-                            <div className="text-gray-500 flex items-center">
-                              <Users className="h-4 w-4 mr-1.5 text-secondary-500" />
-                              Students
-                            </div>
-                            <div className="font-medium pl-6">
-                              {uni.studentPopulation}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {uni.popularCourses && (
-                        <div className="mb-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <BookOpen className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Popular Courses
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {uni.popularCourses.slice(0, 3).map((course, i) => (
-                              <span
-                                key={i}
-                                className="text-xs px-2 py-1 bg-white rounded-md border border-primary-800 text-primary-800"
-                              >
-                                {course}
+                          <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mb-3">
+                            <div className="inline-flex items-center bg-primary-50 text-primary-800 text-xs px-2 py-1 rounded">
+                              <Building className="h-3 w-3 mr-1 text-secondary-500" />
+                              <span className="capitalize">
+                                {uni.university_type}
                               </span>
-                            ))}
-                            {uni.popularCourses.length > 3 && (
-                              <span className="text-xs px-2 py-1 bg-gray-100 rounded-md text-gray-500">
-                                +{uni.popularCourses.length - 3} more
-                              </span>
+                            </div>
+                            {uni.established_year && (
+                              <div className="inline-flex items-center bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                                <Calendar className="h-3 w-3 mr-1 text-secondary-500" />
+                                <span>
+                                  {formatEstablishedYear(uni.established_year)}
+                                </span>
+                              </div>
                             )}
                           </div>
+
+                          {uni.description && (
+                            <p className="text-sm text-gray-600 line-clamp-2 mb-4 text-left">
+                              {uni.description.replace(/<[^>]+>/g, "")}
+                            </p>
+                          )}
+
+                          <div className="mt-auto pt-4 border-t border-gray-200">
+                            <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">
+                                  Tuition
+                                </p>
+                                <div className="flex items-center justify-center text-gray-700">
+                                  <PoundSterling className="h-4 w-4 mr-1 text-secondary-500" />
+                                  <span className="font-medium">
+                                    {formatTuitionFee(
+                                      uni.tuition_fee_min,
+                                      uni.tuition_fee_max
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">
+                                  Rank
+                                </p>
+                                <div className="flex items-center justify-center text-gray-700">
+                                  <Star className="h-4 w-4 mr-1 text-yellow-500" />
+                                  <span className="font-medium">
+                                    {uni.ranking_national
+                                      ? `#${uni.ranking_national} (National)`
+                                      : "N/A"}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-500">
+                                  {uni.ranking_global
+                                    ? `#${uni.ranking_global} (Global)`
+                                    : ""}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-center items-center space-x-4 mb-4">
+                              {uni.email && (
+                                <a
+                                  href={`mailto:${uni.email}`}
+                                  className="text-gray-500 hover:text-primary-800"
+                                  title="Email"
+                                >
+                                  <Mail className="h-5 w-5 text-secondary-500" />
+                                </a>
+                              )}
+                              {uni.phone && (
+                                <a
+                                  href={`tel:${uni.phone}`}
+                                  className="text-gray-500 hover:text-primary-800"
+                                  title="Phone"
+                                >
+                                  <Phone className="h-5 w-5 text-secondary-500" />
+                                </a>
+                              )}
+                            </div>
+
+                            <a
+                              href={uni.website_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-800 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                              Visit Website <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col md:flex-row items-stretch w-full h-full">
+                        <div className="w-full md:w-1/3 h-48 md:h-full relative flex-shrink-0">
+                          {uni.banner_image ? (
+                            <>
+                              <img
+                                src={uni.banner_image}
+                                alt={`${uni.name} banner`}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                <UniversityLogo uni={uni} isList={true} />
+                              </div>
+                            </>
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
+                              <UniversityLogo uni={uni} isList={true} />
+                            </div>
+                          )}
+                          {uni.is_featured && (
+                            <div className="absolute top-3 left-3 bg-primary-800 text-white text-xs font-bold px-2 py-1 rounded">
+                              <Award className="inline mr-1 h-3 w-3 text-secondary-500" />
+                              Featured
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-4 w-full flex-grow flex flex-col">
+                          <div className="flex-grow">
+                            <h3 className="text-xl font-bold text-gray-900 mb-1">
+                              <Link
+                                href={`/university/${uni.slug}`}
+                                className="hover:text-primary-800 hover:underline"
+                              >
+                                {uni.name}
+                              </Link>
+                            </h3>
+                            <div className="flex items-center text-sm text-gray-500 mb-2">
+                              <MapPin className="h-4 w-4 mr-1 text-secondary-500" />
+                              <span>
+                                {uni.city ? `${uni.city}, ` : ""}
+                                {uni.country_name}
+                                {uni.state ? `, ${uni.state}` : ""}
+                              </span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <div className="inline-flex items-center bg-primary-50 text-primary-800 text-xs px-2 py-1 rounded">
+                                <Building className="h-3 w-3 mr-1 text-secondary-500" />
+                                <span className="capitalize">
+                                  {uni.university_type}
+                                </span>
+                              </div>
+                              {uni.established_year && (
+                                <div className="inline-flex items-center bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                                  <Calendar className="h-3 w-3 mr-1 text-secondary-500" />
+                                  <span>
+                                    {formatEstablishedYear(
+                                      uni.established_year
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">
+                                  Tuition
+                                </p>
+                                <div className="flex items-center text-gray-700 text-sm">
+                                  <PoundSterling className="h-4 w-4 mr-1 text-secondary-500" />
+                                  <span className="font-medium">
+                                    {formatTuitionFee(
+                                      uni.tuition_fee_min,
+                                      uni.tuition_fee_max
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">
+                                  Rank
+                                </p>
+                                <div className="flex items-center text-gray-700 text-sm">
+                                  <Star className="h-4 w-4 mr-1 text-yellow-500" />
+                                  <span className="font-medium">
+                                    {uni.ranking_national > 0
+                                      ? `National #${uni.ranking_national}`
+                                      : "N/A"}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-500 pl-5">
+                                  {uni.ranking_global > 0
+                                    ? `Global #${uni.ranking_global}`
+                                    : ""}
+                                </p>
+                              </div>
+                            </div>
+
+                            {uni.description && (
+                              <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+                                {uni.description.replace(/<[^>]+>/g, "")}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap justify-between items-center pt-4 border-t border-gray-200 mt-auto">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-x-4 gap-y-2">
+                              {uni.email && (
+                                <a
+                                  href={`mailto:${uni.email}`}
+                                  className="flex items-center space-x-1 text-gray-500 hover:text-primary-800"
+                                  title="Email"
+                                >
+                                  <Mail className="h-4 w-4 text-secondary-500 flex-shrink-0" />
+                                  <span className="text-sm">{uni.email}</span>
+                                </a>
+                              )}
+                              {uni.phone && (
+                                <a
+                                  href={`tel:${uni.phone}`}
+                                  className="flex items-center space-x-1 text-gray-500 hover:text-primary-800"
+                                  title="Phone"
+                                >
+                                  <Phone className="h-4 w-4 text-secondary-500 flex-shrink-0" />
+                                  <span className="text-sm">{uni.phone}</span>
+                                </a>
+                              )}
+                            </div>
+                            <a
+                              href={uni.website_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-primary-600 hover:text-primary-800 text-sm font-medium mt-2 sm:mt-0 ml-auto"
+                            >
+                              Visit Website
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 ))
               )}
             </AnimatePresence>
           </div>
+          {!isLoading && filteredUniversities.length > 0 && (
+            <PaginationControls />
+          )}
         </div>
       </main>
     </div>
