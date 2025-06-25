@@ -15,162 +15,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-const eventCategories = [
-  { id: 1, name: "University Fairs", slug: "university-fairs" },
-  { id: 2, name: "Webinars", slug: "webinars" },
-  { id: 3, name: "Workshops", slug: "workshops" },
-  { id: 4, name: "Open Days", slug: "open-days" },
-  { id: 5, name: "Alumni Meetups", slug: "alumni-meetups" },
-];
-
-const allEvents = [
-  {
-    id: 1,
-    title: "Global University Fair 2025",
-    description:
-      "Meet representatives from 50+ top international universities including Harvard, Oxford, and ETH Zurich. Get exclusive application fee waivers and on-spot evaluations.",
-    organizer: "Global Education Network",
-    date: "2025-06-20",
-    time: "10:00 AM - 4:00 PM",
-    location: "Grand Hyatt, Mumbai",
-    category: "University Fairs",
-    featured: true,
-    slug: "global-university-fair-2025",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Students interacting with university representatives at a fair",
-    registrationLink: "#",
-    price: "Free",
-    tags: ["USA", "UK", "Europe", "On-Spot Evaluation"],
-    highlights: [
-      "One-on-one meetings with admissions officers",
-      "Scholarship information sessions",
-      "Visa guidance workshops",
-      "Free profile evaluation",
-    ],
-  },
-  {
-    id: 2,
-    title: "Study in Canada: Virtual Open Day",
-    description:
-      "Interactive virtual event with Canadian universities. Learn about programs, scholarships, and post-study work opportunities directly from institution representatives.",
-    organizer: "Canadian Education Bureau",
-    date: "2025-04-05",
-    time: "2:00 PM - 5:00 PM",
-    location: "Online",
-    category: "Webinars",
-    slug: "study-in-canada-virtual-open-day",
-    image:
-      "https://images.unsplash.com/photo-1573497491765-dccce02b29df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Virtual meeting with Canadian university representatives",
-    registrationLink: "#",
-    price: "Free",
-    tags: ["Canada", "Virtual", "Q&A Session"],
-    highlights: [
-      "Live Q&A with admissions staff",
-      "Breakout room sessions by university",
-      "Digital goodie bag for attendees",
-      "Recording available for registrants",
-    ],
-  },
-  {
-    id: 3,
-    title: "IELTS Masterclass Workshop",
-    description:
-      "Intensive 2-day workshop with British Council certified trainers. Learn proven strategies to boost your IELTS score by 1-2 bands.",
-    organizer: "British Council",
-    date: "2025-03-22",
-    time: "9:00 AM - 3:00 PM",
-    location: "British Council, Delhi",
-    category: "Workshops",
-    slug: "ielts-masterclass-workshop",
-    image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Students taking an English language test",
-    registrationLink: "#",
-    price: "₹2,500",
-    tags: ["IELTS", "Test Prep", "British Council"],
-    highlights: [
-      "Diagnostic test with personalized feedback",
-      "Speaking practice with native speakers",
-      "Writing evaluation by examiners",
-      "Free study materials",
-    ],
-  },
-  {
-    id: 4,
-    title: "US Visa Success Seminar",
-    description:
-      "Former visa officers share insider tips for F-1 visa interviews. Includes mock interviews with personalized feedback.",
-    organizer: "Visa Success Consultants",
-    date: "2025-04-10",
-    time: "11:00 AM - 1:00 PM",
-    location: "Taj Lands End, Bangalore",
-    category: "Workshops",
-    slug: "us-visa-success-seminar",
-    image:
-      "https://images.unsplash.com/photo-1573497491765-dccce02b29df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Passport with US visa stamp",
-    registrationLink: "#",
-    price: "₹1,500 (Early Bird)",
-    tags: ["USA", "Visa", "Interview Preparation"],
-    highlights: [
-      "Mock interviews recorded and analyzed",
-      "Document checklist review",
-      "Common refusal reasons explained",
-      "Q&A with former consular officers",
-    ],
-  },
-  {
-    id: 5,
-    title: "UK Alumni Success Stories",
-    description:
-      "Hear from recent graduates about their study experience in the UK and how it helped their careers. Networking reception included.",
-    organizer: "UK Alumni Association",
-    date: "2025-05-08",
-    time: "6:00 PM - 8:30 PM",
-    location: "The Oberoi, Chennai",
-    category: "Alumni Meetups",
-    slug: "uk-alumni-success-stories",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Group of diverse graduates throwing caps",
-    registrationLink: "#",
-    price: "Free (Registration Required)",
-    tags: ["UK", "Alumni", "Networking"],
-    highlights: [
-      "Panel discussion with alumni from various fields",
-      "Breakout sessions by industry",
-      "Networking cocktail hour",
-      "Exclusive scholarship information",
-    ],
-  },
-  {
-    id: 6,
-    title: "STEM Programs in Germany",
-    description:
-      "Discover cutting-edge STEM programs at German universities of applied sciences. Learn about tuition-free options and industry connections.",
-    organizer: "DAAD India",
-    date: "2025-04-18",
-    time: "3:00 PM - 5:00 PM",
-    location: "DAAD Office, New Delhi",
-    category: "Open Days",
-    slug: "stem-programs-in-germany",
-    image:
-      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-    imageAlt: "Modern science laboratory in a German university",
-    registrationLink: "#",
-    price: "Free",
-    tags: ["Germany", "STEM", "Engineering"],
-    highlights: [
-      "Presentation by German professors",
-      "Student visa guidance",
-      "German language course information",
-      "Industry partnership opportunities",
-    ],
-  },
-];
+import ajaxCall from "@/helpers/ajaxCall";
 
 const dateFilters = [
   { id: "all", name: "All Dates" },
@@ -179,28 +24,77 @@ const dateFilters = [
 ];
 
 const Events = () => {
-  const [viewMode, setViewMode] = useState("grid");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 6;
+  const [events, setEvents] = useState([]);
+  const [viewMode, setViewMode] = useState("grid");
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
   const [expandedEvent, setExpandedEvent] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall("/events/events/categories/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setCategories(response.data.results);
+        } else {
+          setCategories([]);
+        }
+      } catch (error) {
+        console.log("Error fetching categories:", error);
+        setCategories([]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall("/events/events/events/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setEvents(response.data.results);
+        } else {
+          setEvents([]);
+        }
+      } catch (error) {
+        console.log("Error fetching events:", error);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const filteredEvents = useMemo(() => {
     const today = moment().startOf("day");
-    return allEvents.filter((event) => {
+    return events.filter((event) => {
       const matchesSearch =
         searchQuery === "" ||
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      const matchesCategory =
-        selectedCategory === "all" || event.category === selectedCategory;
+        event.short_description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-      const eventDate = moment(event.date);
+      const matchesCategory =
+        selectedCategory === "all" || event.category_name === selectedCategory;
+
+      const eventDate = moment(event.start_date);
       const matchesDate =
         dateFilter === "all" ||
         (dateFilter === "upcoming" && eventDate.isSameOrAfter(today)) ||
@@ -208,7 +102,7 @@ const Events = () => {
 
       return matchesSearch && matchesCategory && matchesDate;
     });
-  }, [searchQuery, selectedCategory, dateFilter]);
+  }, [searchQuery, selectedCategory, dateFilter, events]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -230,6 +124,86 @@ const Events = () => {
   const toggleEventExpand = (id) => {
     setExpandedEvent(expandedEvent === id ? null : id);
   };
+
+  if (isLoading) {
+    return (
+      <div className="bg-gray-100">
+        <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-12 bg-gray-300 rounded w-1/2 mx-auto animate-pulse"></div>
+            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-4 animate-pulse"></div>
+          </div>
+        </div>
+
+        <main className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 space-y-6">
+              <div className="flex flex-wrap justify-center gap-2">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-10 bg-gray-200 rounded-full w-24 animate-pulse"
+                  ></div>
+                ))}
+              </div>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="h-10 bg-gray-200 rounded-full w-full md:w-64 animate-pulse"></div>
+                <div className="h-10 bg-gray-200 rounded-full w-24 animate-pulse"></div>
+              </div>
+            </div>
+
+            {viewMode === "grid" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[...Array(3)].map((_, i) => (
+                  <div className="flex flex-col h-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
+                    <div className="relative overflow-hidden h-48 bg-gray-200"></div>
+                    <div className="p-6 flex-grow flex flex-col space-y-4">
+                      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                      <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                      <div className="space-y-2 mt-4">
+                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {[...Array(3)].map((_, i) => (
+                  <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
+                    <div className="p-6">
+                      <div className="flex flex-col md:flex-row md:items-center gap-6">
+                        <div className="md:w-1/4">
+                          <div className="relative overflow-hidden rounded-lg h-40 bg-gray-200"></div>
+                        </div>
+                        <div className="md:w-3/4 space-y-4">
+                          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                          <div className="h-4 bg-gray-200 rounded w-full"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                          <div className="grid grid-cols-3 gap-4 mt-4">
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-100">
@@ -260,7 +234,7 @@ const Events = () => {
               >
                 All Events
               </button>
-              {eventCategories.map((category) => (
+              {categories.map((category) => (
                 <motion.button
                   key={category.id}
                   whileHover={{ scale: 1.05 }}
@@ -342,7 +316,7 @@ const Events = () => {
             </div>
           </div>
 
-          {currentEvents.length === 0 ? (
+          {filteredEvents.length === 0 ? (
             <div className="text-center py-16">
               <Ticket className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-lg font-medium text-gray-900">
@@ -381,13 +355,13 @@ const Events = () => {
                           aria-label={event.title}
                         >
                           <img
-                            src={event.image}
-                            alt={event.imageAlt}
+                            src={event.featured_image}
+                            alt={event.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                           <div className="absolute top-4 right-4 bg-white/90 text-primary-800 px-3 py-1 rounded-full text-xs font-bold">
-                            {event.price === "Free" ? "FREE" : "REGISTER"}
+                            FREE
                           </div>
                         </Link>
                       </div>
@@ -395,18 +369,8 @@ const Events = () => {
                       <div className="p-6 flex-grow flex flex-col">
                         <div className="flex justify-between items-start">
                           <span className="text-sm font-semibold text-secondary-500">
-                            {event.category}
+                            {event.category_name}
                           </span>
-                          <div className="flex flex-wrap gap-1">
-                            {event.tags.slice(0, 2).map((tag) => (
-                              <span
-                                key={tag}
-                                className="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-xs font-medium"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
                         </div>
 
                         <h3 className="mt-3 text-xl font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
@@ -421,15 +385,21 @@ const Events = () => {
                         <div className="mt-4 space-y-2">
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Calendar className="h-4 w-4 text-secondary-500" />
-                            {moment(event.date).format("MMMM D, YYYY")}
+                            {moment(event.start_date).format("MMMM D, YYYY")}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Clock className="h-4 w-4 text-secondary-500" />
-                            {event.time}
+                            {moment(event.start_time, "HH:mm:ss").format(
+                              "h:mm A"
+                            )}{" "}
+                            -{" "}
+                            {moment(event.end_time, "HH:mm:ss").format(
+                              "h:mm A"
+                            )}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <MapPin className="h-4 w-4 text-secondary-500" />
-                            {event.location}
+                            {event.venue_name || "Online"}
                           </div>
                         </div>
 
@@ -468,12 +438,12 @@ const Events = () => {
                           <div className="md:w-1/4">
                             <div className="relative overflow-hidden rounded-lg h-40">
                               <img
-                                src={event.image}
-                                alt={event.imageAlt}
+                                src={event.featured_image}
+                                alt={event.title}
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute top-2 right-2 bg-white/90 text-primary-800 px-2 py-1 rounded text-xs font-bold">
-                                {event.price === "Free" ? "FREE" : "REGISTER"}
+                                FREE
                               </div>
                             </div>
                           </div>
@@ -482,7 +452,7 @@ const Events = () => {
                             <div className="flex justify-between items-start">
                               <div>
                                 <span className="text-sm font-semibold text-secondary-500">
-                                  {event.category}
+                                  {event.category_name}
                                 </span>
                                 <h3 className="mt-1 text-xl font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
                                   <Link href={`/events/${event.slug}`}>
@@ -490,34 +460,32 @@ const Events = () => {
                                   </Link>
                                 </h3>
                               </div>
-                              <div className="flex flex-wrap gap-1">
-                                {event.tags.slice(0, 2).map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-xs font-medium"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
                             </div>
 
                             <p className="mt-2 text-gray-600 line-clamp-2">
-                              {event.description}
+                              {event.short_description}
                             </p>
 
                             <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                               <div className="flex items-center gap-2 text-gray-600">
                                 <Calendar className="h-4 w-4 text-secondary-500" />
-                                {moment(event.date).format("MMMM D, YYYY")}
+                                {moment(event.start_date).format(
+                                  "MMMM D, YYYY"
+                                )}
                               </div>
                               <div className="flex items-center gap-2 text-gray-600">
                                 <Clock className="h-4 w-4 text-secondary-500" />
-                                {event.time}
+                                {moment(event.start_time, "HH:mm:ss").format(
+                                  "h:mm A"
+                                )}{" "}
+                                -{" "}
+                                {moment(event.end_time, "HH:mm:ss").format(
+                                  "h:mm A"
+                                )}
                               </div>
                               <div className="flex items-center gap-2 text-gray-600">
                                 <MapPin className="h-4 w-4 text-secondary-500" />
-                                {event.location}
+                                {event.venue_name || "Online"}
                               </div>
                             </div>
 
@@ -569,23 +537,11 @@ const Events = () => {
                             className="mt-6 pt-6 border-t border-gray-200"
                           >
                             <h4 className="font-semibold text-gray-900 mb-3">
-                              Event Highlights
+                              Event Details
                             </h4>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                              {event.highlights.map((highlight, index) => (
-                                <li
-                                  key={index}
-                                  className="flex items-start gap-2"
-                                >
-                                  <span className="text-primary-600 mt-0.5">
-                                    •
-                                  </span>
-                                  <span className="text-gray-600">
-                                    {highlight}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
+                            <div className="prose prose-sm text-gray-600">
+                              {event.short_description}
+                            </div>
                           </motion.div>
                         )}
                       </div>
