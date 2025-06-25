@@ -1,6 +1,8 @@
 "use client";
-import Raect, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import moment from "moment";
 import Link from "next/link";
+import ajaxCall from "@/helpers/ajaxCall";
 import { notFound } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -16,102 +18,6 @@ import {
   ArrowUp,
   ArrowLeft,
 } from "lucide-react";
-
-const allArticles = [
-  {
-    id: 1,
-    title: "Complete Guide to US Student Visa Interview 2025",
-    excerpt:
-      "Essential tips for acing your F-1 visa interview, including common questions and expert advice from former visa officers.",
-    author: "Rajesh Mehta",
-    date: "Dec 15, 2024",
-    readTime: "8 min read",
-    tags: ["USA", "Visa", "Interview Tips"],
-    category: "Visa Guide",
-    featured: true,
-    slug: "complete-guide-to-us-student-visa-interview-2025",
-    image:
-      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDF8fHN0dWRlbnRzJTIwc2Nob2xhcnNoaXB8ZW58MHx8fHwxNzE4NzcyOTM4fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt: "Student at a visa application center, looking hopeful.",
-  },
-  {
-    id: 2,
-    title: "UK Graduate Visa Changes: What Students Need to Know",
-    excerpt:
-      "Latest updates on the UK Graduate visa route, new requirements, and how these changes affect international students.",
-    author: "Priya Sharma",
-    date: "Dec 10, 2024",
-    readTime: "6 min read",
-    tags: ["UK", "Graduate Visa", "Policy Update"],
-    category: "Visa Guide",
-    slug: "uk-graduate-visa-changes-what-students-need-to-know",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDN8fHVuaXZlcnNpdHklMjBjYW1wdXN8ZW58MHx8fHwxNzE4NzcyOTM5fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt:
-      "A passport with a UK visa stamp, with London's Tower Bridge in the background.",
-  },
-  {
-    id: 3,
-    title: "Top 10 Scholarships for Indian Students in 2025",
-    excerpt:
-      "A comprehensive list of merit-based and need-based scholarships, including eligibility and application deadlines.",
-    author: "Dr. Vikram Gupta",
-    date: "Nov 28, 2024",
-    readTime: "12 min read",
-    tags: ["Scholarships", "Financial Aid", "Application Tips"],
-    category: "Scholarships",
-    slug: "top-10-scholarships-for-indian-students-in-2025",
-    image:
-      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDF8fHN0dWRlbnRzJTIwc2Nob2xhcnNoaXB8ZW58MHx8fHwxNzE4NzcyOTM4fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt: "A group of happy graduates throwing their caps in the air.",
-  },
-  {
-    id: 4,
-    title: "How to Choose the Right University Abroad",
-    excerpt:
-      "Key factors to consider when selecting a university, including rankings, location, costs, and program strengths.",
-    author: "Anjali Patel",
-    date: "Nov 20, 2024",
-    readTime: "10 min read",
-    tags: ["University Selection", "Rankings", "Admission"],
-    category: "University Guide",
-    slug: "how-to-choose-the-right-university-abroad",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDN8fHVuaXZlcnNpdHklMjBjYW1wdXN8ZW58MHx8fHwxNzE4NzcyOTM5fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt: "A beautiful, historic university campus on a sunny day.",
-  },
-  {
-    id: 5,
-    title: "Living Costs in Germany for International Students",
-    excerpt:
-      "A detailed breakdown of monthly expenses, including accommodation, food, transport, and health insurance in major German cities.",
-    author: "Michael Schmidt",
-    date: "Nov 15, 2024",
-    readTime: "9 min read",
-    tags: ["Germany", "Cost of Living", "Budgeting"],
-    category: "Study Abroad",
-    slug: "living-costs-in-germany-for-international-students",
-    image:
-      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDF8fHN0dWRlbnRzJTIwc2Nob2xhcnNoaXB8ZW58MHx8fHwxNzE4NzcyOTM4fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt:
-      "A vibrant city square in Germany with trams and historic buildings.",
-  },
-  {
-    id: 6,
-    title: "Career Opportunities After Studying in Canada",
-    excerpt:
-      "Explore post-graduation work permits, popular industries, and job search strategies for students in Canada.",
-    author: "Lisa Chen",
-    date: "Nov 10, 2024",
-    readTime: "7 min read",
-    tags: ["Canada", "Work Permit", "Jobs"],
-    category: "Career Advice",
-    slug: "career-opportunities-after-studying-in-canada",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzOTAwNXwwfDF8c2VhcmNofDN8fHVuaXZlcnNpdHklMjBjYW1wdXN8ZW58MHx8fHwxNzE4NzcyOTM5fDA&ixlib=rb-4.0.3&q=80&w=1080",
-    imageAlt: "A modern city skyline of Toronto, Canada at dusk.",
-  },
-];
 
 const shareIcons = [
   {
@@ -137,31 +43,37 @@ const shareIcons = [
 const BlogDetails = ({ slug }) => {
   const [blog, setBlog] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showShareTooltip, setShowShareTooltip] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showShareTooltip, setShowShareTooltip] = useState(false);
 
   useEffect(() => {
-    const article = allArticles.find((p) => p.slug === slug);
-    if (article) {
-      setBlog({
-        ...article,
-        author: { user: { username: article.author }, role: "Content Creator" },
-        published_at: article.date,
-        read_time: article.readTime,
-        featured_image: article.image,
-        tags: article.tags.map((tag, i) => ({ id: i, name: tag })),
-      });
-    } else {
-      notFound();
-    }
+    const fetchBlog = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall(`/blog/blog/posts/${slug}/`, {
+          method: "GET",
+        });
+        if (response?.data) {
+          setBlog(response.data);
+        } else {
+          notFound();
+        }
+      } catch (error) {
+        console.log("Error fetching blog:", error);
+        notFound();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlog();
   }, [slug]);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-
-      setShowScrollTop(scrolled > 300);
+      setShowScrollTop(window.scrollY > 300);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -169,19 +81,10 @@ const BlogDetails = ({ slug }) => {
   }, []);
 
   const handleShare = (platform) => {
-    const shareUrl = window.location.href;
-    const shareText = `Check out this article: ${blog?.title}`;
-
     const urls = {
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        shareText
-      )}&url=${encodeURIComponent(shareUrl)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        shareUrl
-      )}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        shareUrl
-      )}`,
+      twitter: "https://twitter.com",
+      linkedin: "https://www.linkedin.com",
+      facebook: "https://www.facebook.com",
     };
 
     if (urls[platform]) {
@@ -189,16 +92,34 @@ const BlogDetails = ({ slug }) => {
     }
   };
 
-  if (!blog) {
+  if (isLoading) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-primary-50">
-        <div
-          className="w-16 h-16 border-4 border-primary-500 border-solid border-t-transparent rounded-full animate-spin"
-          role="status"
-          aria-label="Loading content"
-        ></div>
+        <div className="space-y-4 w-full max-w-lg">
+          <div className="h-8 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+
+          <div className="h-12 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+          <div className="h-12 bg-gray-200 rounded w-full animate-pulse"></div>
+
+          <div className="h-6 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+          <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+
+          <div className="flex items-center gap-4 mt-8">
+            <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse"></div>
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+              <div className="h-3 bg-gray-200 rounded w-16 animate-pulse"></div>
+            </div>
+          </div>
+
+          <div className="w-full h-64 bg-gray-200 rounded-xl mt-8 animate-pulse"></div>
+        </div>
       </div>
     );
+  }
+
+  if (!blog) {
+    return notFound();
   }
 
   return (
@@ -243,28 +164,24 @@ const BlogDetails = ({ slug }) => {
 
             <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-12">
               <div className="flex items-center gap-4">
-                <img
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                  alt={blog.author.user.username}
-                  className="w-12 h-12 rounded-full ring-2 ring-white"
-                />
+                <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-800 font-bold">
+                  {blog.author_name.charAt(0)}
+                </div>
                 <div>
                   <div className="font-semibold text-gray-800">
-                    {blog.author.user.username}
+                    {blog.author_name}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {blog.author.role}
-                  </div>
+                  <div className="text-sm text-gray-500">Author</div>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-secondary-500" />
-                  {blog.published_at}
+                  {moment(blog.published_at).format("MMM D, YYYY")}
                 </span>
                 <span className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-secondary-500" />
-                  {blog.read_time}
+                  {blog.reading_time} min read
                 </span>
               </div>
             </div>
@@ -360,35 +277,10 @@ const BlogDetails = ({ slug }) => {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-lg p-6 md:p-10 mt-12 mb-12"
             >
-              <div className="prose prose-lg max-w-none">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Introduction
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  This is where your article content would go. The text would be
-                  properly formatted with headings, paragraphs, lists, and other
-                  rich text elements.
-                </p>
-
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  Key Points
-                </h3>
-                <ul className="list-disc pl-6 mb-6 text-gray-600">
-                  <li className="mb-2">
-                    First important point about the topic
-                  </li>
-                  <li className="mb-2">Second key aspect to consider</li>
-                  <li className="mb-2">Third major takeaway for readers</li>
-                </ul>
-
-                <div className="bg-primary-100 border-l-4 border-primary-800 p-4 mb-6 rounded-r">
-                  <p className="text-primary-800 font-medium">Pro Tip:</p>
-                  <p className="text-primary-800">
-                    This is an important tip or highlight from the article
-                    content.
-                  </p>
-                </div>
-              </div>
+              <div
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
             </motion.article>
           </div>
         </div>

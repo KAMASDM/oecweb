@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 const Universities = ({ country }) => {
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState("list");
   const [countries, setCountries] = useState([]);
   const [universities, setUniversities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

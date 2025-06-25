@@ -14,13 +14,13 @@ import {
 const footerSections = {
   services: [
     { name: "University Selection", href: "/services" },
-    { name: "Application Support", href: "/services" },
     { name: "Visa Assistance", href: "/services" },
-    { name: "Financial Planning", href: "/services" },
-    { name: "Pre-Departure Support", href: "/services" },
-    { name: "Post-Arrival Support", href: "/services" },
-    { name: "Career Guidance", href: "/services" },
-    { name: "Alumni Network", href: "/services" },
+    { name: "Application Support", href: "/services" },
+    { name: "Test Preparation", href: "/services" },
+    { name: "Scholarship Guidance", href: "/services" },
+    { name: "Pre-Departure Briefing", href: "/services" },
+    { name: "Career Counselling", href: "/services" },
+    { name: "Education Loans", href: "/services" },
   ],
   destinations: [
     { name: "Study in USA", href: "/countries" },
@@ -32,29 +32,23 @@ const footerSections = {
     { name: "Study in Ireland", href: "/countries" },
     { name: "Study in New Zealand", href: "/countries" },
   ],
-  resources: [
-    { name: "University Rankings", href: "/resources" },
-    { name: "Scholarship Database", href: "/resources" },
-    { name: "Cost Calculators", href: "/resources" },
-    { name: "Eligibility Checker", href: "/resources" },
-    { name: "Success Stories", href: "/success-stories" },
-    { name: "Blog & Articles", href: "/resources" },
-    { name: "Download Center", href: "/resources" },
-    { name: "FAQ", href: "/resources" },
-  ],
-  contact: [
-    { name: "Book Free Consultation", href: "/consultation" },
-    { name: "Office Locations", href: "/contact" },
-    { name: "Working Hours", href: "/contact" },
+  company: [
+    { name: "Universities", href: "/universities" },
+    { name: "Courses", href: "/courses" },
+    { name: "Blog & Articles", href: "/blogs" },
+    { name: "Resources", href: "/resources" },
+    { name: "FAQ", href: "/faqs" },
+    { name: "About Us", href: "/about-us" },
+    { name: "Contact Us", href: "/contact-us" },
   ],
 };
 
 const socialLinks = [
-  { icon: Facebook, href: "#", name: "Facebook" },
-  { icon: Instagram, href: "#", name: "Instagram" },
-  { icon: Linkedin, href: "#", name: "LinkedIn" },
-  { icon: Youtube, href: "#", name: "YouTube" },
-  { icon: Twitter, href: "#", name: "Twitter" },
+  { icon: Facebook, href: "https://www.facebook.com", name: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com", name: "Instagram" },
+  { icon: Linkedin, href: "https://www.linkedin.com", name: "LinkedIn" },
+  { icon: Youtube, href: "https://www.youtube.com", name: "YouTube" },
+  { icon: Twitter, href: "https://www.twitter.com", name: "Twitter" },
 ];
 
 const Footer = () => {
@@ -153,9 +147,9 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
-              {footerSections.resources.map((item) => (
+              {footerSections.company.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
@@ -221,19 +215,6 @@ const Footer = () => {
                 </a>
               </div>
             </div>
-            <ul className="space-y-2 mt-4">
-              {footerSections.contact.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-white hover:text-white transition-colors duration-200 text-sm"
-                    aria-label={item.name}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 
