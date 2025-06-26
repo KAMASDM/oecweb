@@ -1,198 +1,146 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import ajaxCall from "@/helpers/ajaxCall";
 import ConsultationForm from "../forms/ConsultationForm";
-import { ArrowRight, Users, Award, Globe, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
-  const [counters, setCounters] = useState({
-    students: 0,
-    visa: 0,
-    partners: 0,
-    years: 0,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroSections, setHeroSections] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [animationTriggered, setAnimationTriggered] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const heroSection = document.getElementById("hero-section");
-      if (heroSection && !animationTriggered) {
-        const rect = heroSection.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.75) {
-          setAnimationTriggered(true);
-          animateCounters();
+    const fetchHeroSections = async () => {
+      setIsLoading(true);
+      try {
+        const response = await ajaxCall("/about/hero-sections/", {
+          method: "GET",
+        });
+        if (response?.data?.results?.length > 0) {
+          setHeroSections(response.data.results);
+        } else {
+          setHeroSections([
+            {
+              id: 3,
+              title: "Craft Your Own Future",
+              subtitle: "We Bridge Your Ambition with a World-Class Education",
+              description:
+                "<p>Imagine a future without boundaries. At OEC India, we believe in the power of your dreams. As your dedicated overseas education partner, we provide personalized counseling and unwavering support to connect you with the perfect course and university abroad. Let us transform your aspirations into an international reality. The world is waiting for you.</p>",
+              background_image:
+                "https://sweekarme.in/media/about/hero/about-us-2_tNVk7YA.jpg",
+              cta_text: "Contact us Today",
+              cta_link: "/contact-us",
+              is_active: true,
+            },
+            {
+              id: 2,
+              title: "Your Journey to a Global Future Starts Here",
+              subtitle: "Expert Guidance for Your Overseas Education Dream",
+              description:
+                "<p>OEC India is your trusted partner in turning your study abroad aspirations into reality. For over two decades, we have been the one-stop solution for students across India, offering comprehensive and personalized counseling for top universities in the UK, USA, Canada, Australia, and New Zealand. From course and university selection to visa assistance and pre-departure briefings, our experienced counselors are dedicated to guiding you at every step. Begin your global education journey with confidence.</p>",
+              background_image:
+                "https://sweekarme.in/media/about/hero/about-us-2_tNVk7YA.jpg",
+              cta_text: "Contact us Today",
+              cta_link: "/contact-us",
+              is_active: true,
+            },
+          ]);
         }
+      } catch (error) {
+        console.error("Error fetching hero sections:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [animationTriggered]);
+    fetchHeroSections();
+  }, []);
 
-  const animateCounters = () => {
-    const targets = {
-      students: 2000,
-      visa: 95,
-      partners: 500,
-      years: 10,
-    };
+  // Auto-rotate slides
+  useEffect(() => {
+    if (heroSections.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % heroSections.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [heroSections.length]);
 
-    const duration = 2000; // 2 seconds
-    const steps = 60;
-    const increment = duration / steps;
+  if (isLoading || heroSections.length === 0) {
+    return <div className="min-h-screen bg-gray-200 animate-pulse"></div>;
+  }
 
-    let currentStep = 0;
-    const timer = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-
-      setCounters({
-        students: Math.floor(targets.students * progress),
-        visa: Math.floor(targets.visa * progress),
-        partners: Math.floor(targets.partners * progress),
-        years: Math.floor(targets.years * progress),
-      });
-
-      if (currentStep >= steps) {
-        clearInterval(timer);
-        setCounters(targets);
-      }
-    }, increment);
-
-    return () => clearInterval(timer);
-  };
+  const currentHero = heroSections[currentSlide];
 
   return (
     <>
       <section
-        id="hero-section"
-        className="relative overflow-hidden bg-primary-800  text-white"
+        className="relative mt-20 lg:mt-28 min-h-screen flex items-center justify-center bg-cover bg-center transition-all duration-1000 ease-in-out"
+        style={{
+          backgroundImage: `url(${currentHero.background_image})`,
+        }}
         aria-labelledby="hero-heading"
       >
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-32 pb-40">
-          <div className="text-center space-y-8">
-            <div className="space-y-6 animate-fade-in-up">
-              <h1
-                id="hero-heading"
-                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
-              >
-                <span className="block">From Application to Graduation:</span>
-                <span className="bg-secondary-500 bg-clip-text text-transparent">
-                  Your Trusted Partner
-                </span>
-                <span className="block">for World-Class Education</span>
-              </h1>
+        <div className="absolute inset-0 bg-black/60"></div>
 
-              <p
-                className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto"
-                aria-label="Success statistics"
-              >
-                Join {counters.students}+ students who've successfully started
-                their international education journey with India's most trusted
-                overseas education consultant
-              </p>
-            </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white z-10 py-12">
+          <div className="space-y-4 md:space-y-6 animate-fade-in-up">
+            <h1
+              id="hero-heading"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+            >
+              {currentHero.title}
+            </h1>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up">
+            <h2 className="text-xl md:text-2xl lg:text-3xl text-secondary-500 font-medium">
+              {currentHero.subtitle}
+            </h2>
+
+            <div
+              className="text-base md:text-lg text-gray-200 max-w-3xl mx-auto"
+              dangerouslySetInnerHTML={{ __html: currentHero.description }}
+            />
+          </div>
+
+          <div className="mt-8 md:mt-10">
+            {currentHero.cta_link ? (
+              <Link
+                href={currentHero.cta_link}
+                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-base md:text-lg"
+              >
+                {currentHero.cta_text}
+                <ArrowRight size={20} aria-hidden="true" />
+              </Link>
+            ) : (
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-white text-primary-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
-                aria-label="Book free consultation"
+                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-base md:text-lg"
               >
-                Book Your Free Consultation Today
+                {currentHero.cta_text}
                 <ArrowRight size={20} aria-hidden="true" />
               </button>
-              <Link
-                href="/services"
-                className="flex items-center gap-2 border-2 border-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors duration-200"
-                aria-label="Explore our services"
-              >
-                Explore Our Services
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-16 animate-fade-in-up">
-              <div
-                className="text-center"
-                aria-label={`${counters.students} students placed`}
-              >
-                <div className="flex items-center justify-center mb-2">
-                  <Users
-                    className="h-8 w-8 text-secondary-500 mr-2"
-                    aria-hidden="true"
-                  />
-                  <span className="text-4xl md:text-5xl font-bold">
-                    {counters.students}+
-                  </span>
-                </div>
-                <p className="text-blue-200">Students Placed</p>
-              </div>
-
-              <div
-                className="text-center"
-                aria-label={`${counters.visa}% visa success rate`}
-              >
-                <div className="flex items-center justify-center mb-2">
-                  <Award
-                    className="h-8 w-8 text-secondary-500 mr-2"
-                    aria-hidden="true"
-                  />
-                  <span className="text-4xl md:text-5xl font-bold">
-                    {counters.visa}%
-                  </span>
-                </div>
-                <p className="text-blue-200">Visa Success Rate</p>
-              </div>
-
-              <div
-                className="text-center"
-                aria-label={`${counters.partners} university partners`}
-              >
-                <div className="flex items-center justify-center mb-2">
-                  <Globe
-                    className="h-8 w-8 text-secondary-500 mr-2"
-                    aria-hidden="true"
-                  />
-                  <span className="text-4xl md:text-5xl font-bold">
-                    {counters.partners}+
-                  </span>
-                </div>
-                <p className="text-blue-200">University Partners</p>
-              </div>
-
-              <div
-                className="text-center"
-                aria-label={`${counters.years} years experience`}
-              >
-                <div className="flex items-center justify-center mb-2">
-                  <Clock
-                    className="h-8 w-8 text-secondary-500 mr-2"
-                    aria-hidden="true"
-                  />
-                  <span className="text-4xl md:text-5xl font-bold">
-                    {counters.years}
-                  </span>
-                </div>
-                <p className="text-blue-200">Years Experience</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0" aria-hidden="true">
-          <svg
-            viewBox="0 0 1440 120"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M0 120L1440 120L1440 0C1440 0 1140 60 720 60C300 60 0 0 0 0L0 120Z"
-              fill="#f2f2f2"
-            />
-          </svg>
-        </div>
+        {heroSections.length > 1 && (
+          <div className="absolute bottom-6 sm:bottom-8 left-0 right-0 flex justify-center space-x-2 z-10">
+            {heroSections.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? "bg-white w-6"
+                    : "bg-white/50 hover:bg-white/75"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </section>
       {isModalOpen && (
         <ConsultationForm

@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import ajaxCall from "@/helpers/ajaxCall";
 import {
   Phone,
   Mail,
@@ -11,38 +13,6 @@ import {
   Twitter,
 } from "lucide-react";
 
-const footerSections = {
-  services: [
-    { name: "University Selection", href: "/services" },
-    { name: "Visa Assistance", href: "/services" },
-    { name: "Application Support", href: "/services" },
-    { name: "Test Preparation", href: "/services" },
-    { name: "Scholarship Guidance", href: "/services" },
-    { name: "Pre-Departure Briefing", href: "/services" },
-    { name: "Career Counselling", href: "/services" },
-    { name: "Education Loans", href: "/services" },
-  ],
-  destinations: [
-    { name: "Study in USA", href: "/countries" },
-    { name: "Study in UK", href: "/countries" },
-    { name: "Study in Canada", href: "/countries" },
-    { name: "Study in Australia", href: "/countries" },
-    { name: "Study in Germany", href: "/countries" },
-    { name: "Study in Singapore", href: "/countries" },
-    { name: "Study in Ireland", href: "/countries" },
-    { name: "Study in New Zealand", href: "/countries" },
-  ],
-  company: [
-    { name: "Universities", href: "/universities" },
-    { name: "Courses", href: "/courses" },
-    { name: "Blog & Articles", href: "/blogs" },
-    { name: "Resources", href: "/resources" },
-    { name: "FAQ", href: "/faqs" },
-    { name: "About Us", href: "/about-us" },
-    { name: "Contact Us", href: "/contact-us" },
-  ],
-};
-
 const socialLinks = [
   { icon: Facebook, href: "https://www.facebook.com", name: "Facebook" },
   { icon: Instagram, href: "https://www.instagram.com", name: "Instagram" },
@@ -53,6 +23,49 @@ const socialLinks = [
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await ajaxCall("/academics/academics/countries/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setCountries(response.data.results);
+        } else {
+          setCountries([]);
+        }
+      } catch (error) {
+        console.log("Error fetching countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  const footerSections = {
+    services: [
+      { name: "University Selection", href: "/services" },
+      { name: "Visa Assistance", href: "/services" },
+      { name: "Application Support", href: "/services" },
+      { name: "Test Preparation", href: "/services" },
+      { name: "Scholarship Guidance", href: "/services" },
+      { name: "Pre-Departure Briefing", href: "/services" },
+      { name: "Career Counselling", href: "/services" },
+      { name: "Education Loans", href: "/services" },
+    ],
+    company: [
+      { name: "Universities", href: "/universities" },
+      { name: "Courses", href: "/courses" },
+      { name: "Blog & Articles", href: "/blogs" },
+      { name: "Resources", href: "/resources" },
+      { name: "FAQ", href: "/faqs" },
+      { name: "About Us", href: "/about-us" },
+      { name: "Contact Us", href: "/contact-us" },
+    ],
+  };
 
   return (
     <footer
@@ -89,7 +102,7 @@ const Footer = () => {
                 <strong>Students Placed:</strong> 2,000+
               </p>
               <p>
-                <strong>Countries:</strong> 15+
+                <strong>Countries:</strong> {countries.length}+
               </p>
               <p>
                 <strong>Success Rate:</strong> 95%
@@ -129,17 +142,16 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Study Destinations</h3>
             <ul className="space-y-2">
-              {footerSections.destinations.map((item) => (
-                <li key={item.name}>
+              {countries.map((country) => (
+                <li key={country.id}>
                   <Link
-                    href={item.href}
+                    href={`/country-guides/${country.name
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
                     className="text-white hover:text-white transition-colors duration-200 text-sm"
-                    aria-label={`Study in ${item.name.replace(
-                      "Study in ",
-                      ""
-                    )}`}
+                    aria-label={`Study in ${country.name}`}
                   >
-                    {item.name}
+                    Study in {country.name}
                   </Link>
                 </li>
               ))}
