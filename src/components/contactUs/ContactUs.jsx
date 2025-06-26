@@ -1,0 +1,495 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  Phone,
+  Mail,
+  Clock,
+  MessageCircle,
+  MapPin,
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import ajaxCall from "@/helpers/ajaxCall";
+
+const schema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]+$/, "Must be only digits")
+    .min(10, "Must be at least 10 digits")
+    .required("Phone number is required"),
+  country_interested: yup.string().required("Please select a country"),
+  interested_intake: yup.string().required("Please select an intake"),
+  current_education: yup
+    .string()
+    .required("Please select your education level"),
+});
+
+const FormInput = ({
+  label,
+  name,
+  register,
+  error,
+  type = "text",
+  placeholder,
+}) => (
+  <div>
+    <label htmlFor={name} className="block text-gray-700 font-semibold mb-2">
+      {label} <span className="text-red-500">*</span>
+    </label>
+    <input
+      id={name}
+      type={type}
+      {...register(name)}
+      placeholder={placeholder}
+      className={`w-full px-4 py-3 rounded-lg border ${
+        error ? "border-red-500" : "border-gray-300"
+      } text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition`}
+    />
+    {error && (
+      <p className="mt-1 text-sm text-red-600" aria-live="polite">
+        {error.message}
+      </p>
+    )}
+  </div>
+);
+
+const FormSelect = ({ label, name, register, error, children }) => (
+  <div>
+    <label htmlFor={name} className="block text-gray-700 font-semibold mb-2">
+      {label} <span className="text-red-500">*</span>
+    </label>
+    <select
+      id={name}
+      {...register(name)}
+      className={`w-full px-4 py-3 rounded-lg border ${
+        error ? "border-red-500" : "border-gray-300"
+      } text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition appearance-none`}
+    >
+      {children}
+    </select>
+    {error && (
+      <p className="mt-1 text-sm text-red-600" aria-live="polite">
+        {error.message}
+      </p>
+    )}
+  </div>
+);
+
+const ContactUs = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    countries: true,
+    branches: true,
+  });
+  const [error, setError] = useState({ countries: null, branches: null });
+  const [branches, setBranches] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [expandedBranch, setExpandedBranch] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const countryResponse = await ajaxCall(
+          "/academics/academics/countries/",
+          {
+            method: "GET",
+          }
+        );
+        setCountries(countryResponse.data?.results || []);
+      } catch (e) {
+        console.error("Error fetching countries:", e);
+        setError((prev) => ({
+          ...prev,
+          countries: "Could not load countries.",
+        }));
+      } finally {
+        setIsLoading((prev) => ({ ...prev, countries: false }));
+      }
+
+      try {
+        const branchResponse = await ajaxCall("/branches/branches/", {
+          method: "GET",
+        });
+        const branchData = branchResponse.data?.results || [];
+        setBranches(branchData);
+        if (branchData.length > 0) {
+          const mainBranch = branchData.find((branch) => branch.is_main_branch);
+          setExpandedBranch(mainBranch ? mainBranch.id : branchData[0].id);
+        }
+      } catch (e) {
+        console.error("Error fetching branches:", e);
+        setError((prev) => ({
+          ...prev,
+          branches: "Could not load branch locations.",
+        }));
+      } finally {
+        setIsLoading((prev) => ({ ...prev, branches: false }));
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const toggleBranch = (branchId) => {
+    setExpandedBranch(expandedBranch === branchId ? null : branchId);
+  };
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      const response = await ajaxCall("/enquiry/enquiries/", {
+        method: "POST",
+        data,
+      });
+      if (response.status === 201 || response.status === 200) {
+        setFormSubmitted(true);
+        reset();
+      } else {
+        setSubmitError("An unexpected error occurred. Please try again.");
+        console.error("Error submitting form:", response);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setSubmitError(
+          "Please check your input. Some fields might be invalid."
+        );
+      } else {
+        setSubmitError(
+          "Submission failed. Please check your connection and try again."
+        );
+      }
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAnotherInquiry = () => {
+    setFormSubmitted(false);
+    setSubmitError(null);
+  };
+
+  return (
+    <div className="min-h-screen">
+      <section className="bg-primary-800 text-white mt-20 py-20 md:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
+          <p className="text-secondary-500 text-lg md:text-xl max-w-4xl mx-auto">
+            Ready to start your international education journey? Get in touch
+            with our expert counselors for personalized guidance.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+              <div className="bg-primary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Phone className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Call Us</h3>
+              <a
+                href="tel:+919876543210"
+                className="text-gray-600 hover:text-primary-600 transition-colors block mb-2"
+              >
+                +91 98765 43210
+              </a>
+              <p className="text-gray-500 text-sm">Mon-Sat: 9 AM - 8 PM</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">WhatsApp</h3>
+              <a
+                href="https://wa.me/919876543210"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-green-600 transition-colors block mb-2"
+              >
+                +91 98765 43210
+              </a>
+              <p className="text-gray-500 text-sm">24/7 Quick Support</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Mail className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Email Us</h3>
+              <a
+                href="mailto:info@oecindia.com"
+                className="text-gray-600 hover:text-blue-600 transition-colors block mb-2"
+              >
+                info@oecindia.com
+              </a>
+              <p className="text-gray-500 text-sm">Response within 2 hours</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+              <div className="bg-primary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Emergency</h3>
+              <a
+                href="tel:+919876543212"
+                className="text-gray-600 hover:text-primary-600 transition-colors block mb-2"
+              >
+                +91 98765 43212
+              </a>
+              <p className="text-gray-500 text-sm">24/7 for current students</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-primary-800 mb-4">
+              Our Branches & Consultation
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Visit us or book a free consultation for your study abroad
+              journey.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <div className="lg:col-span-1">
+              <div className="bg-gray-50 rounded-xl shadow-md overflow-hidden">
+                <div className="p-6 bg-primary-800 text-white">
+                  <h3 className="text-xl font-semibold flex items-center">
+                    <MapPin className="h-5 w-5 mr-2" />
+                    Our Branch Locations
+                  </h3>
+                </div>
+                {isLoading.branches ? (
+                  <div className="flex justify-center items-center p-8">
+                    <Loader2 className="h-8 w-8 text-primary-600 animate-spin" />
+                  </div>
+                ) : error.branches ? (
+                  <div className="p-4 text-center text-red-600 bg-red-50">
+                    {error.branches}
+                  </div>
+                ) : (
+                  <div className="p-2 space-y-2">
+                    {branches.map((branch) => (
+                      <div
+                        key={branch.id}
+                        className="bg-white rounded-lg border border-gray-200"
+                      >
+                        <button
+                          onClick={() => toggleBranch(branch.id)}
+                          aria-expanded={expandedBranch === branch.id}
+                          className="w-full flex justify-between items-center p-4 text-left hover:bg-gray-100 transition-colors rounded-lg"
+                        >
+                          <span className="font-medium text-primary-900">
+                            {branch.name}
+                            {branch.is_main_branch && (
+                              <span className="ml-2 bg-secondary-200 text-secondary-800 text-xs px-2 py-1 rounded-full">
+                                Main
+                              </span>
+                            )}
+                          </span>
+                          {expandedBranch === branch.id ? (
+                            <ChevronUp className="h-5 w-5 text-gray-500" />
+                          ) : (
+                            <ChevronDown className="h-5 w-5 text-gray-500" />
+                          )}
+                        </button>
+                        {expandedBranch === branch.id && (
+                          <div className="p-4 pt-0">
+                            <p className="text-gray-600 mb-3 whitespace-pre-line border-t border-gray-200 pt-3">
+                              {branch.address}
+                            </p>
+                            <div className="space-y-2">
+                              {branch.phone && (
+                                <div className="flex items-center text-sm">
+                                  <Phone className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                                  <a
+                                    href={`tel:${branch.phone}`}
+                                    className="text-gray-600 hover:text-primary-600"
+                                  >
+                                    {branch.phone}
+                                  </a>
+                                </div>
+                              )}
+                              {branch.email && (
+                                <div className="flex items-center text-sm">
+                                  <Mail className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                                  <a
+                                    href={`mailto:${branch.email}`}
+                                    className="text-gray-600 hover:text-primary-600"
+                                  >
+                                    {branch.email}
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="lg:col-span-2">
+              <div className="bg-gray-50 rounded-xl shadow-md p-6 md:p-8">
+                {formSubmitted ? (
+                  <div className="bg-green-100 border-l-4 border-green-500 text-green-800 p-6 rounded-lg text-center">
+                    <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
+                    <p>Your form has been submitted successfully.</p>
+                    <p>Our team will contact you shortly.</p>
+                    <button
+                      onClick={handleAnotherInquiry}
+                      className="mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Submit Another Inquiry
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <h3 className="text-2xl font-semibold text-primary-800 mb-6 flex items-center">
+                      <MessageCircle className="h-6 w-6 mr-2" />
+                      Book Your Free Consultation
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormInput
+                        label="Name"
+                        name="name"
+                        register={register}
+                        error={errors.name}
+                        placeholder="Your full name"
+                      />
+                      <FormInput
+                        label="Email"
+                        name="email"
+                        type="email"
+                        register={register}
+                        error={errors.email}
+                        placeholder="you@example.com"
+                      />
+                      <FormInput
+                        label="Phone"
+                        name="phone"
+                        type="tel"
+                        register={register}
+                        error={errors.phone}
+                        placeholder="Your phone number"
+                      />
+
+                      <FormSelect
+                        label="Country Interested"
+                        name="country_interested"
+                        register={register}
+                        error={errors.country_interested}
+                      >
+                        <option value="">Select Country</option>
+                        {countries.map((country) => (
+                          <option key={country.id} value={country.id}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </FormSelect>
+
+                      <FormSelect
+                        label="Interested Intake"
+                        name="interested_intake"
+                        register={register}
+                        error={errors.interested_intake}
+                      >
+                        <option value="">Select Intake</option>
+                        <option value="spring">Spring (January-March)</option>
+                        <option value="summer">Summer (April-June)</option>
+                        <option value="fall">Fall (September-November)</option>
+                        <option value="winter">
+                          Winter (December-February)
+                        </option>
+                        <option value="not-sure">Not sure</option>
+                      </FormSelect>
+
+                      <FormSelect
+                        label="Current Education"
+                        name="current_education"
+                        register={register}
+                        error={errors.current_education}
+                      >
+                        <option value="">Select Education Level</option>
+                        <option value="high_school">High School</option>
+                        <option value="bachelors_ongoing">
+                          Bachelor's (Ongoing)
+                        </option>
+                        <option value="bachelors_completed">
+                          Bachelor's (Completed)
+                        </option>
+                        <option value="masters_ongoing">
+                          Master's (Ongoing)
+                        </option>
+                        <option value="masters_completed">
+                          Master's (Completed)
+                        </option>
+                        <option value="other">Other</option>
+                      </FormSelect>
+                    </div>
+
+                    <div className="text-center mt-6">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 disabled:bg-primary-300 text-white font-semibold py-3 px-8 rounded-lg transition-colors inline-flex items-center justify-center"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                      {submitError && (
+                        <div
+                          className="mt-4 text-red-600 bg-red-100 border border-red-300 rounded-lg p-3 flex items-center justify-center text-sm"
+                          aria-live="assertive"
+                        >
+                          <AlertTriangle className="h-5 w-5 mr-2" />
+                          {submitError}
+                        </div>
+                      )}
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default ContactUs;
