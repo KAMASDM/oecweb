@@ -21,9 +21,41 @@ const socialLinks = [
   { icon: Twitter, href: "https://www.twitter.com", name: "Twitter" },
 ];
 
+const company = [
+  { name: "Universities", href: "/universities" },
+  { name: "Courses", href: "/courses" },
+  { name: "Blog & Articles", href: "/blogs" },
+  { name: "Resources", href: "/resources" },
+  { name: "FAQ", href: "/faqs" },
+  { name: "About Us", href: "/about-us" },
+  { name: "Contact Us", href: "/contact-us" },
+];
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [services, setServices] = useState([]);
   const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await ajaxCall("/services/services/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setServices(response.data.results);
+        } else {
+          setServices([]);
+        }
+      } catch (error) {
+        console.log("Error fetching services:", error);
+        setServices([]);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -44,28 +76,6 @@ const Footer = () => {
 
     fetchCountries();
   }, []);
-
-  const footerSections = {
-    services: [
-      { name: "University Selection", href: "/services" },
-      { name: "Visa Assistance", href: "/services" },
-      { name: "Application Support", href: "/services" },
-      { name: "Test Preparation", href: "/services" },
-      { name: "Scholarship Guidance", href: "/services" },
-      { name: "Pre-Departure Briefing", href: "/services" },
-      { name: "Career Counselling", href: "/services" },
-      { name: "Education Loans", href: "/services" },
-    ],
-    company: [
-      { name: "Universities", href: "/universities" },
-      { name: "Courses", href: "/courses" },
-      { name: "Blog & Articles", href: "/blogs" },
-      { name: "Resources", href: "/resources" },
-      { name: "FAQ", href: "/faqs" },
-      { name: "About Us", href: "/about-us" },
-      { name: "Contact Us", href: "/contact-us" },
-    ],
-  };
 
   return (
     <footer
@@ -125,10 +135,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
-              {footerSections.services.map((item) => (
+              {services.map((item) => (
                 <li key={item.name}>
                   <Link
-                    href={item.href}
+                    href={"/services"}
                     className="text-white hover:text-white transition-colors duration-200 text-sm"
                     aria-label={`Learn about ${item.name}`}
                   >
@@ -161,7 +171,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
-              {footerSections.company.map((item) => (
+              {company.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
