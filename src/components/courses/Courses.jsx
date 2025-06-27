@@ -13,28 +13,75 @@ import {
   Globe,
   Calendar,
   Award,
-  User,
-  BarChart2,
   ChevronLeft,
   ChevronRight,
+  Star,
+  School,
+  MapPin,
+  Clock3,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import OpenAI from "openai";
+import ajaxCall from "@/helpers/ajaxCall";
+import Link from "next/link";
 
-const Courses = ({ country, course, university }) => {
+const Courses = ({ course }) => {
   const [viewMode, setViewMode] = useState("grid");
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    degree: "bachelor",
-    country: country ? country : "united-states",
-    university: university ? university : "",
-    field: course ? course : "computer-science",
-    duration: "4-years",
-    delivery: "on-campus",
+    degree: "",
+    country: "",
+    field: course ? course : "",
+    duration: "",
+    scholarship: "",
+    featured: "",
   });
   const [search, setSearch] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [fields, setFields] = useState([]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await ajaxCall("/academics/academics/countries/", {
+          method: "GET",
+        });
+
+        if (response?.data?.results?.length > 0) {
+          setCountries(response.data.results);
+        } else {
+          setCountries([]);
+        }
+      } catch (error) {
+        console.log("Error fetching countries:", error);
+      }
+    };
+
+    const fetchFields = async () => {
+      try {
+        const response = await ajaxCall(
+          "/academics/academics/course-categories/",
+          {
+            method: "GET",
+          }
+        );
+
+        if (response?.data?.results?.length > 0) {
+          setFields(response.data.results);
+        } else {
+          setFields([]);
+        }
+      } catch (error) {
+        console.log("Error fetching fields:", error);
+      }
+    };
+
+    fetchCountries();
+    fetchFields();
+  }, []);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,88 +89,23 @@ const Courses = ({ country, course, university }) => {
   const [totalCourses, setTotalCourses] = useState(0);
   const coursesPerPage = 6;
 
-  const getUniversityLogo = (name) => {
-    if (!name) return "https://placehold.co/100x100/2563eb/white?text=U";
-    const initials = name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-    return `https://placehold.co/100x100/2563eb/white?text=${initials}`;
-  };
-
   const fetchCourses = async () => {
     setIsLoading(true);
     setError(null);
-    setCourses([]);
-    setCurrentPage(1); // Reset to first page on new filter
-
-    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-      setError("OpenAI API key not configured.");
-      setIsLoading(false);
-      return;
-    }
-
-    const openai = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-      dangerouslyAllowBrowser: true,
-    });
-
-    const prompt = `
-      You are an expert course database assistant. Generate a list of 18 fictional but realistic courses based on:
-      - Degree Level: ${filters.degree}
-      - Country: ${filters.country}
-      - University: ${filters.university || "any reputable university"}
-      - Field: ${filters.field}
-      - Duration: ${filters.duration}
-      - Delivery Mode: ${filters.delivery}
-
-      Return valid JSON like:
-      {
-        "courses": [
-          {
-            "id": "unique-id",
-            "name": "Course Name",
-            "university": "University Name",
-            "country": "Country",
-            "description": "20-25 word overview of the course.",
-            "degree": "Bachelor",
-            "field": "Computer Science",
-            "duration": "4 years",
-            "delivery": "On Campus",
-            "tuition": "$25,000 - $35,000",
-            "intake": "Fall, Spring",
-            "scholarship": "Up to 30%",
-            "acceptanceRate": "35%",
-            "careerOutcomes": ["Software Developer", "Data Analyst", "IT Consultant"],
-            "curriculum": ["Algorithms", "Data Structures", "Machine Learning"],
-            "faculty": "School of Computer Science",
-            "requirements": ["High School Diploma", "Math Proficiency"],
-            "language": "English",
-            "accreditation": "Nationally Accredited"
-          }
-        ]
-      }
-    `;
 
     try {
-      const res = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
+      const response = await ajaxCall("/academics/academics/courses/", {
+        method: "GET",
       });
 
-      const json = JSON.parse(res.choices[0].message.content);
-      const coursesWithLogos = Array.isArray(json.courses)
-        ? json.courses.map((course) => ({
-            ...course,
-            logo: getUniversityLogo(course.university),
-          }))
-        : [];
-      setCourses(coursesWithLogos);
-      setTotalCourses(coursesWithLogos.length);
-      setTotalPages(Math.ceil(coursesWithLogos.length / coursesPerPage));
+      setCourses(response.data.results);
+      setTotalCourses(response.data.count || response.data.results.length);
+      setTotalPages(
+        Math.ceil(
+          (response.data.count || response.data.results.length) / coursesPerPage
+        )
+      );
     } catch (err) {
-      console.error("Error fetching data:", err);
       setError("Unable to fetch course data. Please try again later.");
     } finally {
       setIsLoading(false);
@@ -136,30 +118,61 @@ const Courses = ({ country, course, university }) => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchCourses();
-    }, 500);
+    fetchCourses();
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [filters]);
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch =
+      search === "" ||
+      course.name.toLowerCase().includes(search.toLowerCase()) ||
+      course.university_name?.toLowerCase().includes(search.toLowerCase()) ||
+      course.category_name?.toLowerCase().includes(search.toLowerCase()) ||
+      course.description?.toLowerCase().includes(search.toLowerCase());
 
-  const filteredCourses = courses.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.university?.toLowerCase()?.includes(search.toLowerCase()) ||
-      c.field?.toLowerCase()?.includes(search.toLowerCase()) ||
-      c.curriculum?.some((topic) =>
-        topic.toLowerCase().includes(search.toLowerCase())
-      )
-  );
+    const matchesDegree =
+      !filters.degree || course.degree_level === filters.degree;
+    const matchesCountry =
+      !filters.country ||
+      course.university_country
+        ?.toLowerCase()
+        .includes(filters.country.toLowerCase());
+    const matchesField =
+      !filters.field ||
+      course.category_name?.toLowerCase().includes(filters.field.toLowerCase());
+    const matchesDuration =
+      !filters.duration ||
+      (filters.duration === "short" && course.duration <= 1) ||
+      (filters.duration === "medium" &&
+        course.duration > 1 &&
+        course.duration <= 3) ||
+      (filters.duration === "long" && course.duration > 3);
+    const matchesScholarship =
+      !filters.scholarship ||
+      (filters.scholarship === "available" &&
+        course.is_scholarship_available) ||
+      (filters.scholarship === "unavailable" &&
+        !course.is_scholarship_available);
+    const matchesFeatured =
+      !filters.featured ||
+      (filters.featured === "featured" && course.is_featured) ||
+      (filters.featured === "regular" && !course.is_featured);
 
-  // Pagination logic
+    return (
+      matchesSearch &&
+      matchesDegree &&
+      matchesCountry &&
+      matchesField &&
+      matchesDuration &&
+      matchesScholarship &&
+      matchesFeatured
+    );
+  });
+
   useEffect(() => {
     setTotalPages(Math.ceil(filteredCourses.length / coursesPerPage));
     setTotalCourses(filteredCourses.length);
-    // Reset to first page when search changes
     setCurrentPage(1);
-  }, [filteredCourses.length, search]);
+  }, [filteredCourses.length, filters, search]);
 
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
@@ -173,6 +186,15 @@ const Courses = ({ country, course, university }) => {
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  const getIntakes = (course) => {
+    const intakes = [];
+    if (course.intake_spring) intakes.push("Spring");
+    if (course.intake_summer) intakes.push("Summer");
+    if (course.intake_fall) intakes.push("Fall");
+    if (course.intake_winter) intakes.push("Winter");
+    return intakes.join(", ") || "Not specified";
   };
 
   const skeletonCards = Array.from({ length: coursesPerPage }).map((_, i) => (
@@ -210,16 +232,13 @@ const Courses = ({ country, course, university }) => {
     </div>
   ));
 
-  // Pagination controls component
   const PaginationControls = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
 
-    // Calculate range of pages to show
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-    // Adjust if we're at the start or end
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -345,50 +364,78 @@ const Courses = ({ country, course, university }) => {
               {[
                 {
                   name: "degree",
-                  options: ["bachelor", "master", "phd", "diploma"],
+                  label: "Degree Level",
+                  options: [
+                    { value: "", label: "All Degrees" },
+                    { value: "certificate", label: "Certificate" },
+                    { value: "diploma", label: "Diploma" },
+                    { value: "bachelor", label: "Bachelor" },
+                    { value: "master", label: "Master" },
+                    { value: "doctorate", label: "Doctorate" },
+                    { value: "postgraduate", label: "Post-Graduate" },
+                  ],
                   icon: <GraduationCap className="h-4 w-4 mr-2" />,
                 },
                 {
                   name: "country",
+                  label: "Country",
                   options: [
-                    "united-states",
-                    "canada",
-                    "united-kingdom",
-                    "germany",
-                    "australia",
+                    { value: "", label: "All Countries" },
+                    ...countries.map((country) => ({
+                      value: country.name,
+                      label: country.name,
+                    })),
                   ],
                   icon: <Globe className="h-4 w-4 mr-2" />,
                 },
                 {
                   name: "field",
+                  label: "Field of Study",
                   options: [
-                    "computer-science",
-                    "mba",
-                    "data-science",
-                    "engineering",
-                    "business",
-                    "medicine",
-                    "architecture",
+                    { value: "", label: "All Fields" },
+                    ...fields.map((field) => ({
+                      value: field.name,
+                      label: field.name,
+                    })),
                   ],
                   icon: <BookOpen className="h-4 w-4 mr-2" />,
                 },
                 {
                   name: "duration",
-                  options: ["1-year", "2-years", "3-years", "4-years"],
-                  icon: <Clock className="h-4 w-4 mr-2" />,
+                  label: "Duration",
+                  options: [
+                    { value: "", label: "Any Duration" },
+                    { value: "short", label: "Short (<1 year)" },
+                    { value: "medium", label: "Medium (1-3 years)" },
+                    { value: "long", label: "Long (>3 years)" },
+                  ],
+                  icon: <Clock3 className="h-4 w-4 mr-2" />,
                 },
                 {
-                  name: "delivery",
-                  options: ["on-campus", "online", "hybrid"],
-                  icon: <User className="h-4 w-4 mr-2" />,
+                  name: "scholarship",
+                  label: "Scholarship",
+                  options: [
+                    { value: "", label: "Any Scholarship" },
+                    { value: "available", label: "Available" },
+                    { value: "unavailable", label: "Unavailable" },
+                  ],
+                  icon: <Award className="h-4 w-4 mr-2" />,
                 },
-              ].map(({ name, options, icon }) => (
+                {
+                  name: "featured",
+                  label: "Featured",
+                  options: [
+                    { value: "", label: "All Courses" },
+                    { value: "featured", label: "Featured Only" },
+                    { value: "regular", label: "Regular Only" },
+                  ],
+                  icon: <Star className="h-4 w-4 mr-2" />,
+                },
+              ].map(({ name, label, options, icon }) => (
                 <div key={name} className="relative flex-1 min-w-[150px]">
                   <div className="flex items-center text-sm text-secondary-500 mb-1 ml-1">
                     {icon}
-                    <span className="text-primary-800">
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
-                    </span>
+                    <span className="text-primary-800">{label}</span>
                   </div>
                   <select
                     name={name}
@@ -396,11 +443,9 @@ const Courses = ({ country, course, university }) => {
                     onChange={handleFilterChange}
                     className="appearance-none w-full pl-3 pr-8 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
                   >
-                    {options.map((o) => (
-                      <option key={o} value={o}>
-                        {o
-                          .replace(/-/g, " ")
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                    {options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
                       </option>
                     ))}
                   </select>
@@ -479,38 +524,54 @@ const Courses = ({ country, course, university }) => {
                   >
                     <div className="p-6 w-full">
                       <div className="flex items-start mb-4">
-                        <img
-                          src={course.logo}
-                          alt={`${course.university} logo`}
-                          className="h-12 w-12 rounded-full object-contain mr-4 border border-gray-200"
-                        />
+                        <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center mr-4">
+                          <School className="h-6 w-6 text-primary-800" />
+                        </div>
                         <div>
                           <h3 className="text-xl font-bold text-gray-900">
                             {course.name}
                           </h3>
-                          <div className="text-sm text-gray-500 mt-1">
-                            {course.university}, {course.country}
+                          <div className="text-sm text-gray-500 mt-1 flex items-center">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            {course.university_name},{" "}
+                            {course.university_country}
                           </div>
                         </div>
+                        {course.is_featured && (
+                          <div className="ml-auto">
+                            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                          </div>
+                        )}
                       </div>
 
-                      <p className="text-gray-700 mb-4">{course.description}</p>
+                      <div
+                        className="text-gray-700 mb-4 line-clamp-3"
+                        dangerouslySetInnerHTML={{ __html: course.description }}
+                      />
 
                       <div className="flex flex-wrap gap-2 mb-4">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                          <GraduationCap className="h-3 w-3 mr-1" />{" "}
-                          {course.degree}
+                          <GraduationCap className="h-3 w-3 mr-1" />
+                          {course.degree_level.charAt(0).toUpperCase() +
+                            course.degree_level.slice(1)}
                         </span>
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          <BookOpen className="h-3 w-3 mr-1" /> {course.field}
+                          <BookOpen className="h-3 w-3 mr-1" />
+                          {course.category_name}
                         </span>
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          <Clock className="h-3 w-3 mr-1" /> {course.duration}
+                          <Clock className="h-3 w-3 mr-1" />
+                          {course.duration} {course.duration_type}
                         </span>
-                        {course.scholarship && (
+                        {course.is_scholarship_available ? (
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <Award className="h-3 w-3 mr-1" /> Scholarship:{" "}
-                            {course.scholarship}
+                            <Award className="h-3 w-3 mr-1" />
+                            Scholarship Available
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <XCircle className="h-3 w-3 mr-1" />
+                            No Scholarship
                           </span>
                         )}
                       </div>
@@ -519,94 +580,49 @@ const Courses = ({ country, course, university }) => {
                         <div>
                           <div className="text-gray-500 flex items-center">
                             <CircleDollarSign className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Tuition
+                            Tuition Fee
                           </div>
                           <div className="font-medium pl-6">
-                            {course.tuition || "Varies"}
+                            {course.currency} {course.tuition_fee}
                           </div>
                         </div>
                         <div>
                           <div className="text-gray-500 flex items-center">
                             <Calendar className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Intake
+                            Intakes
                           </div>
                           <div className="font-medium pl-6">
-                            {course.intake || "Multiple"}
+                            {getIntakes(course)}
                           </div>
                         </div>
-                        {course.acceptanceRate && (
-                          <div>
-                            <div className="text-gray-500 flex items-center">
-                              <Percent className="h-4 w-4 mr-1.5 text-secondary-500" />
-                              Acceptance
-                            </div>
-                            <div className="font-medium pl-6">
-                              {course.acceptanceRate}
-                            </div>
+                        <div>
+                          <div className="text-gray-500 flex items-center">
+                            <Percent className="h-4 w-4 mr-1.5 text-secondary-500" />
+                            Min GPA
                           </div>
-                        )}
-                        {course.delivery && (
-                          <div>
-                            <div className="text-gray-500 flex items-center">
-                              <User className="h-4 w-4 mr-1.5 text-secondary-500" />
-                              Delivery
-                            </div>
-                            <div className="font-medium pl-6">
-                              {course.delivery}
-                            </div>
+                          <div className="font-medium pl-6">
+                            {course.min_gpa}
                           </div>
-                        )}
+                        </div>
+                        <div>
+                          <div className="text-gray-500 flex items-center">
+                            <CheckCircle className="h-4 w-4 mr-1.5 text-secondary-500" />
+                            IELTS
+                          </div>
+                          <div className="font-medium pl-6">
+                            {course.ielts_score}
+                          </div>
+                        </div>
                       </div>
 
-                      {course.curriculum && (
-                        <div className="mb-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <BookOpen className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Key Topics
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {course.curriculum.slice(0, 3).map((topic, i) => (
-                              <span
-                                key={i}
-                                className="text-xs px-2 py-1 bg-white rounded-md border border-primary-800 text-primary-800"
-                              >
-                                {topic}
-                              </span>
-                            ))}
-                            {course.curriculum.length > 3 && (
-                              <span className="text-xs px-2 py-1 bg-gray-100 rounded-md text-gray-500">
-                                +{course.curriculum.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {course.careerOutcomes && (
-                        <div className="mb-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <BarChart2 className="h-4 w-4 mr-1.5 text-secondary-500" />
-                            Career Outcomes
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {course.careerOutcomes
-                              .slice(0, 3)
-                              .map((career, i) => (
-                                <span
-                                  key={i}
-                                  className="text-xs px-2 py-1 bg-white rounded-md border border-green-600 text-green-700"
-                                >
-                                  {career}
-                                </span>
-                              ))}
-                            {course.careerOutcomes.length > 3 && (
-                              <span className="text-xs px-2 py-1 bg-gray-100 rounded-md text-gray-500">
-                                +{course.careerOutcomes.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      <div className="flex justify-end items-center mt-4">
+                        <Link
+                          href={`/courses/${course.slug}`}
+                          className="bg-primary-800 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                        >
+                          View Details
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 ))

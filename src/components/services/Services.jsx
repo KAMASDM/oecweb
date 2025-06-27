@@ -184,7 +184,7 @@ const Services = () => {
     const fetchServices = async () => {
       setIsLoading(true);
       try {
-        const response = await ajaxCall("/services/services", {
+        const response = await ajaxCall("/services/services/", {
           method: "GET",
         });
 
