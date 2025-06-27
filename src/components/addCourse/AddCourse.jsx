@@ -1,17 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import OpenAI from "openai";
 import ajaxCall from "@/helpers/ajaxCall";
 
 const AddCourse = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingName, setIsFetchingName] = useState(false);
+  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
   const [universities, setUniversities] = useState([]);
   const [courseCategories, setCourseCategories] = useState([]);
   const [activeTab, setActiveTab] = useState("basic");
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
     university: "",
+    university_name: "",
     category: "",
+    category_name: "",
     degree_level: "certificate",
     duration: "",
     duration_unit: "years",
@@ -38,6 +44,100 @@ const AddCourse = () => {
     is_active: false,
   });
 
+  const initiateAiFetch = async () => {
+    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+      setError("OpenAI API key not configured.");
+      return;
+    }
+    if (!formData.university_name || !formData.category_name) {
+      return;
+    }
+
+    setError(null);
+
+    // Step 1: Fetch Course Name
+    setIsFetchingName(true);
+    const openai = new OpenAI({
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
+
+    try {
+      const namePrompt = `Suggest a common and official-sounding course name for the category "${formData.category_name}" offered at the "${formData.university_name}". Return only the name as a plain text string, without any extra text or quotation marks.`;
+      const nameRes = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: namePrompt }],
+      });
+      const courseName = nameRes.choices[0].message.content.trim();
+      const courseSlug = courseName
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+
+      setFormData((prev) => ({ ...prev, name: courseName, slug: courseSlug }));
+      setIsFetchingName(false);
+
+      // Step 2: Fetch All Other Details with the new course name
+      setIsFetchingDetails(true);
+      const detailsPrompt = `
+        Based on the course "${courseName}" at "${formData.university_name}", provide the following details in a valid JSON format.
+        The JSON object must have these keys: "description", "curriculum", "career_prospects", "admission_requirements", "tuition_fee", "other_fees", "currency", "min_gpa", "ielts_score", "toefl_score", "gre_required", "gmat_required", "is_scholarship_available", "meta_title", "meta_description", "duration", "duration_unit", and "intakes".
+        - The "duration" should be a number (e.g., 4).
+        - The "duration_unit" should be one of the following strings: "years", "months", or "weeks".
+        - The "intakes" value should be an object with boolean keys for "spring", "fall", "summer", and "winter".
+        - For boolean fields, the value must be true or false.
+        - For numerical fields, provide a number.
+        - The "currency" should be a standard currency code (e.g., USD, CAD, EUR).
+      `;
+
+      const detailsRes = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: detailsPrompt }],
+      });
+
+      const json = JSON.parse(detailsRes.choices[0].message.content);
+
+      setFormData((prev) => ({
+        ...prev,
+        description: json.description || "",
+        curriculum: json.curriculum || "",
+        career_prospects: json.career_prospects || "",
+        admission_requirements: json.admission_requirements || "",
+        tuition_fee: json.tuition_fee || "",
+        other_fees: json.other_fees || "",
+        currency: json.currency || "",
+        min_gpa: json.min_gpa || "",
+        ielts_score: json.ielts_score || "",
+        toefl_score: json.toefl_score || "",
+        gre_required: json.gre_required || false,
+        gmat_required: json.gmat_required || false,
+        is_scholarship_available: json.is_scholarship_available || false,
+        meta_title: json.meta_title || "",
+        meta_description: json.meta_description || "",
+        duration: json.duration || "",
+        duration_unit: json.duration_unit || "years",
+        intake_spring: json.intakes?.spring || false,
+        intake_fall: json.intakes?.fall || false,
+        intake_summer: json.intakes?.summer || false,
+        intake_winter: json.intakes?.winter || false,
+      }));
+    } catch (err) {
+      console.error("Error fetching data from OpenAI:", err);
+      setError(
+        "Unable to fetch course data. Please check the console for more details."
+      );
+    } finally {
+      setIsFetchingName(false);
+      setIsFetchingDetails(false);
+    }
+  };
+
+  useEffect(() => {
+    if (formData.university && formData.category) {
+      initiateAiFetch();
+    }
+  }, [formData.university, formData.category]);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -63,22 +163,46 @@ const AddCourse = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (name === "university") {
+      const selectedUniversity = universities.find(
+        (uni) => uni.id === parseInt(value)
+      );
+      setFormData((prev) => ({
+        ...prev,
+        university: value,
+        university_name: selectedUniversity ? selectedUniversity.name : "",
+      }));
+    } else if (name === "category") {
+      const selectedCategory = courseCategories.find(
+        (cat) => cat.id === parseInt(value)
+      );
+      setFormData((prev) => ({
+        ...prev,
+        category: value,
+        category_name: selectedCategory ? selectedCategory.name : "",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    const payload = { ...formData };
+
     try {
       const response = await ajaxCall("/academics/academics/courses/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       if (response.status === 201) {
         alert("Course added successfully!");
@@ -136,6 +260,20 @@ const AddCourse = () => {
             </nav>
           </div>
 
+          <div className="text-center my-4">
+            {isFetchingName && (
+              <p className="text-primary-800 font-semibold">
+                Generating course name...
+              </p>
+            )}
+            {isFetchingDetails && (
+              <p className="text-primary-800 font-semibold">
+                Fetching course details...
+              </p>
+            )}
+            {error && <p className="text-red-500 font-semibold">{error}</p>}
+          </div>
+
           {/* Tab Contents */}
           <div className="space-y-6">
             {/* Basic Information Tab */}
@@ -150,7 +288,7 @@ const AddCourse = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Course name"
+                    placeholder="Auto-generated after selecting University and Category"
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
                     required
                   />
@@ -165,7 +303,7 @@ const AddCourse = () => {
                     name="slug"
                     value={formData.slug}
                     onChange={handleChange}
-                    placeholder="slug"
+                    placeholder="Auto-generated from course name"
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
                     required
                   />
@@ -460,23 +598,26 @@ const AddCourse = () => {
                     Intake Periods
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {["spring", "fall", "summer", "winter"].map((intake) => (
-                      <div key={intake} className="flex items-center">
+                    {[
+                      { name: "intake_spring", label: "Intake Spring" },
+                      { name: "intake_fall", label: "Intake Fall" },
+                      { name: "intake_summer", label: "Intake Summer" },
+                      { name: "intake_winter", label: "Intake Winter" },
+                    ].map((intake) => (
+                      <div key={intake.name} className="flex items-center">
                         <input
                           type="checkbox"
-                          id={`intake_${intake}`}
-                          name={`intake_${intake}`}
-                          checked={formData[`intake_${intake}`]}
+                          id={intake.name}
+                          name={intake.name}
+                          checked={formData[intake.name]}
                           onChange={handleChange}
                           className="h-4 w-4 text-primary-800 focus:ring-primary-800 border-gray-300 rounded"
                         />
                         <label
-                          htmlFor={`intake_${intake}`}
+                          htmlFor={intake.name}
                           className="ml-2 block text-gray-700"
                         >
-                          {`Intake ${
-                            intake.charAt(0).toUpperCase() + intake.slice(1)
-                          }`}
+                          {intake.label}
                         </label>
                       </div>
                     ))}
@@ -588,7 +729,7 @@ const AddCourse = () => {
             ) : (
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || isFetchingName || isFetchingDetails}
                 className="bg-primary-800 hover:bg-primary-600 text-white py-2 px-6 rounded-lg disabled:opacity-50"
               >
                 {isLoading ? "Adding..." : "Add Course"}

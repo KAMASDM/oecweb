@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import OpenAI from "openai";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Grid,
   List,
@@ -15,24 +17,30 @@ import {
   Award,
   User,
   BarChart2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import OpenAI from "openai";
 
-const AICollegeFinder = ({ country, university }) => {
+const AICollegeFinder = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     degree: "bachelor",
-    country: country ? country : "united-states",
-    university: university ? university : "",
+    country: "united-states",
+    university: "",
     field: "computer-science",
     duration: "4-years",
     delivery: "on-campus",
   });
   const [search, setSearch] = useState("");
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const coursesPerPage = 6;
 
   const getUniversityLogo = (name) => {
     if (!name) return "https://placehold.co/100x100/2563eb/white?text=U";
@@ -48,6 +56,7 @@ const AICollegeFinder = ({ country, university }) => {
     setIsLoading(true);
     setError(null);
     setCourses([]);
+    setCurrentPage(1); // Reset to first page on new filter
 
     if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
       setError("OpenAI API key not configured.");
@@ -61,7 +70,7 @@ const AICollegeFinder = ({ country, university }) => {
     });
 
     const prompt = `
-      You are an expert course database assistant. Generate a list of 6 fictional but realistic courses based on:
+      You are an expert course database assistant. Generate a list of 18 fictional but realistic courses based on:
       - Degree Level: ${filters.degree}
       - Country: ${filters.country}
       - University: ${filters.university || "any reputable university"}
@@ -111,6 +120,8 @@ const AICollegeFinder = ({ country, university }) => {
           }))
         : [];
       setCourses(coursesWithLogos);
+      setTotalCourses(coursesWithLogos.length);
+      setTotalPages(Math.ceil(coursesWithLogos.length / coursesPerPage));
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("Unable to fetch course data. Please try again later.");
@@ -142,12 +153,29 @@ const AICollegeFinder = ({ country, university }) => {
       )
   );
 
+  // Pagination logic
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredCourses.length / coursesPerPage));
+    setTotalCourses(filteredCourses.length);
+    // Reset to first page when search changes
+    setCurrentPage(1);
+  }, [filteredCourses.length, search]);
+
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  const skeletonCards = Array.from({ length: 6 }).map((_, i) => (
+  const skeletonCards = Array.from({ length: coursesPerPage }).map((_, i) => (
     <div
       key={`skel-${i}`}
       className={`bg-white rounded-xl shadow-sm overflow-hidden ${
@@ -181,6 +209,108 @@ const AICollegeFinder = ({ country, university }) => {
       </div>
     </div>
   ));
+
+  // Pagination controls component
+  const PaginationControls = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    // Calculate range of pages to show
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    // Adjust if we're at the start or end
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+        <div className="text-sm text-gray-600">
+          Showing {indexOfFirstCourse + 1} to{" "}
+          {Math.min(indexOfLastCourse, totalCourses)} of {totalCourses} courses
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className={`p-2 rounded-lg ${
+              currentPage === 1
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          {startPage > 1 && (
+            <>
+              <button
+                onClick={() => paginate(1)}
+                className={`px-3 py-1 rounded-lg ${
+                  1 === currentPage
+                    ? "bg-primary-800 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                1
+              </button>
+              {startPage > 2 && <span className="px-2">...</span>}
+            </>
+          )}
+
+          {pageNumbers.map((number) => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 rounded-lg ${
+                number === currentPage
+                  ? "bg-primary-800 text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+
+          {endPage < totalPages && (
+            <>
+              {endPage < totalPages - 1 && <span className="px-2">...</span>}
+              <button
+                onClick={() => paginate(totalPages)}
+                className={`px-3 py-1 rounded-lg ${
+                  totalPages === currentPage
+                    ? "bg-primary-800 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className={`p-2 rounded-lg ${
+              currentPage === totalPages
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            aria-label="Next page"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-gray-100">
@@ -233,12 +363,12 @@ const AICollegeFinder = ({ country, university }) => {
                   name: "field",
                   options: [
                     "computer-science",
-                    "business-administration",
+                    "mba",
                     "data-science",
                     "engineering",
+                    "business",
                     "medicine",
                     "architecture",
-                    "psychology",
                   ],
                   icon: <BookOpen className="h-4 w-4 mr-2" />,
                 },
@@ -326,7 +456,7 @@ const AICollegeFinder = ({ country, university }) => {
                     </button>
                   </div>
                 </div>
-              ) : filteredCourses.length === 0 ? (
+              ) : currentCourses.length === 0 ? (
                 <div className="col-span-full text-center py-16">
                   <div className="bg-primary-50 border border-primary-200 text-primary-800 px-4 py-3 rounded-lg max-w-2xl mx-auto">
                     <h3 className="font-bold text-lg mb-1">No Courses Found</h3>
@@ -334,7 +464,7 @@ const AICollegeFinder = ({ country, university }) => {
                   </div>
                 </div>
               ) : (
-                filteredCourses.map((course) => (
+                currentCourses.map((course) => (
                   <motion.div
                     key={course.id}
                     variants={cardVariants}
@@ -477,26 +607,15 @@ const AICollegeFinder = ({ country, university }) => {
                           </div>
                         </div>
                       )}
-
-                      <div className="flex justify-between items-center border-t border-gray-100 pt-4">
-                        <div>
-                          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium mr-4">
-                            View Details
-                          </button>
-                          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            Compare
-                          </button>
-                        </div>
-                        <button className="bg-primary-700 hover:bg-primary-800 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                          Apply Now
-                        </button>
-                      </div>
                     </div>
                   </motion.div>
                 ))
               )}
             </AnimatePresence>
           </div>
+          {!isLoading && !error && filteredCourses.length > 0 && (
+            <PaginationControls />
+          )}
         </div>
       </main>
     </div>

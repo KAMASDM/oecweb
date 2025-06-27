@@ -17,6 +17,7 @@ const Header = () => {
   const mobileMenuRef = useRef(null);
   const exploreDropdownRef = useRef(null);
   const [countries, setCountries] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
@@ -24,17 +25,24 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleExploreOpen = async () => {
-    if (countries.length === 0 && !isLoading) {
+    if ((countries.length === 0 || courses.length === 0) && !isLoading) {
       try {
         setIsLoading(true);
-        const response = await ajaxCall("/academics/academics/countries/", {
-          method: "GET",
-        });
-        if (response?.data?.results?.length > 0) {
-          setCountries(response.data.results);
+        const [countriesResponse, coursesResponse] = await Promise.all([
+          ajaxCall("/academics/academics/countries/", { method: "GET" }),
+          ajaxCall("/academics/academics/course-categories/", {
+            method: "GET",
+          }),
+        ]);
+
+        if (countriesResponse?.data?.results?.length > 0) {
+          setCountries(countriesResponse.data.results);
+        }
+        if (coursesResponse?.data?.results?.length > 0) {
+          setCourses(coursesResponse.data.results);
         }
       } catch (error) {
-        console.error("Failed to fetch countries:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -99,6 +107,7 @@ const Header = () => {
 
   const getMenuSections = () => {
     const topCountries = countries.filter((c) => c.university_count > 0);
+    const topCourses = courses.filter((c) => c.course_count >= 0);
 
     return [
       {
@@ -138,17 +147,17 @@ const Header = () => {
       {
         title: "Popular Courses",
         subtitle: "Course details, structure, pre-reqs & more...",
-        items: [
-          {
-            name: "Computer Science",
-            href: "/popular-courses/computer-science",
-          },
-          { name: "MBA", href: "/popular-courses/mba" },
-          { name: "Data Science", href: "/popular-courses/data-science" },
-          { name: "Engineering", href: "/popular-courses/engineering" },
-          { name: "Business", href: "/popular-courses/business" },
-          { name: "Explore All", href: "/popular-courses" },
-        ],
+        items:
+          topCourses.length > 0
+            ? [
+                ...topCourses.map((course) => ({
+                  name: course.name,
+                  href: `/popular-courses/${course.slug}`,
+                })),
+                { name: "Explore All", href: "/popular-courses" },
+              ]
+            : [{ name: "Loading...", href: "#" }],
+        isLoading: topCourses.length === 0,
       },
     ];
   };
