@@ -9,15 +9,6 @@ import {
   Headphones,
 } from "lucide-react";
 
-const iconComponents = {
-  GraduationCap,
-  FileText,
-  IdCard,
-  Calculator,
-  Plane,
-  Headphones,
-};
-
 const services = [
   {
     icon: <GraduationCap size={32} />,
@@ -106,7 +97,6 @@ const Services = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
-            const IconComponent = iconComponents[service.icon];
             return (
               <div
                 key={index}
