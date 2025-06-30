@@ -26,7 +26,7 @@ const smartFeatures = [
     image: "/CollegeFinder.png",
   },
   {
-    href: "",
+    href: "/community",
     title: "Community",
     description:
       "Connect with over a million study abroad students & aspirants and build your network.",
@@ -40,7 +40,7 @@ const smartFeatures = [
     image: "/Events.png",
   },
   {
-    href: "",
+    href: "/finance",
     title: "Finance",
     description:
       "Check your eligibility and start your loan process with 100% free assistance.",
@@ -63,7 +63,7 @@ const SmartFeatures = () => {
             >
               All-Tech For Studying Abroad
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-7xl mx-auto px-4">
               We have smart features to help you throughout your abroad
               education journey
             </p>

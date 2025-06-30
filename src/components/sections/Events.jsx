@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import moment from "moment";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import ajaxCall from "@/helpers/ajaxCall";
 import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
@@ -43,7 +43,7 @@ const Events = () => {
           >
             What's happening with overseas education
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 mx-auto">
             Stay up-to-date with the latest updates on overseas education,
             student life, rules, COVID-19, and many more!
           </p>
