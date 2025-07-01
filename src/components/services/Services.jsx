@@ -13,7 +13,7 @@ import {
   DollarSign,
   GraduationCap,
   University,
-  Passport,
+  IdCard,
   Briefcase,
 } from "lucide-react";
 import FAQSection from "./faqs/Faqs";
@@ -58,7 +58,7 @@ const slugToIdMap = [
 const serviceIcons = {
   matching: University,
   application: FileText,
-  visa: Passport,
+  visa: IdCard,
   financial: DollarSign,
   predeparture: Plane,
   support: GraduationCap,

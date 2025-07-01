@@ -121,7 +121,7 @@ const StudentBlogs = () => {
                       <span>{post.views_count} views</span>
                     </div>
                     <a
-                      href={`/blogs/${post.slug}`}
+                      href={`/blog/${post.slug}`}
                       className="text-primary-800 font-medium hover:text-primary-600"
                     >
                       Read More →

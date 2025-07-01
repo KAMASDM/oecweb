@@ -457,7 +457,9 @@ const Universities = ({ country }) => {
                         <div className="p-6 pt-14 text-center flex-grow flex flex-col">
                           <h3 className="text-xl font-bold text-gray-900 mb-1">
                             <Link
-                              href={`/university/${uni.slug}`}
+                              href={`/universities/${uni.country_name
+                                .toLowerCase()
+                                .replace(/\s+/g, "-")}/${uni.slug}`}
                               className="hover:text-primary-800 hover:underline"
                             >
                               {uni.name}
@@ -592,7 +594,9 @@ const Universities = ({ country }) => {
                           <div className="flex-grow">
                             <h3 className="text-xl font-bold text-gray-900 mb-1">
                               <Link
-                                href={`/university/${uni.slug}`}
+                                href={`/universities/${uni.country_name
+                                  .toLowerCase()
+                                  .replace(/\s+/g, "-")}/${uni.slug}`}
                                 className="hover:text-primary-800 hover:underline"
                               >
                                 {uni.name}

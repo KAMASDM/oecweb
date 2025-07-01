@@ -275,7 +275,7 @@ const Blogs = () => {
                     >
                       <div className="relative overflow-hidden">
                         <Link
-                          href={`/blogs/${article.slug}`}
+                          href={`/blog/${article.slug}`}
                           aria-label={article.title}
                         >
                           <img
@@ -293,7 +293,7 @@ const Blogs = () => {
                         </p>
                         <h3 className="mt-2 text-lg font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
                           <Link
-                            href={`/blogs/${article.slug}`}
+                            href={`/blog/${article.slug}`}
                             className="line-clamp-2"
                           >
                             {article.title}
@@ -319,7 +319,7 @@ const Blogs = () => {
                           </div>
                         </div>
                         <Link
-                          href={`/blogs/${article.slug}`}
+                          href={`/blog/${article.slug}`}
                           className="mt-4 inline-flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
                         >
                           Read More
@@ -350,7 +350,7 @@ const Blogs = () => {
                           {article.category_name}
                         </p>
                         <h3 className="mt-2 text-xl font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
-                          <Link href={`/blogs/${article.slug}`}>
+                          <Link href={`/blog/${article.slug}`}>
                             {article.title}
                           </Link>
                         </h3>
@@ -375,7 +375,7 @@ const Blogs = () => {
                             </div>
                           </div>
                           <Link
-                            href={`/blogs/${article.slug}`}
+                            href={`/blog/${article.slug}`}
                             className="font-semibold text-primary-600 inline-flex items-center gap-1 hover:text-primary-800 whitespace-nowrap"
                           >
                             Read More{" "}

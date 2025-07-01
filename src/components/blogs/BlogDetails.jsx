@@ -12,7 +12,7 @@ import {
   Bookmark,
   Heart,
   Twitter,
-  Linkedin,
+  Instagram,
   Facebook,
   Tag,
   ArrowUp,
@@ -27,9 +27,9 @@ const shareIcons = [
     color: "hover:bg-blue-50 hover:text-blue-500",
   },
   {
-    icon: Linkedin,
-    label: "LinkedIn",
-    platform: "linkedin",
+    icon: Instagram,
+    label: "Instagram",
+    platform: "instagram",
     color: "hover:bg-blue-50 hover:text-blue-700",
   },
   {
@@ -82,9 +82,9 @@ const BlogDetails = ({ slug }) => {
 
   const handleShare = (platform) => {
     const urls = {
-      twitter: "https://twitter.com",
-      linkedin: "https://www.linkedin.com",
-      facebook: "https://www.facebook.com",
+      twitter: "https://x.com/oec_india",
+      instagram: "https://www.instagram.com/oecindia",
+      facebook: "https://www.facebook.com/oecbaroda",
     };
 
     if (urls[platform]) {
@@ -136,7 +136,7 @@ const BlogDetails = ({ slug }) => {
             className="mt-8 mb-8"
           >
             <Link
-              href="/blogs"
+              href="/blog"
               className="group flex items-center gap-2 text-primary-600 hover:text-primary-800 transition-colors font-medium"
             >
               <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
