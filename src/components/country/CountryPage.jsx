@@ -85,7 +85,6 @@ const CountryPage = ({ normalCountry }) => {
         const response = await ajaxCall("/academics/academics/countries/", {
           method: "GET",
         });
-
         if (response?.data?.results?.length > 0) {
           const data = response.data.results.find(
             (country) => country.name === normalCountry

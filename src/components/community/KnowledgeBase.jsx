@@ -145,7 +145,7 @@ const KnowledgeBase = () => {
                     {blog.reading_time} min read
                   </span>
                   <Link
-                    href={`/blogs/${blog.slug}`}
+                    href={`/blog/${blog.slug}`}
                     className="text-primary-600 text-sm font-medium hover:text-primary-800"
                   >
                     Read More

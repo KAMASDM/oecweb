@@ -617,7 +617,9 @@ const Courses = ({ course }) => {
 
                       <div className="flex justify-end items-center mt-4">
                         <Link
-                          href={`/courses/${course.slug}`}
+                          href={`/popular-courses/${course.category_name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}/${course.slug}`}
                           className="bg-primary-800 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                         >
                           View Details

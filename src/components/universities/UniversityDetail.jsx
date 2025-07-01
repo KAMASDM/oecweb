@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-const UniversityDetails = ({ slug }) => {
+const UniversityDetail = ({ slug }) => {
   const [university, setUniversity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -539,4 +539,4 @@ const UniversityDetails = ({ slug }) => {
   );
 };
 
-export default UniversityDetails;
+export default UniversityDetail;

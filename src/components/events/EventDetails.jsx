@@ -16,7 +16,6 @@ import {
   FacebookIcon,
   TwitterIcon,
   InstagramIcon,
-  LinkedinIcon,
 } from "lucide-react";
 
 const EventDetailPage = ({ slug }) => {
@@ -440,32 +439,25 @@ const EventDetailPage = ({ slug }) => {
                   </h3>
                   <div className="flex justify-between">
                     <Link
-                      href="https://www.facebook.com"
+                      href="https://www.facebook.com/oecbaroda"
                       target="_blank"
                       className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors"
                     >
                       <FacebookIcon />
                     </Link>
                     <Link
-                      href="https://twitter.com"
+                      href="https://x.com/oec_india"
                       target="_blank"
                       className="w-12 h-12 rounded-full bg-blue-100 text-blue-400 flex items-center justify-center hover:bg-blue-200 transition-colors"
                     >
                       <TwitterIcon />
                     </Link>
                     <Link
-                      href="https://www.instagram.com"
+                      href="https://www.instagram.com/oecindia"
                       target="_blank"
                       className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors"
                     >
                       <InstagramIcon />
-                    </Link>
-                    <Link
-                      href="https://www.linkedin.com"
-                      target="_blank"
-                      className="w-12 h-12 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center hover:bg-blue-200 transition-colors"
-                    >
-                      <LinkedinIcon />
                     </Link>
                   </div>
                 </div>

@@ -75,10 +75,10 @@ const CTA = () => {
               <Link
                 href="tel:+919876543210"
                 className="flex items-center justify-center py-3 px-6 border border-white text-white hover:bg-white hover:text-primary-600 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
-                aria-label="Call us at +91 98765 43210"
+                aria-label="Call us at +91 93275 81167"
               >
                 <Phone className="h-5 w-5 mr-2" aria-hidden="true" />
-                Call +91 98765 43210
+                Call +91 93275 81167
               </Link>
             </div>
 

@@ -93,7 +93,7 @@ const Header = () => {
       title: "Blogs",
       subtitle: "Study abroad articles & more",
       bgColor: "bg-gray-500",
-      href: "/blogs",
+      href: "/blog",
       icon: BookOpen,
     },
     {
@@ -187,14 +187,14 @@ const Header = () => {
               className="flex items-center gap-2 hover:text-primary-200 transition-colors text-xs md:text-sm"
             >
               <Phone size={14} />
-              <span>+91 98765 43210</span>
+              <span>+91 93275 81167</span>
             </Link>
             <Link
-              href="mailto:info@oecindia.com"
+              href="mailto:uk@oecindia.com"
               className="flex items-center gap-2 hover:text-primary-200 transition-colors text-xs md:text-sm"
             >
               <Mail size={14} />
-              <span>info@oecindia.com</span>
+              <span>uk@oecindia.com</span>
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-2 text-primary-100 text-sm">

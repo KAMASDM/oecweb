@@ -8,23 +8,19 @@ import {
   MapPin,
   Facebook,
   Instagram,
-  Linkedin,
-  Youtube,
   Twitter,
 } from "lucide-react";
 
 const socialLinks = [
-  { icon: Facebook, href: "https://www.facebook.com", name: "Facebook" },
-  { icon: Instagram, href: "https://www.instagram.com", name: "Instagram" },
-  { icon: Linkedin, href: "https://www.linkedin.com", name: "LinkedIn" },
-  { icon: Youtube, href: "https://www.youtube.com", name: "YouTube" },
-  { icon: Twitter, href: "https://www.twitter.com", name: "Twitter" },
+  { icon: Facebook, href: "https://www.facebook.com/oecbaroda", name: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/oecindia", name: "Instagram" },
+  { icon: Twitter, href: "https://x.com/oec_india", name: "Twitter" },
 ];
 
 const company = [
   { name: "Universities", href: "/universities" },
   { name: "Courses", href: "/courses" },
-  { name: "Blog & Articles", href: "/blogs" },
+  { name: "Blog & Articles", href: "/blog" },
   { name: "Resources", href: "/resources" },
   { name: "FAQ", href: "/faqs" },
   { name: "About Us", href: "/about-us" },
@@ -195,11 +191,11 @@ const Footer = () => {
                   aria-hidden="true"
                 />
                 <div>
-                  <p className="font-medium">Head Office: Mumbai</p>
+                  <p className="font-medium">Head Office: Vadodara</p>
                   <p className="text-white">
-                    123 Education Hub, MG Road
+                    2nd Floor, Prestige Building, Race Course Circle
                     <br />
-                    Andheri East, Mumbai 400069
+                    Beside Axis Bank, Vadodara 390007
                   </p>
                 </div>
               </div>
@@ -209,8 +205,8 @@ const Footer = () => {
                   className="text-primary-400"
                   aria-hidden="true"
                 />
-                <a href="tel:+919876543210" className="hover:underline">
-                  +91 98765 43210
+                <a href="tel:+919327581167" className="hover:underline">
+                  +91 93275 81167, +91 89055 70642
                 </a>
               </div>
               <div className="flex items-center space-x-3">
@@ -219,8 +215,8 @@ const Footer = () => {
                   className="text-primary-400"
                   aria-hidden="true"
                 />
-                <a href="mailto:info@oecindia.com" className="hover:underline">
-                  info@oecindia.com
+                <a href="mailto:uk@oecindia.com" className="hover:underline">
+                  uk@oecindia.com
                 </a>
               </div>
               <div className="flex items-center space-x-3">
@@ -230,10 +226,10 @@ const Footer = () => {
                   aria-hidden="true"
                 />
                 <a
-                  href="tel:+919876543212"
+                  href="tel:+918905570642"
                   className="font-medium text-secondary-500 hover:underline"
                 >
-                  Emergency: +91 98765 43212
+                  Emergency: +91 8905570642
                 </a>
               </div>
             </div>
@@ -243,25 +239,17 @@ const Footer = () => {
         <div className="border-t border-secondary-500 mt-12 pt-8 text-center text-sm text-white">
           <p>
             &copy; {currentYear} OEC India. All rights reserved. |{" "}
-            <Link href="/privacy" className="hover:text-white underline">
+            <Link href="/privacy-policy" className="hover:text-white">
               Privacy Policy
             </Link>{" "}
             |{" "}
-            <Link href="/terms" className="hover:text-white underline">
-              Terms of Service
+            <Link href="/terms-and-conditions" className="hover:text-white">
+              Terms & Conditions
             </Link>{" "}
             |{" "}
-            <Link href="/disclaimer" className="hover:text-white underline">
+            <Link href="/disclaimer" className="hover:text-white">
               Disclaimer
-            </Link>{" "}
-            |{" "}
-            <Link href="/sitemap" className="hover:text-white underline">
-              Sitemap
             </Link>
-          </p>
-          <p className="mt-2">
-            Registered Education Consultant | ICEF Certified | British Council
-            Partner | NAFSA Member
           </p>
         </div>
       </div>

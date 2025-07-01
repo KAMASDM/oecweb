@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-const CourseDetails = ({ slug }) => {
+const CourseDetail = ({ slug }) => {
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -546,4 +546,4 @@ const CourseDetails = ({ slug }) => {
   );
 };
 
-export default CourseDetails;
+export default CourseDetail;

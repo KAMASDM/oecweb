@@ -87,7 +87,7 @@ const Blogs = ({ country }) => {
           className="group flex flex-col h-full bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-200 overflow-hidden"
         >
           <div className="relative overflow-hidden">
-            <Link href={`/blogs/${article.slug}`} aria-label={article.title}>
+            <Link href={`/blog/${article.slug}`} aria-label={article.title}>
               <img
                 src={article.featured_image}
                 alt={article.title}
@@ -102,7 +102,7 @@ const Blogs = ({ country }) => {
               {article.category_name}
             </p>
             <h3 className="mt-2 text-lg font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
-              <Link href={`/blogs/${article.slug}`} className="line-clamp-2">
+              <Link href={`/blog/${article.slug}`} className="line-clamp-2">
                 {article.title}
               </Link>
             </h3>
@@ -126,7 +126,7 @@ const Blogs = ({ country }) => {
               </div>
             </div>
             <Link
-              href={`/blogs/${article.slug}`}
+              href={`/blog/${article.slug}`}
               className="mt-4 inline-flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
             >
               Read More

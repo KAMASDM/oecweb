@@ -1,6 +1,42 @@
 import React from "react";
 import { Handshake, ShieldCheck, Clock, GraduationCap } from "lucide-react";
 
+export const metadata = {
+  title: "About OEC India - Trusted Study Abroad Consultants Since 2010",
+  description:
+    "Learn about OEC India’s mission, team, and success stories. We are a leading overseas education consultancy helping students study in top global universities.",
+  openGraph: {
+    title: "About OEC India - Trusted Study Abroad Consultants Since 2010",
+    description:
+      "Learn about OEC India’s mission, team, and success stories. We are a leading overseas education consultancy helping students study in top global universities.",
+    images: [
+      {
+        url: "https://oecindia.com/oec.png",
+        width: 800,
+        height: 600,
+        alt: "OEC India",
+      },
+    ],
+    siteName: "OEC India",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About OEC India - Trusted Study Abroad Consultants Since 2010",
+    description:
+      "Learn about OEC India’s mission, team, and success stories. We are a leading overseas education consultancy helping students study in top global universities.",
+    images: [
+      {
+        url: "https://oecindia.com/oec.png",
+        width: 800,
+        height: 600,
+        alt: "OEC India",
+      },
+    ],
+  },
+};
+
 const AboutUs = () => {
   return (
     <div>

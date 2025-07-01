@@ -215,7 +215,7 @@ const ContactUs = () => {
                 href="tel:+919876543210"
                 className="text-gray-600 hover:text-primary-600 transition-colors block mb-2"
               >
-                +91 98765 43210
+                +91 93275 81167
               </a>
               <p className="text-gray-500 text-sm">Mon-Sat: 9 AM - 8 PM</p>
             </div>
@@ -230,7 +230,7 @@ const ContactUs = () => {
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-green-600 transition-colors block mb-2"
               >
-                +91 98765 43210
+                +91 93275 81167
               </a>
               <p className="text-gray-500 text-sm">24/7 Quick Support</p>
             </div>
@@ -240,10 +240,10 @@ const ContactUs = () => {
               </div>
               <h3 className="font-semibold text-lg mb-2">Email Us</h3>
               <a
-                href="mailto:info@oecindia.com"
+                href="mailto:uk@oecindia.com"
                 className="text-gray-600 hover:text-blue-600 transition-colors block mb-2"
               >
-                info@oecindia.com
+                uk@oecindia.com
               </a>
               <p className="text-gray-500 text-sm">Response within 2 hours</p>
             </div>
