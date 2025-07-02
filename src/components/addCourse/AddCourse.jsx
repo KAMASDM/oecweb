@@ -46,7 +46,7 @@ const AddCourse = () => {
 
   const initiateAiFetch = async () => {
     if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-      setError("OpenAI API key not configured.");
+      setError("OpenAI API key not configure.");
       return;
     }
     if (!formData.university_name || !formData.category_name) {
