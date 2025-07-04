@@ -338,7 +338,7 @@ const Courses = ({ course }) => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Find Your Perfect Course
           </h1>
-          <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             Discover programs that match your academic goals and career
             aspirations
           </p>
@@ -350,7 +350,7 @@ const Courses = ({ course }) => {
                 placeholder="Search courses, universities, or fields..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="block w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
+                className="w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
               />
             </div>
           </div>

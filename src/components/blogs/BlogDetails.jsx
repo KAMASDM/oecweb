@@ -97,13 +97,10 @@ const BlogDetails = ({ slug }) => {
       <div className="min-h-screen w-full flex items-center justify-center bg-primary-50">
         <div className="space-y-4 w-full max-w-lg">
           <div className="h-8 bg-gray-200 rounded w-1/4 animate-pulse"></div>
-
           <div className="h-12 bg-gray-200 rounded w-3/4 animate-pulse"></div>
           <div className="h-12 bg-gray-200 rounded w-full animate-pulse"></div>
-
           <div className="h-6 bg-gray-200 rounded w-5/6 animate-pulse"></div>
           <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-
           <div className="flex items-center gap-4 mt-8">
             <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse"></div>
             <div className="space-y-2">
@@ -111,7 +108,6 @@ const BlogDetails = ({ slug }) => {
               <div className="h-3 bg-gray-200 rounded w-16 animate-pulse"></div>
             </div>
           </div>
-
           <div className="w-full h-64 bg-gray-200 rounded-xl mt-8 animate-pulse"></div>
         </div>
       </div>
@@ -127,6 +123,9 @@ const BlogDetails = ({ slug }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      itemScope
+      itemType="https://schema.org/BlogPosting"
+      className="min-h-screen w-full flex flex-col bg-gray-100"
     >
       <header className="relative overflow-hidden pt-20">
         <div className="container mx-auto px-4 pt-10 pb-16">
@@ -138,6 +137,7 @@ const BlogDetails = ({ slug }) => {
             <Link
               href="/blog"
               className="group flex items-center gap-2 text-primary-600 hover:text-primary-800 transition-colors font-medium"
+              aria-label="Back to all blog articles"
             >
               <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
               Back to All Articles
@@ -150,6 +150,7 @@ const BlogDetails = ({ slug }) => {
                 <span
                   key={tag.id}
                   className="px-4 py-1.5 bg-primary-100/80 text-primary-800 rounded-full text-sm font-medium flex items-center gap-2"
+                  itemProp="keywords"
                 >
                   <Tag className="w-4 h-4" />
                   {tag.name}
@@ -157,18 +158,28 @@ const BlogDetails = ({ slug }) => {
               ))}
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight"
+              itemProp="headline"
+            >
               {blog.title}
             </h1>
-            <p className="text-xl text-gray-600 mb-8">{blog.excerpt}</p>
+            <p className="text-xl text-gray-600 mb-8" itemProp="description">
+              {blog.excerpt}
+            </p>
 
             <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-12">
-              <div className="flex items-center gap-4">
+              <div
+                className="flex items-center gap-4"
+                itemProp="author"
+                itemScope
+                itemType="https://schema.org/Person"
+              >
                 <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-800 font-bold">
                   {blog.author_name.charAt(0)}
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-800">
+                  <div className="font-semibold text-gray-800" itemProp="name">
                     {blog.author_name}
                   </div>
                   <div className="text-sm text-gray-500">Author</div>
@@ -177,7 +188,12 @@ const BlogDetails = ({ slug }) => {
               <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-secondary-500" />
-                  {moment(blog.published_at).format("MMM D, YYYY")}
+                  <time
+                    dateTime={moment(blog.published_at).format("YYYY-MM-DD")}
+                    itemProp="datePublished"
+                  >
+                    {moment(blog.published_at).format("MMM D, YYYY")}
+                  </time>
                 </span>
                 <span className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-secondary-500" />
@@ -199,6 +215,9 @@ const BlogDetails = ({ slug }) => {
                       ? "bg-red-100 text-red-600"
                       : "bg-white hover:bg-red-50 text-secondary-500 hover:text-red-500"
                   } shadow-sm hover:shadow-md`}
+                  aria-label={
+                    isLiked ? "Unlike this article" : "Like this article"
+                  }
                 >
                   <Heart
                     className={`w-5 h-5 transition-transform ${
@@ -214,6 +233,9 @@ const BlogDetails = ({ slug }) => {
                       ? "bg-primary-100 text-primary-600"
                       : "bg-white hover:bg-primary-50 text-secondary-500 hover:text-primary-600"
                   } shadow-sm hover:shadow-md`}
+                  aria-label={
+                    isBookmarked ? "Remove bookmark" : "Bookmark this article"
+                  }
                 >
                   <Bookmark
                     className={`w-5 h-5 transition-transform ${
@@ -226,6 +248,8 @@ const BlogDetails = ({ slug }) => {
                   <button
                     onClick={() => setShowShareTooltip(!showShareTooltip)}
                     className="group p-3 rounded-xl bg-white hover:bg-gray-100 text-secondary-500 hover:text-gray-700 transition-all duration-300 shadow-sm hover:shadow-md"
+                    aria-label="Share options"
+                    aria-expanded={showShareTooltip}
                   >
                     <Share2 className="w-5 h-5 transition-transform group-hover:scale-110" />
                   </button>
@@ -236,6 +260,7 @@ const BlogDetails = ({ slug }) => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
                         className="absolute left-full ml-4 top-0 bg-white rounded-xl shadow-lg border border-gray-100 p-2 w-40"
+                        role="menu"
                       >
                         <div className="flex flex-col gap-1">
                           {shareIcons.map(
@@ -244,6 +269,8 @@ const BlogDetails = ({ slug }) => {
                                 key={platform}
                                 onClick={() => handleShare(platform)}
                                 className={`flex items-center gap-2 p-2 rounded-lg text-sm transition-colors w-full ${color}`}
+                                role="menuitem"
+                                aria-label={`Share on ${label}`}
                               >
                                 <Icon className="w-4 h-4 text-secondary-500" />
                                 <span>{label}</span>
@@ -263,6 +290,8 @@ const BlogDetails = ({ slug }) => {
                 src={blog.featured_image}
                 alt={blog.title}
                 className="w-full aspect-[16/8] object-cover rounded-2xl shadow-xl"
+                itemProp="image"
+                loading="lazy"
               />
             </div>
           </div>
@@ -280,6 +309,7 @@ const BlogDetails = ({ slug }) => {
               <div
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: blog.content }}
+                itemProp="articleBody"
               />
             </motion.article>
           </div>
@@ -294,6 +324,7 @@ const BlogDetails = ({ slug }) => {
             exit={{ opacity: 0, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="fixed bottom-8 right-8 p-4 bg-secondary-500 text-white rounded-full shadow-lg hover:opacity-90 hover:shadow-xl transition-all duration-300 z-50"
+            aria-label="Scroll to top"
           >
             <ArrowUp className="w-6 h-6" />
           </motion.button>

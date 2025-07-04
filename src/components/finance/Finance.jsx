@@ -307,14 +307,14 @@ const Finance = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Financial Calculators
           </h1>
-          <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             Make informed financial decisions with our comprehensive suite of
             calculators designed specifically for study abroad planning.
           </p>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-primary-800 mb-4">
             Choose Your Calculator
