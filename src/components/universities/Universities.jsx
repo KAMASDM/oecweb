@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import ajaxCall from "@/helpers/ajaxCall";
 import { motion, AnimatePresence } from "framer-motion";
@@ -86,7 +86,8 @@ const Universities = ({ country }) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const filteredUniversities = React.useMemo(() => {
+  const filteredUniversities = useMemo(() => {
+    if (!universities) return [];
     return universities.filter((u) => {
       const matchesSearch =
         u.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -312,7 +313,7 @@ const Universities = ({ country }) => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Best Colleges & Universities to Study Abroad
           </h1>
-          <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             All you need to know about universities worldwide
           </p>
           <div className="mt-8 max-w-2xl mx-auto">
@@ -323,7 +324,7 @@ const Universities = ({ country }) => {
                 placeholder="Search universities, countries, or cities..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="block w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
+                className="w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
               />
             </div>
           </div>

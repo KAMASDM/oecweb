@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
 import moment from "moment";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import ajaxCall from "@/helpers/ajaxCall";
 import {
   Calendar,
   MapPin,
@@ -14,13 +16,14 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { motion } from "framer-motion";
-import ajaxCall from "@/helpers/ajaxCall";
 
 const dateFilters = [
   { id: "all", name: "All Dates" },
-  { id: "upcoming", name: "Upcoming" },
+  { id: "upcoming", name: "Upcoming Events" },
   { id: "past", name: "Past Events" },
+  { id: "today", name: "Today" },
+  { id: "this-week", name: "This Week" },
+  { id: "this-month", name: "This Month" },
 ];
 
 const Events = () => {
@@ -31,7 +34,7 @@ const Events = () => {
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [dateFilter, setDateFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("upcoming");
   const [expandedEvent, setExpandedEvent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -83,6 +86,9 @@ const Events = () => {
 
   const filteredEvents = useMemo(() => {
     const today = moment().startOf("day");
+    const endOfWeek = moment().endOf("week");
+    const endOfMonth = moment().endOf("month");
+
     return events.filter((event) => {
       const matchesSearch =
         searchQuery === "" ||
@@ -95,10 +101,27 @@ const Events = () => {
         selectedCategory === "all" || event.category_name === selectedCategory;
 
       const eventDate = moment(event.start_date);
-      const matchesDate =
-        dateFilter === "all" ||
-        (dateFilter === "upcoming" && eventDate.isSameOrAfter(today)) ||
-        (dateFilter === "past" && eventDate.isBefore(today));
+      let matchesDate = true;
+
+      switch (dateFilter) {
+        case "upcoming":
+          matchesDate = eventDate.isSameOrAfter(today);
+          break;
+        case "past":
+          matchesDate = eventDate.isBefore(today);
+          break;
+        case "today":
+          matchesDate = eventDate.isSame(today, "day");
+          break;
+        case "this-week":
+          matchesDate = eventDate.isBetween(today, endOfWeek, null, "[]");
+          break;
+        case "this-month":
+          matchesDate = eventDate.isBetween(today, endOfMonth, null, "[]");
+          break;
+        default: // "all"
+          matchesDate = true;
+      }
 
       return matchesSearch && matchesCategory && matchesDate;
     });
@@ -118,7 +141,7 @@ const Events = () => {
   const handleResetFilters = () => {
     setSearchQuery("");
     setSelectedCategory("all");
-    setDateFilter("all");
+    setDateFilter("upcoming");
   };
 
   const toggleEventExpand = (id) => {
@@ -127,78 +150,35 @@ const Events = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-100">
-        <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="h-12 bg-gray-300 rounded w-1/2 mx-auto animate-pulse"></div>
-            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-4 animate-pulse"></div>
+      <div className="bg-gray-100 min-h-screen">
+        <div className="bg-primary-800 text-white py-20 md:py-32 text-center">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="h-12 bg-gray-300 rounded w-1/2 mx-auto animate-pulse" />
+            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mt-4 animate-pulse" />
           </div>
         </div>
 
         <main className="py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 space-y-6">
-              <div className="flex flex-wrap justify-center gap-2">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-10 bg-gray-200 rounded-full w-24 animate-pulse"
-                  ></div>
-                ))}
-              </div>
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="h-10 bg-gray-200 rounded-full w-full md:w-64 animate-pulse"></div>
-                <div className="h-10 bg-gray-200 rounded-full w-24 animate-pulse"></div>
-              </div>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse"
+                >
+                  <div className="h-48 bg-gray-200" />
+                  <div className="p-6 space-y-4">
+                    <div className="h-4 bg-gray-200 rounded w-1/4" />
+                    <div className="h-6 bg-gray-200 rounded w-3/4" />
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded" />
+                      <div className="h-4 bg-gray-200 rounded w-5/6" />
+                    </div>
+                    <div className="h-10 bg-gray-200 rounded mt-4" />
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[...Array(3)].map((_, i) => (
-                  <div className="flex flex-col h-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
-                    <div className="relative overflow-hidden h-48 bg-gray-200"></div>
-                    <div className="p-6 flex-grow flex flex-col space-y-4">
-                      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                      <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                      <div className="space-y-2">
-                        <div className="h-4 bg-gray-200 rounded"></div>
-                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                      </div>
-                      <div className="space-y-2 mt-4">
-                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {[...Array(3)].map((_, i) => (
-                  <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
-                    <div className="p-6">
-                      <div className="flex flex-col md:flex-row md:items-center gap-6">
-                        <div className="md:w-1/4">
-                          <div className="relative overflow-hidden rounded-lg h-40 bg-gray-200"></div>
-                        </div>
-                        <div className="md:w-3/4 space-y-4">
-                          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                          <div className="h-4 bg-gray-200 rounded w-full"></div>
-                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                          <div className="grid grid-cols-3 gap-4 mt-4">
-                            <div className="h-4 bg-gray-200 rounded"></div>
-                            <div className="h-4 bg-gray-200 rounded"></div>
-                            <div className="h-4 bg-gray-200 rounded"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </main>
       </div>
@@ -207,94 +187,36 @@ const Events = () => {
 
   return (
     <div className="bg-gray-100">
-      <div className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="bg-primary-800 text-white mt-20 py-20 md:py-32 text-center">
+        <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Upcoming Education Events
           </h1>
-          <p className="text-secondary-500 text-xl md:text-2xl max-w-6xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             Connect with universities, attend workshops, and get expert advice
             for your study abroad journey
           </p>
-        </div>
-      </div>
-
-      <main className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 space-y-6">
-            <div className="flex flex-wrap justify-center gap-2">
-              <button
-                onClick={() => setSelectedCategory("all")}
-                aria-pressed={selectedCategory === "all"}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                  selectedCategory === "all"
-                    ? "bg-primary-800 text-white shadow-md"
-                    : "bg-white text-gray-600 hover:bg-primary-100 hover:text-primary-800 border border-gray-300"
-                }`}
-              >
-                All Events
-              </button>
-              {categories.map((category) => (
-                <motion.button
-                  key={category.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedCategory(category.name)}
-                  aria-pressed={selectedCategory === category.name}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    selectedCategory === category.name
-                      ? "bg-primary-800 text-white shadow-md"
-                      : "bg-white text-primary-800 hover:bg-primary-100 hover:text-primary-800 border border-primary-800"
-                  }`}
-                >
-                  {category.name}
-                </motion.button>
-              ))}
+          <div className="mt-8 max-w-2xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-3.5 h-5 w-5 text-secondary-500" />
+              <input
+                type="search"
+                placeholder="Search events..."
+                aria-label="Search events"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-full bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
+              />
             </div>
-
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                <div className="relative w-full sm:w-auto md:max-w-xs">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-secondary-500" />
-                  </div>
-                  <input
-                    type="search"
-                    placeholder="Search events..."
-                    aria-label="Search events"
-                    className="block w-full pl-10 pr-3 py-2 border border-primary-800 rounded-full leading-5 bg-white placeholder-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-800 focus:border-primary-800 sm:text-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                <div className="relative w-full sm:w-auto">
-                  <select
-                    id="date-filter"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    aria-label="Filter events by date"
-                    className="appearance-none block w-full pl-3 pr-10 py-2 border border-primary-800 rounded-full leading-5 bg-white text-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-800 focus:border-primary-800 sm:text-sm"
-                  >
-                    {dateFilters.map((filter) => (
-                      <option key={filter.id} value={filter.id}>
-                        {filter.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary-500">
-                    <ChevronDown className="h-5 w-5" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 p-1 bg-gray-300 rounded-full">
+            <div className="flex justify-center gap-4 mt-6">
+              <div className="flex p-1 rounded-full bg-white/10 border border-white/20">
                 <button
                   onClick={() => setViewMode("grid")}
                   aria-pressed={viewMode === "grid"}
-                  className={`p-2 rounded-full transition-colors duration-200 ${
+                  className={`p-2 rounded-full ${
                     viewMode === "grid"
-                      ? "bg-white text-secondary-500 shadow"
-                      : "text-gray-500 hover:text-gray-800"
+                      ? "bg-white text-secondary-500"
+                      : "text-white hover:text-white/80"
                   }`}
                   aria-label="Grid view"
                 >
@@ -303,10 +225,10 @@ const Events = () => {
                 <button
                   onClick={() => setViewMode("list")}
                   aria-pressed={viewMode === "list"}
-                  className={`p-2 rounded-full transition-colors duration-200 ${
+                  className={`p-2 rounded-full ${
                     viewMode === "list"
-                      ? "bg-white text-secondary-500 shadow"
-                      : "text-gray-500 hover:text-gray-800"
+                      ? "bg-white text-secondary-500"
+                      : "text-white hover:text-white/80"
                   }`}
                   aria-label="List view"
                 >
@@ -315,23 +237,77 @@ const Events = () => {
               </div>
             </div>
           </div>
+        </div>
+      </header>
 
+      <section className="sticky top-28 z-10 bg-white shadow-md">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                onClick={() => setSelectedCategory("all")}
+                aria-pressed={selectedCategory === "all"}
+                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  selectedCategory === "all"
+                    ? "bg-primary-800 text-white"
+                    : "bg-white text-primary-800 hover:bg-primary-100 border border-primary-800"
+                }`}
+              >
+                All Events
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.name)}
+                  aria-pressed={selectedCategory === category.name}
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    selectedCategory === category.name
+                      ? "bg-primary-800 text-white"
+                      : "bg-white text-primary-800 hover:bg-primary-100 border border-primary-800"
+                  }`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="dateFilter" className="sr-only">
+                Date Filter
+              </label>
+              <select
+                id="dateFilter"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="px-4 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800"
+              >
+                {dateFilters.map((filter) => (
+                  <option key={filter.id} value={filter.id}>
+                    {filter.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main className="py-12">
+        <div className="max-w-7xl mx-auto px-4">
           {filteredEvents.length === 0 ? (
             <div className="text-center py-16">
               <Ticket className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900">
+              <h2 className="mt-2 text-lg font-medium text-gray-900">
                 No Events Found
-              </h3>
+              </h2>
               <p className="mt-1 text-sm text-gray-500">
-                Try adjusting your search or category filters.
+                Try adjusting your search or filter criteria.
               </p>
               <div className="mt-6">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  type="button"
                   onClick={handleResetFilters}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-800 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  className="px-4 py-2 bg-primary-800 text-white rounded-md hover:bg-primary-700"
                 >
                   Reset Filters
                 </motion.button>
@@ -342,14 +318,16 @@ const Events = () => {
               {viewMode === "grid" ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {currentEvents.map((event) => (
-                    <motion.div
+                    <motion.article
                       key={event.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="group flex flex-col h-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden"
+                      className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 overflow-hidden"
+                      itemScope
+                      itemType="https://schema.org/Event"
                     >
-                      <div className="relative overflow-hidden h-48">
+                      <div className="relative h-48">
                         <Link
                           href={`/events/${event.slug}`}
                           aria-label={event.title}
@@ -357,37 +335,44 @@ const Events = () => {
                           <img
                             src={event.featured_image}
                             alt={event.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover"
+                            itemProp="image"
+                            loading="lazy"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                           <div className="absolute top-4 right-4 bg-white/90 text-primary-800 px-3 py-1 rounded-full text-xs font-bold">
                             FREE
                           </div>
                         </Link>
                       </div>
 
-                      <div className="p-6 flex-grow flex flex-col">
-                        <div className="flex justify-between items-start">
-                          <span className="text-sm font-semibold text-secondary-500">
-                            {event.category_name}
-                          </span>
-                        </div>
-
-                        <h3 className="mt-3 text-xl font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
-                          <Link
-                            href={`/events/${event.slug}`}
-                            className="line-clamp-2"
-                          >
+                      <div className="p-6">
+                        <span
+                          className="text-sm font-semibold text-secondary-500"
+                          itemProp="eventType"
+                        >
+                          {event.category_name}
+                        </span>
+                        <h3
+                          className="mt-2 text-xl font-bold text-gray-900 hover:text-primary-800"
+                          itemProp="name"
+                        >
+                          <Link href={`/events/${event.slug}`}>
                             {event.title}
                           </Link>
                         </h3>
 
-                        <div className="mt-4 space-y-2">
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="mt-4 space-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-secondary-500" />
-                            {moment(event.start_date).format("MMMM D, YYYY")}
+                            <time
+                              dateTime={event.start_date}
+                              itemProp="startDate"
+                            >
+                              {moment(event.start_date).format("MMMM D, YYYY")}
+                            </time>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-secondary-500" />
                             {moment(event.start_time, "HH:mm:ss").format(
                               "h:mm A"
@@ -397,50 +382,57 @@ const Events = () => {
                               "h:mm A"
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-secondary-500" />
-                            {event.venue_name || "Online"}
+                            <span itemProp="location">
+                              {event.venue_name || "Online"}
+                            </span>
                           </div>
                         </div>
 
-                        <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
                           <Link
                             href={`/events/${event.slug}`}
-                            className="inline-flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
+                            className="flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
+                            aria-label={`View details for ${event.title}`}
                           >
                             View Details
-                            <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
+                            <ArrowRight className="h-4 w-4" />
                           </Link>
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                            className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700"
                           >
                             Register Now
                           </motion.button>
                         </div>
                       </div>
-                    </motion.div>
+                    </motion.article>
                   ))}
                 </div>
               ) : (
                 <div className="space-y-6">
                   {currentEvents.map((event) => (
-                    <motion.div
+                    <motion.article
                       key={event.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden"
+                      className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 overflow-hidden"
+                      itemScope
+                      itemType="https://schema.org/Event"
                     >
                       <div className="p-6">
-                        <div className="flex flex-col md:flex-row md:items-center gap-6">
+                        <div className="flex flex-col md:flex-row gap-6">
                           <div className="md:w-1/4">
-                            <div className="relative overflow-hidden rounded-lg h-40">
+                            <div className="relative h-40 rounded-lg overflow-hidden">
                               <img
                                 src={event.featured_image}
                                 alt={event.title}
                                 className="w-full h-full object-cover"
+                                itemProp="image"
+                                loading="lazy"
                               />
                               <div className="absolute top-2 right-2 bg-white/90 text-primary-800 px-2 py-1 rounded text-xs font-bold">
                                 FREE
@@ -449,80 +441,95 @@ const Events = () => {
                           </div>
 
                           <div className="md:w-3/4">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <span className="text-sm font-semibold text-secondary-500">
-                                  {event.category_name}
-                                </span>
-                                <h3 className="mt-1 text-xl font-bold text-gray-900 group-hover:text-primary-800 transition-colors">
-                                  <Link href={`/events/${event.slug}`}>
-                                    {event.title}
-                                  </Link>
-                                </h3>
-                              </div>
-                            </div>
-
-                            <p className="mt-2 text-gray-600 line-clamp-2">
-                              {event.short_description}
-                            </p>
-
-                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                              <div className="flex items-center gap-2 text-gray-600">
-                                <Calendar className="h-4 w-4 text-secondary-500" />
-                                {moment(event.start_date).format(
-                                  "MMMM D, YYYY"
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2 text-gray-600">
-                                <Clock className="h-4 w-4 text-secondary-500" />
-                                {moment(event.start_time, "HH:mm:ss").format(
-                                  "h:mm A"
-                                )}{" "}
-                                -{" "}
-                                {moment(event.end_time, "HH:mm:ss").format(
-                                  "h:mm A"
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2 text-gray-600">
-                                <MapPin className="h-4 w-4 text-secondary-500" />
-                                {event.venue_name || "Online"}
-                              </div>
-                            </div>
-
-                            <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                              <Link
-                                href={`/events/${event.slug}`}
-                                className="inline-flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
+                            <div>
+                              <span
+                                className="text-sm font-semibold text-secondary-500"
+                                itemProp="eventType"
                               >
-                                View Details
-                                <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
-                              </Link>
-                              <div className="flex gap-3">
-                                <motion.button
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={() => toggleEventExpand(event.id)}
-                                  className="px-3 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-1"
-                                >
-                                  {expandedEvent === event.id ? (
-                                    <>
-                                      <ChevronUp className="h-4 w-4" />
-                                      Less Info
-                                    </>
-                                  ) : (
-                                    <>
-                                      <ChevronDown className="h-4 w-4" />
-                                      More Info
-                                    </>
+                                {event.category_name}
+                              </span>
+                              <h3
+                                className="mt-1 text-xl font-bold text-gray-900 hover:text-primary-800"
+                                itemProp="name"
+                              >
+                                <Link href={`/events/${event.slug}`}>
+                                  {event.title}
+                                </Link>
+                              </h3>
+                              <p
+                                className="mt-2 text-gray-600 line-clamp-2"
+                                itemProp="description"
+                              >
+                                {event.short_description}
+                              </p>
+
+                              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <Calendar className="h-4 w-4 text-secondary-500" />
+                                  <time
+                                    dateTime={event.start_date}
+                                    itemProp="startDate"
+                                  >
+                                    {moment(event.start_date).format(
+                                      "MMMM D, YYYY"
+                                    )}
+                                  </time>
+                                </div>
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <Clock className="h-4 w-4 text-secondary-500" />
+                                  {moment(event.start_time, "HH:mm:ss").format(
+                                    "h:mm A"
+                                  )}{" "}
+                                  -{" "}
+                                  {moment(event.end_time, "HH:mm:ss").format(
+                                    "h:mm A"
                                   )}
-                                </motion.button>
-                                <motion.button
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                                </div>
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <MapPin className="h-4 w-4 text-secondary-500" />
+                                  <span itemProp="location">
+                                    {event.venue_name || "Online"}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <Link
+                                  href={`/events/${event.slug}`}
+                                  className="flex items-center gap-1 font-semibold text-primary-600 hover:text-primary-800"
+                                  aria-label={`View details for ${event.title}`}
                                 >
-                                  Register Now
-                                </motion.button>
+                                  View Details
+                                  <ArrowRight className="h-4 w-4" />
+                                </Link>
+                                <div className="flex gap-3">
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => toggleEventExpand(event.id)}
+                                    className="px-3 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 flex items-center gap-1"
+                                    aria-expanded={expandedEvent === event.id}
+                                  >
+                                    {expandedEvent === event.id ? (
+                                      <>
+                                        <ChevronUp className="h-4 w-4" />
+                                        Less Info
+                                      </>
+                                    ) : (
+                                      <>
+                                        <ChevronDown className="h-4 w-4" />
+                                        More Info
+                                      </>
+                                    )}
+                                  </motion.button>
+                                  <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700"
+                                  >
+                                    Register Now
+                                  </motion.button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -545,7 +552,7 @@ const Events = () => {
                           </motion.div>
                         )}
                       </div>
-                    </motion.div>
+                    </motion.article>
                   ))}
                 </div>
               )}
@@ -562,6 +569,7 @@ const Events = () => {
                       onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                       disabled={currentPage === 1}
                       className="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                      aria-label="Previous page"
                     >
                       Previous
                     </motion.button>
@@ -575,11 +583,12 @@ const Events = () => {
                           aria-current={
                             currentPage === page ? "page" : undefined
                           }
-                          className={`w-10 h-10 rounded-md text-sm font-medium transition-colors ${
+                          className={`w-10 h-10 rounded-md text-sm font-medium ${
                             currentPage === page
                               ? "bg-primary-800 text-white"
                               : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
                           }`}
+                          aria-label={`Go to page ${page}`}
                         >
                           {page}
                         </motion.button>
@@ -593,6 +602,7 @@ const Events = () => {
                       }
                       disabled={currentPage === totalPages}
                       className="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                      aria-label="Next page"
                     >
                       Next
                     </motion.button>

@@ -53,7 +53,7 @@ const Community = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Connect. Learn. Succeed.
           </h1>
-          <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             From university selection to career guidance - we support you at
             every step of your study abroad journey
           </p>

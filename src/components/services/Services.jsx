@@ -349,14 +349,14 @@ const Services = () => {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Complete Study Abroad Solutions
           </h1>
-          <p className="text-secondary-500 text-xl md:text-3xl max-w-5xl mx-auto">
+          <p className="text-secondary-500 text-xl md:text-2xl max-w-4xl mx-auto">
             From university selection to career guidance - we support you at
             every step of your study abroad journey
           </p>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="max-w-7xl mx-auto px-4 pb-16">
         {isLoading ? (
           <ServicesSkeleton />
         ) : (
