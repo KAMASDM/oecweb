@@ -103,9 +103,9 @@ const AboutUs = () => {
                 </section>
 
                 <section className="mt-12">
-                  <h3 className="text-2xl font-bold text-gray-700 mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                     Our Mission
-                  </h3>
+                  </h2>
                   <p className="text-gray-600 leading-relaxed mb-6">
                     To empower Indian students with the knowledge, guidance, and
                     support they need to achieve their international education
@@ -115,9 +115,9 @@ const AboutUs = () => {
                 </section>
 
                 <section className="mt-12">
-                  <h3 className="text-2xl font-bold text-gray-700 mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                     Our Values
-                  </h3>
+                  </h2>
                   <ul className="space-y-4">
                     {[
                       "Transparency: No hidden costs, no false promises - just honest, clear guidance",
@@ -126,7 +126,7 @@ const AboutUs = () => {
                       "Long-term Success: We measure our success by your success, not just admissions",
                       "Integrity: Always acting in the best interest of our students and their families",
                     ].map((item, index) => (
-                      <li key={index} className="p-4 border-b border-gray-100">
+                      <li key={index} className="p-2 border-b border-gray-100">
                         <strong>{item.split(":")[0]}:</strong>{" "}
                         {item.split(":")[1]}
                       </li>
@@ -135,9 +135,9 @@ const AboutUs = () => {
                 </section>
 
                 <section className="mt-12">
-                  <h3 className="text-2xl font-bold text-gray-700 mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
                     Our Track Record
-                  </h3>
+                  </h2>
                   <ul className="space-y-2">
                     {[
                       "2,000+ students successfully placed in top universities worldwide",

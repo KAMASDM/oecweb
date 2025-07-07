@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import OpenAI from "openai";
 import ajaxCall from "@/helpers/ajaxCall";
 
@@ -33,17 +33,19 @@ const initialFormData = {
   meta_title: "",
   meta_description: "",
   is_featured: false,
-  is_active: false,
+  is_active: true,
 };
 
 const AddCourse = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [universities, setUniversities] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [courseCategories, setCourseCategories] = useState([]);
   const [activeTab, setActiveTab] = useState("basic");
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   const initiateAiFetch = async () => {
     if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
@@ -82,7 +84,8 @@ const AddCourse = () => {
       - "ielts_score": The required IELTS score. Should be a number.
       - "toefl_score": The required TOEFL score. Should be a number.
       - "gre_required", "gmat_required", "is_scholarship_available": Must be true or false.
-      - "meta_title": A concise, SEO-friendly title, no more than 60 characters, based on the course name and university.
+      - "meta_title": A concise, SEO-friendly title, not more than 60 characters, based on the course name and university.
+      - "meta_description": A short description, not more than 160 characters, based on the course description and university.
       - "intakes": An object with boolean keys for "spring", "fall", "summer", and "winter" based on the application deadlines or start dates mentioned.
       - "duration": A number representing the course length.
       - "duration_unit": The unit for the duration ("years", "months", or "weeks").
@@ -96,7 +99,7 @@ const AddCourse = () => {
       });
 
       const json = JSON.parse(response.choices[0].message.content);
-      const courseSlug = (json.name)
+      const courseSlug = (json.name || "")
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "");
@@ -104,7 +107,7 @@ const AddCourse = () => {
       setFormData((prev) => ({
         ...prev,
         name: json.name || "",
-        slug: courseSlug || "",
+        slug: courseSlug,
         description: json.description || "",
         curriculum: json.curriculum || "",
         career_prospects: json.career_prospects || "",
@@ -154,14 +157,16 @@ const AddCourse = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [univResponse, catResponse] = await Promise.all([
+        const [univResponse, countryResponse, catResponse] = await Promise.all([
           ajaxCall("/academics/academics/universities/", { method: "GET" }),
+          ajaxCall("/academics/academics/countries/", { method: "GET" }),
           ajaxCall("/academics/academics/course-categories/", {
             method: "GET",
           }),
         ]);
 
         setUniversities(univResponse?.data?.results || []);
+        setCountries(countryResponse?.data?.results || []);
         setCourseCategories(catResponse?.data?.results || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -184,6 +189,8 @@ const AddCourse = () => {
         ...initialFormData,
         university: value,
         university_name: selectedUniversity ? selectedUniversity.name : "",
+        category: prev.category,
+        category_name: prev.category_name,
       }));
     } else if (name === "category") {
       const selectedCategory = courseCategories.find(
@@ -201,6 +208,27 @@ const AddCourse = () => {
       }));
     }
   };
+
+  const handleCountryChange = (e) => {
+    const countryId = e.target.value;
+    setSelectedCountry(countryId);
+
+    setFormData((prev) => ({
+      ...prev,
+      university: "",
+      university_name: "",
+    }));
+  };
+
+  const filteredUniversities = useMemo(() => {
+    if (!selectedCountry) {
+      return universities;
+    }
+    return universities.filter(
+      (uni) => uni.country === parseInt(selectedCountry)
+    );
+  }, [selectedCountry, universities]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -224,6 +252,7 @@ const AddCourse = () => {
         alert("Course added successfully! ✅");
         setFormData(initialFormData);
         setActiveTab("basic");
+        setSelectedCountry("");
       } else {
         console.log("error");
       }
@@ -321,7 +350,24 @@ const AddCourse = () => {
                     required
                   />
                 </div>
-
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    Country
+                  </label>
+                  <select
+                    name="country_filter"
+                    value={selectedCountry}
+                    onChange={handleCountryChange}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
+                  >
+                    <option value="">All Countries</option>
+                    {countries.map((country) => (
+                      <option key={country.id} value={country.id}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
                     University
@@ -334,7 +380,7 @@ const AddCourse = () => {
                     required
                   >
                     <option value="">Select University</option>
-                    {universities.map((university) => (
+                    {filteredUniversities.map((university) => (
                       <option key={university.id} value={university.id}>
                         {university.name}
                       </option>
