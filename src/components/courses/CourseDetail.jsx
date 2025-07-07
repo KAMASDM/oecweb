@@ -57,6 +57,15 @@ const CourseDetail = ({ slug }) => {
     fetchCourse();
   }, [slug]);
 
+  const activateLinks = (text) => {
+    if (!text) return "";
+    const urlRegex = /\[(https?:\/\/[^\]]+)\]/g;
+    return text.replace(
+      urlRegex,
+      '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:underline">$1</a>'
+    );
+  };
+
   const formatFee = (amount) => {
     if (!amount) return "N/A";
     return new Intl.NumberFormat("en-US", {
@@ -231,6 +240,23 @@ const CourseDetail = ({ slug }) => {
                 </div>
               </div>
             </div>
+
+            {course.university_logo && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="w-32 h-32 bg-white rounded-full p-2 shadow-xl border-4 border-white/20 relative z-10"
+              >
+                <img
+                  src={`https://sweekarme.in/media/${course.university_logo}`}
+                  alt={`${course.university_name} logo`}
+                  width={128}
+                  height={128}
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </header>
@@ -270,7 +296,9 @@ const CourseDetail = ({ slug }) => {
                 {course.description && (
                   <div
                     className="prose max-w-none text-gray-700"
-                    dangerouslySetInnerHTML={{ __html: course.description }}
+                    dangerouslySetInnerHTML={{
+                      __html: activateLinks(course.description),
+                    }}
                   />
                 )}
               </motion.section>
@@ -384,7 +412,7 @@ const CourseDetail = ({ slug }) => {
                     {course.university_logo && (
                       <div className="w-16 h-16 rounded-full bg-white p-1 border border-gray-200">
                         <img
-                          src={course.university_logo}
+                          src={`https://sweekarme.in/media/${course.university_logo}`}
                           alt={`${course.university_name} logo`}
                           className="w-full h-full object-contain rounded-full"
                         />
@@ -401,9 +429,9 @@ const CourseDetail = ({ slug }) => {
                     </div>
                   </div>
                   <Link
-                    href={`/university/${course.university_name
+                    href={`/universities/${course.university_country
                       .toLowerCase()
-                      .replace(" ", "-")}`}
+                      .replace(/\s+/g, "-")}/${course.university_slug}`}
                     className="inline-flex items-center text-primary-600 hover:text-primary-800 text-sm font-medium transition-colors"
                   >
                     View university profile
