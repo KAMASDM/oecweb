@@ -522,7 +522,20 @@ const Courses = ({ course }) => {
                         : "flex flex-col"
                     }`}
                   >
-                    <div className="p-6 w-full">
+                    {viewMode === "list" && course.university.banner_image && (
+                      <div className="md:w-1/3">
+                        <img
+                          src={course.university.banner_image}
+                          alt={`${course.university.name} campus`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div
+                      className={`p-6 w-full ${
+                        viewMode === "list" ? "md:w-2/3" : ""
+                      }`}
+                    >
                       <div className="flex items-start mb-4">
                         {course.university.logo ? (
                           <img
@@ -552,11 +565,6 @@ const Courses = ({ course }) => {
                         )}
                       </div>
 
-                      <div
-                        className="text-gray-700 mb-4 line-clamp-3"
-                        dangerouslySetInnerHTML={{ __html: course.description }}
-                      />
-
                       <div className="flex flex-wrap gap-2 mb-4">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                           <GraduationCap className="h-3 w-3 mr-1" />
@@ -583,6 +591,17 @@ const Courses = ({ course }) => {
                           </span>
                         )}
                       </div>
+
+                      {viewMode === "grid" &&
+                        course.university.banner_image && (
+                          <div className="w-full h-48 mb-4">
+                            <img
+                              src={course.university.banner_image}
+                              alt={`${course.university.name} campus`}
+                              className="w-full h-full object-cover rounded-xl"
+                            />
+                          </div>
+                        )}
 
                       <div className="grid grid-cols-2 gap-3 text-sm mb-6">
                         <div>

@@ -249,7 +249,7 @@ const CourseDetail = ({ slug }) => {
                 className="w-32 h-32 bg-white rounded-full p-2 shadow-xl border-4 border-white/20 relative z-10"
               >
                 <img
-                  src={`https://sweekarme.in/media/${course.university_logo}`}
+                  src={course.university_logo}
                   alt={`${course.university_name} logo`}
                   width={128}
                   height={128}
@@ -401,6 +401,26 @@ const CourseDetail = ({ slug }) => {
             <div className="space-y-6">
               <motion.div
                 variants={itemVariants}
+                className="bg-gradient-to-br from-primary-600 to-primary-800 p-6 rounded-xl shadow-lg"
+              >
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Ready to Apply?
+                </h3>
+                <p className="text-primary-100 mb-6">
+                  Start your application process for this program at{" "}
+                  {course.university_name}.
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-white text-primary-700 font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all"
+                >
+                  Apply Now
+                </motion.button>
+              </motion.div>
+              
+              <motion.div
+                variants={itemVariants}
                 className="bg-white p-6 rounded-xl shadow-md border border-gray-200"
               >
                 <h3 className="font-semibold text-xl mb-4 text-primary-800 flex items-center">
@@ -412,7 +432,7 @@ const CourseDetail = ({ slug }) => {
                     {course.university_logo && (
                       <div className="w-16 h-16 rounded-full bg-white p-1 border border-gray-200">
                         <img
-                          src={`https://sweekarme.in/media/${course.university_logo}`}
+                          src={course.university_logo}
                           alt={`${course.university_name} logo`}
                           className="w-full h-full object-contain rounded-full"
                         />
@@ -544,27 +564,6 @@ const CourseDetail = ({ slug }) => {
                     </span>
                   </div>
                 </div>
-              </motion.div>
-
-              {/* Apply CTA */}
-              <motion.div
-                variants={itemVariants}
-                className="bg-gradient-to-br from-primary-600 to-primary-800 p-6 rounded-xl shadow-lg"
-              >
-                <h3 className="text-xl font-bold text-white mb-3">
-                  Ready to Apply?
-                </h3>
-                <p className="text-primary-100 mb-6">
-                  Start your application process for this program at{" "}
-                  {course.university_name}.
-                </p>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-white text-primary-700 font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all"
-                >
-                  Apply Now
-                </motion.button>
               </motion.div>
             </div>
           </motion.div>
