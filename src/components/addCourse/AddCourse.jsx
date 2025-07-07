@@ -3,6 +3,39 @@ import React, { useEffect, useState } from "react";
 import OpenAI from "openai";
 import ajaxCall from "@/helpers/ajaxCall";
 
+const initialFormData = {
+  name: "",
+  slug: "",
+  university: "",
+  university_name: "",
+  category: "",
+  category_name: "",
+  degree_level: "certificate",
+  duration: "",
+  duration_unit: "years",
+  description: "",
+  curriculum: "",
+  career_prospects: "",
+  admission_requirements: "",
+  tuition_fee: "",
+  other_fees: "",
+  currency: "",
+  intake_spring: false,
+  intake_fall: false,
+  intake_summer: false,
+  intake_winter: false,
+  min_gpa: "",
+  ielts_score: "",
+  toefl_score: "",
+  gre_required: false,
+  gmat_required: false,
+  is_scholarship_available: false,
+  meta_title: "",
+  meta_description: "",
+  is_featured: false,
+  is_active: false,
+};
+
 const AddCourse = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingName, setIsFetchingName] = useState(false);
@@ -11,38 +44,7 @@ const AddCourse = () => {
   const [courseCategories, setCourseCategories] = useState([]);
   const [activeTab, setActiveTab] = useState("basic");
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-    university: "",
-    university_name: "",
-    category: "",
-    category_name: "",
-    degree_level: "certificate",
-    duration: "",
-    duration_unit: "years",
-    description: "",
-    curriculum: "",
-    career_prospects: "",
-    admission_requirements: "",
-    tuition_fee: "",
-    other_fees: "",
-    currency: "",
-    intake_spring: false,
-    intake_fall: false,
-    intake_summer: false,
-    intake_winter: false,
-    min_gpa: "",
-    ielts_score: "",
-    toefl_score: "",
-    gre_required: false,
-    gmat_required: false,
-    is_scholarship_available: false,
-    meta_title: "",
-    meta_description: "",
-    is_featured: false,
-    is_active: false,
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const initiateAiFetch = async () => {
     if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
@@ -63,7 +65,7 @@ const AddCourse = () => {
     });
 
     try {
-      const namePrompt = `Suggest a common and official-sounding course name for the category "${formData.category_name}" offered at the "${formData.university_name}". Return only the name as a plain text string, without any extra text or quotation marks.`;
+      const namePrompt = `What is an actual, official course name for the category "${formData.category_name}" at "${formData.university_name}"? Return only the course name as a plain text string, without any extra text, explanations, or quotation marks.`;
       const nameRes = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: namePrompt }],
@@ -82,6 +84,7 @@ const AddCourse = () => {
       const detailsPrompt = `
         Based on the course "${courseName}" at "${formData.university_name}", provide the following details in a valid JSON format.
         The JSON object must have these keys: "description", "curriculum", "career_prospects", "admission_requirements", "tuition_fee", "other_fees", "currency", "min_gpa", "ielts_score", "toefl_score", "gre_required", "gmat_required", "is_scholarship_available", "meta_title", "meta_description", "duration", "duration_unit", and "intakes".
+        - The "meta_title" must be a concise, SEO-friendly title that is no more than 60 characters long.
         - The "duration" should be a number (e.g., 4).
         - The "duration_unit" should be one of the following strings: "years", "months", or "weeks".
         - The "intakes" value should be an object with boolean keys for "spring", "fall", "summer", and "winter".
@@ -197,20 +200,26 @@ const AddCourse = () => {
     const payload = { ...formData };
 
     try {
-      const response = await ajaxCall("/academics/academics/courses/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://sweekarme.in/oecweb/api/academics/academics/courses/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
       if (response.status === 201) {
-        alert("Course added successfully!");
-        // Reset form or redirect as needed
+        alert("Course added successfully! ✅");
+        setFormData(initialFormData);
+        setActiveTab("basic");
+      } else {
+        console.log("error");
       }
     } catch (error) {
-      console.error("Error adding course:", error);
-      alert("Failed to add course");
+      console.log("error", error);
     } finally {
       setIsLoading(false);
     }
@@ -263,7 +272,7 @@ const AddCourse = () => {
           <div className="text-center my-4">
             {isFetchingName && (
               <p className="text-primary-800 font-semibold">
-                Generating course name...
+                Finding course name...
               </p>
             )}
             {isFetchingDetails && (
@@ -700,7 +709,7 @@ const AddCourse = () => {
           <div className="flex justify-between mt-8">
             {activeTab !== "basic" ? (
               <button
-                type="button"
+                type="button" // This is crucial to prevent form submission
                 onClick={() =>
                   setActiveTab(
                     tabs[tabs.findIndex((tab) => tab.id === activeTab) - 1].id
@@ -716,7 +725,7 @@ const AddCourse = () => {
 
             {activeTab !== "seo" ? (
               <button
-                type="button"
+                type="button" // This is crucial to prevent form submission
                 onClick={() =>
                   setActiveTab(
                     tabs[tabs.findIndex((tab) => tab.id === activeTab) + 1].id
