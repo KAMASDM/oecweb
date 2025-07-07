@@ -38,8 +38,7 @@ const initialFormData = {
 
 const AddCourse = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingName, setIsFetchingName] = useState(false);
-  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [universities, setUniversities] = useState([]);
   const [courseCategories, setCourseCategories] = useState([]);
   const [activeTab, setActiveTab] = useState("basic");
@@ -48,7 +47,7 @@ const AddCourse = () => {
 
   const initiateAiFetch = async () => {
     if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-      setError("OpenAI API key not configure.");
+      setError("OpenAI API key not configured.");
       return;
     }
     if (!formData.university_name || !formData.category_name) {
@@ -56,52 +55,56 @@ const AddCourse = () => {
     }
 
     setError(null);
+    setIsFetching(true);
 
-    // Step 1: Fetch Course Name
-    setIsFetchingName(true);
     const openai = new OpenAI({
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
       dangerouslyAllowBrowser: true,
     });
 
+    const comprehensivePrompt = `
+      Your task is to act as a highly accurate academic data specialist.
+      1. First, find an official course page on the website of "${formData.university_name}" for a program that fits the category "${formData.category_name}".
+      2. Once you have found the specific, official course webpage, extract the following information directly from that page. Prioritize accuracy above all else. Do not invent or infer data that is not present on the page.
+      3. Return a single, valid JSON object with the following keys. If a specific piece of information cannot be found on the official course page, use an empty string "" as the value.
+
+      The JSON object must have these keys: "name", "description", "curriculum", "career_prospects", "admission_requirements", "tuition_fee", "other_fees", "currency", "min_gpa", "ielts_score", "toefl_score", "gre_required", "gmat_required", "is_scholarship_available", "meta_title", "meta_description", "duration", "duration_unit", and "intakes".
+
+      **JSON Field Instructions:**
+      - "name": The official, full name of the course as listed on the page.
+      - "description": A detailed overview from the page. At the end, you **must** include the full URL of the official course page you used as your source. For example: "For more information, visit: [URL]".
+      - "curriculum": A summary of the course structure or list of modules, taken directly from the source.
+      - "career_prospects": A summary of potential career prospects, taken directly from the source.
+      - "admission_requirements": A summary of admission requirements, taken directly from the source.
+      - "tuition_fee": The specific tuition fee amount. Should be a number.
+      - "currency": The currency code for the fee (e.g., USD, CAD).
+      - "min_gpa": The minimum required GPA. Should be a number.
+      - "ielts_score": The required IELTS score. Should be a number.
+      - "toefl_score": The required TOEFL score. Should be a number.
+      - "gre_required", "gmat_required", "is_scholarship_available": Must be true or false.
+      - "meta_title": A concise, SEO-friendly title, no more than 60 characters, based on the course name and university.
+      - "intakes": An object with boolean keys for "spring", "fall", "summer", and "winter" based on the application deadlines or start dates mentioned.
+      - "duration": A number representing the course length.
+      - "duration_unit": The unit for the duration ("years", "months", or "weeks").
+    `;
+
     try {
-      const namePrompt = `What is an actual, official course name for the category "${formData.category_name}" at "${formData.university_name}"? Return only the course name as a plain text string, without any extra text, explanations, or quotation marks.`;
-      const nameRes = await openai.chat.completions.create({
+      const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: namePrompt }],
+        messages: [{ role: "user", content: comprehensivePrompt }],
+        response_format: { type: "json_object" },
       });
-      const courseName = nameRes.choices[0].message.content.trim();
-      const courseSlug = courseName
+
+      const json = JSON.parse(response.choices[0].message.content);
+      const courseSlug = (json.name)
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "");
 
-      setFormData((prev) => ({ ...prev, name: courseName, slug: courseSlug }));
-      setIsFetchingName(false);
-
-      // Step 2: Fetch All Other Details with the new course name
-      setIsFetchingDetails(true);
-      const detailsPrompt = `
-        Based on the course "${courseName}" at "${formData.university_name}", provide the following details in a valid JSON format.
-        The JSON object must have these keys: "description", "curriculum", "career_prospects", "admission_requirements", "tuition_fee", "other_fees", "currency", "min_gpa", "ielts_score", "toefl_score", "gre_required", "gmat_required", "is_scholarship_available", "meta_title", "meta_description", "duration", "duration_unit", and "intakes".
-        - The "meta_title" must be a concise, SEO-friendly title that is no more than 60 characters long.
-        - The "duration" should be a number (e.g., 4).
-        - The "duration_unit" should be one of the following strings: "years", "months", or "weeks".
-        - The "intakes" value should be an object with boolean keys for "spring", "fall", "summer", and "winter".
-        - For boolean fields, the value must be true or false.
-        - For numerical fields, provide a number.
-        - The "currency" should be a standard currency code (e.g., USD, CAD, EUR).
-      `;
-
-      const detailsRes = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: detailsPrompt }],
-      });
-
-      const json = JSON.parse(detailsRes.choices[0].message.content);
-
       setFormData((prev) => ({
         ...prev,
+        name: json.name || "",
+        slug: courseSlug || "",
         description: json.description || "",
         curriculum: json.curriculum || "",
         career_prospects: json.career_prospects || "",
@@ -127,18 +130,24 @@ const AddCourse = () => {
     } catch (err) {
       console.error("Error fetching data from OpenAI:", err);
       setError(
-        "Unable to fetch course data. Please check the console for more details."
+        "Unable to fetch course data. The AI may have had trouble finding the course or formatting the response. Please try different categories or check the console."
       );
     } finally {
-      setIsFetchingName(false);
-      setIsFetchingDetails(false);
+      setIsFetching(false);
     }
   };
 
   useEffect(() => {
-    if (formData.university && formData.category) {
-      initiateAiFetch();
-    }
+    // Debounce AI fetch to avoid rapid calls while user is selecting
+    const handler = setTimeout(() => {
+      if (formData.university && formData.category) {
+        initiateAiFetch();
+      }
+    }, 1000); // 1-second delay after user stops selecting
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [formData.university, formData.category]);
 
   useEffect(() => {
@@ -172,7 +181,7 @@ const AddCourse = () => {
         (uni) => uni.id === parseInt(value)
       );
       setFormData((prev) => ({
-        ...prev,
+        ...initialFormData,
         university: value,
         university_name: selectedUniversity ? selectedUniversity.name : "",
       }));
@@ -251,7 +260,7 @@ const AddCourse = () => {
         <form onSubmit={handleSubmit}>
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 mb-6">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-8 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
@@ -269,14 +278,9 @@ const AddCourse = () => {
             </nav>
           </div>
 
-          <div className="text-center my-4">
-            {isFetchingName && (
-              <p className="text-primary-800 font-semibold">
-                Finding course name...
-              </p>
-            )}
-            {isFetchingDetails && (
-              <p className="text-primary-800 font-semibold">
+          <div className="text-center my-4 h-6">
+            {isFetching && (
+              <p className="text-primary-800 font-semibold animate-pulse">
                 Fetching course details...
               </p>
             )}
@@ -422,7 +426,7 @@ const AddCourse = () => {
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Course description"
-                    rows="4"
+                    rows="6"
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
                   ></textarea>
                 </div>
@@ -436,7 +440,7 @@ const AddCourse = () => {
                     value={formData.curriculum}
                     onChange={handleChange}
                     placeholder="Curriculum details"
-                    rows="4"
+                    rows="6"
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-primary-800 focus:border-primary-800 shadow-sm"
                   ></textarea>
                 </div>
@@ -709,7 +713,7 @@ const AddCourse = () => {
           <div className="flex justify-between mt-8">
             {activeTab !== "basic" ? (
               <button
-                type="button" // This is crucial to prevent form submission
+                type="button"
                 onClick={() =>
                   setActiveTab(
                     tabs[tabs.findIndex((tab) => tab.id === activeTab) - 1].id
@@ -720,12 +724,12 @@ const AddCourse = () => {
                 Previous
               </button>
             ) : (
-              <div></div> // Empty div to maintain space
+              <div></div>
             )}
 
             {activeTab !== "seo" ? (
               <button
-                type="button" // This is crucial to prevent form submission
+                type="button"
                 onClick={() =>
                   setActiveTab(
                     tabs[tabs.findIndex((tab) => tab.id === activeTab) + 1].id
@@ -738,7 +742,7 @@ const AddCourse = () => {
             ) : (
               <button
                 type="submit"
-                disabled={isLoading || isFetchingName || isFetchingDetails}
+                disabled={isLoading || isFetching}
                 className="bg-primary-800 hover:bg-primary-600 text-white py-2 px-6 rounded-lg disabled:opacity-50"
               >
                 {isLoading ? "Adding..." : "Add Course"}

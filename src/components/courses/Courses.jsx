@@ -125,7 +125,7 @@ const Courses = ({ course }) => {
     const matchesSearch =
       search === "" ||
       course.name.toLowerCase().includes(search.toLowerCase()) ||
-      course.university_name?.toLowerCase().includes(search.toLowerCase()) ||
+      course.university.name?.toLowerCase().includes(search.toLowerCase()) ||
       course.category_name?.toLowerCase().includes(search.toLowerCase()) ||
       course.description?.toLowerCase().includes(search.toLowerCase());
 
@@ -133,7 +133,7 @@ const Courses = ({ course }) => {
       !filters.degree || course.degree_level === filters.degree;
     const matchesCountry =
       !filters.country ||
-      course.university_country
+      course.university.country_name
         ?.toLowerCase()
         .includes(filters.country.toLowerCase());
     const matchesField =
@@ -524,17 +524,25 @@ const Courses = ({ course }) => {
                   >
                     <div className="p-6 w-full">
                       <div className="flex items-start mb-4">
-                        <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center mr-4">
-                          <School className="h-6 w-6 text-primary-800" />
-                        </div>
+                        {course.university.logo ? (
+                          <img
+                            src={course.university.logo}
+                            alt={`${course.university.name} logo`}
+                            className="h-12 w-12 rounded-full object-cover mr-4"
+                          />
+                        ) : (
+                          <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center mr-4">
+                            <School className="h-6 w-6 text-primary-800" />
+                          </div>
+                        )}
                         <div>
                           <h3 className="text-xl font-bold text-gray-900">
                             {course.name}
                           </h3>
                           <div className="text-sm text-gray-500 mt-1 flex items-center">
                             <MapPin className="h-4 w-4 mr-1" />
-                            {course.university_name},{" "}
-                            {course.university_country}
+                            {course.university.name},{" "}
+                            {course.university.country_name}
                           </div>
                         </div>
                         {course.is_featured && (

@@ -18,16 +18,16 @@ const Header = () => {
   const exploreDropdownRef = useRef(null);
   const [countries, setCountries] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleExploreOpen = async () => {
-    if ((countries.length === 0 || courses.length === 0) && !isLoading) {
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         const [countriesResponse, coursesResponse] = await Promise.all([
           ajaxCall("/academics/academics/countries/", { method: "GET" }),
           ajaxCall("/academics/academics/course-categories/", {
@@ -42,11 +42,16 @@ const Header = () => {
           setCourses(coursesResponse.data.results);
         }
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Failed to fetch dropdown data:", error);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
+
+    fetchDropdownData();
+  }, []);
+
+  const handleExploreOpen = () => {
     setIsExploreOpen(true);
   };
 
@@ -124,8 +129,7 @@ const Header = () => {
                 })),
                 { name: "Explore All", href: "/universities" },
               ]
-            : [{ name: "Loading...", href: "#" }],
-        isLoading: topCountries.length === 0,
+            : [],
       },
       {
         title: "Country Guides",
@@ -141,8 +145,7 @@ const Header = () => {
                 })),
                 { name: "Explore All", href: "/country-guides" },
               ]
-            : [{ name: "Loading...", href: "#" }],
-        isLoading: topCountries.length === 0,
+            : [],
       },
       {
         title: "Popular Courses",
@@ -156,8 +159,7 @@ const Header = () => {
                 })),
                 { name: "Explore All", href: "/popular-courses" },
               ]
-            : [{ name: "Loading...", href: "#" }],
-        isLoading: topCourses.length === 0,
+            : [],
       },
     ];
   };
@@ -224,14 +226,15 @@ const Header = () => {
                 <div
                   key={item.name}
                   className="relative"
+                  onMouseEnter={item.hasDropdown ? handleExploreOpen : null}
+                  onMouseLeave={
+                    item.hasDropdown ? () => setIsExploreOpen(false) : null
+                  }
                   ref={item.hasDropdown ? exploreDropdownRef : null}
                 >
                   {item.hasDropdown ? (
                     <>
-                      <button
-                        onClick={handleExploreOpen}
-                        className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2"
-                      >
+                      <button className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2">
                         {item.name}
                         <ChevronDown
                           size={16}
@@ -298,7 +301,7 @@ const Header = () => {
                               <div className="w-full md:w-1/2 p-4 md:p-6">
                                 <div className="space-y-3">
                                   <h3 className="font-semibold text-gray-800 text-base md:text-lg">
-                                    {menuSections[activeSection].title}
+                                    {menuSections[activeSection]?.title}
                                   </h3>
                                   {isLoading ? (
                                     <div className="space-y-2">
@@ -312,21 +315,21 @@ const Header = () => {
                                   ) : (
                                     <div className="max-h-[300px] overflow-y-auto scrollable-menu pr-2">
                                       <ul className="space-y-2">
-                                        {menuSections[activeSection].items?.map(
-                                          (item, itemIndex) => (
-                                            <li key={itemIndex}>
-                                              <Link
-                                                href={item.href}
-                                                onClick={() =>
-                                                  setIsExploreOpen(false)
-                                                }
-                                                className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
-                                              >
-                                                {item.name}
-                                              </Link>
-                                            </li>
-                                          )
-                                        )}
+                                        {menuSections[
+                                          activeSection
+                                        ]?.items?.map((item, itemIndex) => (
+                                          <li key={itemIndex}>
+                                            <Link
+                                              href={item.href}
+                                              onClick={() =>
+                                                setIsExploreOpen(false)
+                                              }
+                                              className="block px-3 py-2 text-sm md:text-base rounded-lg hover:bg-primary-50 text-gray-700 transition-colors"
+                                            >
+                                              {item.name}
+                                            </Link>
+                                          </li>
+                                        ))}
                                       </ul>
                                     </div>
                                   )}
@@ -376,7 +379,7 @@ const Header = () => {
                 {item.hasDropdown ? (
                   <div className="py-3">
                     <button
-                      onClick={handleExploreOpen}
+                      onClick={() => setIsExploreOpen(!isExploreOpen)}
                       className="flex items-center justify-between w-full text-gray-700 font-medium"
                     >
                       <span>{item.name}</span>
