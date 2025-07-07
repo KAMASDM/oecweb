@@ -31,7 +31,7 @@ const TestSelectionMenu = ({ onSelectTest, activeCategory }) => {
 };
 
 const TestPreparation = () => {
-  const [activeCategory, setActiveCategory] = useState("general");
+  const [activeCategory, setActiveCategory] = useState("ielts");
 
   const handleSelectTest = (testId) => {
     setActiveCategory(testId);
