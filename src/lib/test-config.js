@@ -5,7 +5,6 @@ import {
   Globe,
   FilePenLine,
   Ear,
-  MessageSquare,
   Calculator,
   SpellCheck,
   FileSignature,
@@ -32,11 +31,9 @@ const GeneralKnowledge = () => (
 const IELTSReading = () => <PlaceholderComponent name="IELTS Reading" />;
 const IELTSWriting = () => <PlaceholderComponent name="IELTS Writing" />;
 const IELTSListening = () => <PlaceholderComponent name="IELTS Listening" />;
-const IELTSSpeaking = () => <PlaceholderComponent name="IELTS Speaking" />;
 const TOEFLReading = () => <PlaceholderComponent name="TOEFL Reading" />;
 const TOEFLWriting = () => <PlaceholderComponent name="TOEFL Writing" />;
 const TOEFLListening = () => <PlaceholderComponent name="TOEFL Listening" />;
-const TOEFLSpeaking = () => <PlaceholderComponent name="TOEFL Speaking" />;
 const SATReading = () => <PlaceholderComponent name="SAT Reading" />;
 const SATWriting = () => <PlaceholderComponent name="SAT Writing & Language" />;
 const SATMath = () => <PlaceholderComponent name="SAT Math" />;
@@ -44,7 +41,7 @@ const GREVerbal = () => <PlaceholderComponent name="GRE Verbal Reasoning" />;
 const GREQuantitative = () => (
   <PlaceholderComponent name="GRE Quantitative Reasoning" />
 );
-const GREWriting = () => <PlaceholderComponent name="GRE Analytical Writing" />;
+const GREAnalytical = () => <PlaceholderComponent name="GRE Analytical Writing" />;
 const GMATQuantitative = () => (
   <PlaceholderComponent name="GMAT Quantitative Reasoning" />
 );
@@ -52,7 +49,7 @@ const GMATVerbal = () => <PlaceholderComponent name="GMAT Verbal Reasoning" />;
 const GMATReasoning = () => (
   <PlaceholderComponent name="GMAT Integrated Reasoning" />
 );
-const GMATWriting = () => (
+const GMATAnalytical = () => (
   <PlaceholderComponent name="GMAT Analytical Writing" />
 );
 
@@ -126,12 +123,6 @@ export const allTestCategories = {
       description: "Sharpen your listening skills with audio exercises.",
       icon: <Ear className="h-10 w-10 text-primary-800" />,
     },
-    speaking: {
-      title: "Speaking",
-      slug: "speaking",
-      description: "Enhance your fluency and pronunciation.",
-      icon: <MessageSquare className="h-10 w-10 text-primary-800" />,
-    },
   },
   toefl: {
     reading: {
@@ -151,12 +142,6 @@ export const allTestCategories = {
       slug: "listening",
       description: "Sharpen your listening skills with audio exercises.",
       icon: <Ear className="h-10 w-10 text-primary-800" />,
-    },
-    speaking: {
-      title: "Speaking",
-      slug: "speaking",
-      description: "Enhance your fluency and pronunciation.",
-      icon: <MessageSquare className="h-10 w-10 text-primary-800" />,
     },
   },
   sat: {
@@ -180,37 +165,31 @@ export const allTestCategories = {
     },
   },
   gre: {
-    verbal: {
-      title: "Verbal Reasoning",
-      slug: "verbal-reasoning",
-      description: "Analyze text, evaluate arguments, and synthesize info.",
-      icon: <SpellCheck className="h-10 w-10 text-primary-800" />,
-    },
-    quantitative: {
-      title: "Quantitative Reasoning",
-      slug: "quantitative-reasoning",
-      description: "Interpret data and solve mathematical problems.",
-      icon: <Calculator className="h-10 w-10 text-primary-800" />,
-    },
-    writing: {
+    analytical: {
       title: "Analytical Writing",
       slug: "analytical-writing",
       description: "Articulate and support complex ideas in writing.",
       icon: <FileSignature className="h-10 w-10 text-primary-800" />,
     },
-  },
-  gmat: {
+    verbal: {
+      title: "Verbal Reasoning",
+      slug: "verbal-reasoning",
+      description: "Analyze text, evaluate arguments, and synthesize info.",
+      icon: <SpellCheck className="h-10 w-10 text-primary-800" />,
+    },
     quantitative: {
       title: "Quantitative Reasoning",
       slug: "quantitative-reasoning",
       description: "Interpret data and solve mathematical problems.",
       icon: <Calculator className="h-10 w-10 text-primary-800" />,
     },
-    verbal: {
-      title: "Verbal Reasoning",
-      slug: "verbal-reasoning",
-      description: "Analyze text, evaluate arguments, and synthesize info.",
-      icon: <SpellCheck className="h-10 w-10 text-primary-800" />,
+  },
+  gmat: {
+    analytical: {
+      title: "Analytical Writing Assessment",
+      slug: "analytical-writing-assessment",
+      description: "Analyze an argument and critique its reasoning.",
+      icon: <FileSignature className="h-10 w-10 text-primary-800" />,
     },
     reasoning: {
       title: "Integrated Reasoning",
@@ -218,11 +197,17 @@ export const allTestCategories = {
       description: "Evaluate information presented in multiple formats.",
       icon: <Puzzle className="h-10 w-10 text-primary-800" />,
     },
-    writing: {
-      title: "Analytical Writing",
-      slug: "analytical-writing",
-      description: "Analyze an argument and critique its reasoning.",
-      icon: <FileSignature className="h-10 w-10 text-primary-800" />,
+    quantitative: {
+      title: "Quantitative",
+      slug: "quantitative",
+      description: "Interpret data and solve mathematical problems.",
+      icon: <Calculator className="h-10 w-10 text-primary-800" />,
+    },
+    verbal: {
+      title: "Verbal",
+      slug: "verbal",
+      description: "Analyze text, evaluate arguments, and synthesize info.",
+      icon: <SpellCheck className="h-10 w-10 text-primary-800" />,
     },
   },
 };
@@ -238,13 +223,11 @@ export const componentMap = {
     reading: <IELTSReading />,
     writing: <IELTSWriting />,
     listening: <IELTSListening />,
-    speaking: <IELTSSpeaking />,
   },
   toefl: {
     reading: <TOEFLReading />,
     writing: <TOEFLWriting />,
     listening: <TOEFLListening />,
-    speaking: <TOEFLSpeaking />,
   },
   sat: {
     reading: <SATReading />,
@@ -252,14 +235,14 @@ export const componentMap = {
     math: <SATMath />,
   },
   gre: {
+    analytical: <GREAnalytical />,
     verbal: <GREVerbal />,
     quantitative: <GREQuantitative />,
-    writing: <GREWriting />,
   },
   gmat: {
+    analytical: <GMATAnalytical />,
+    reasoning: <GMATReasoning />,
     quantitative: <GMATQuantitative />,
     verbal: <GMATVerbal />,
-    reasoning: <GMATReasoning />,
-    writing: <GMATWriting />,
   },
 };
