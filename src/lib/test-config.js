@@ -1,14 +1,5 @@
+import Reading from "@/components/IELTS/Reading/Reading";
 import { BookOpen, Star, FilePenLine, Ear } from "lucide-react";
-
-const PlaceholderComponent = ({ name }) => (
-  <div className="p-8">
-    <h2 className="text-2xl font-bold">{name} Component</h2>
-  </div>
-);
-
-const IELTSReading = () => <PlaceholderComponent name="IELTS Reading" />;
-const IELTSWriting = () => <PlaceholderComponent name="IELTS Writing" />;
-const IELTSListening = () => <PlaceholderComponent name="IELTS Listening" />;
 
 export const testConfig = {
   ielts: {
@@ -42,8 +33,6 @@ export const allTestCategories = {
 
 export const componentMap = {
   ielts: {
-    reading: <IELTSReading />,
-    writing: <IELTSWriting />,
-    listening: <IELTSListening />,
+    reading: <Reading />,
   },
 };
