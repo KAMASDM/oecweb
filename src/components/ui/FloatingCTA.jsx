@@ -6,7 +6,7 @@ import ConsultationForm from "../forms/ConsultationForm";
 const FloatingCTA = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
