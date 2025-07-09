@@ -29,6 +29,7 @@ const schema = yup.object().shape({
   current_education: yup
     .string()
     .required("Please select your education level"),
+  enquiry_details: yup.string(),
 });
 
 const FormInput = ({
@@ -96,7 +97,30 @@ const FormSelect = ({ label, name, register, error, children, disabled }) => (
   </div>
 );
 
-const ConsultationForm = ({ isOpen, onClose, service }) => {
+const FormTextarea = ({ label, name, register, error, placeholder }) => (
+  <div className="mt-4 mb-4">
+    <label htmlFor={name} className="block text-gray-700 font-semibold mb-2">
+      {label}
+    </label>
+    <textarea
+      id={name}
+      {...register(name)}
+      placeholder={placeholder}
+      rows="4"
+      className={`w-full px-4 py-3 rounded-lg border ${
+        error ? "border-red-500" : "border-gray-300"
+      } text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition`}
+      aria-invalid={error ? "true" : "false"}
+    />
+    {error && (
+      <p className="mt-1 text-sm text-red-600" role="alert">
+        {error.message}
+      </p>
+    )}
+  </div>
+);
+
+const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -109,9 +133,22 @@ const ConsultationForm = ({ isOpen, onClose, service }) => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    if (
+      initialEnquiry?.name &&
+      initialEnquiry?.university &&
+      initialEnquiry?.country &&
+      isOpen
+    ) {
+      const message = `I am interested in the "${initialEnquiry.name}" course at ${initialEnquiry.university}, ${initialEnquiry.country}. Please provide more details.`;
+      setValue("enquiry_details", message);
+    }
+  }, [initialEnquiry, isOpen, setValue]);
 
   useEffect(() => {
     if (isOpen) {
@@ -145,8 +182,6 @@ const ConsultationForm = ({ isOpen, onClose, service }) => {
         reset();
         if (service === "Test Prep+") {
           router.push("/test-preparation");
-        } else if (service === "AI College Finder") {
-          router.push("/ai-college-finder");
         }
       } else {
         setSubmitError("An unexpected error occurred. Please try again.");
@@ -305,11 +340,19 @@ const ConsultationForm = ({ isOpen, onClose, service }) => {
                 </FormSelect>
               </div>
 
+              <FormTextarea
+                label="Message"
+                name="enquiry_details"
+                register={register}
+                error={errors.enquiry_details}
+                placeholder="Tell us more about your study plans or any specific questions you have."
+              />
+
               <div className="text-center mt-6">
                 <button
                   type="submit"
                   disabled={countriesLoading || isSubmitting}
-                  className="w-full md:w-auto bg-primary-600 hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-10 rounded-lg transition-colors inline-flex items-center justify-center"
+                  className="w-full md:w-auto bg-primary-800 hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-10 rounded-lg transition-colors inline-flex items-center justify-center"
                 >
                   {isSubmitting ? (
                     <>
