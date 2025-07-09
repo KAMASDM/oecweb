@@ -19,7 +19,7 @@ const smartFeatures = [
     image: "/TestPrep.png",
   },
   {
-    href: "",
+    href: "/ai-college-finder",
     title: "AI College Finder",
     description:
       "Find the universities & programs that best match your profile with the help of AI.",
@@ -53,64 +53,59 @@ const SmartFeatures = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
-      <section className="py-10 bg-gray-50" aria-labelledby="services-heading">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2
-              id="services-heading"
-              className="text-3xl sm:text-4xl font-bold text-primary-800 mb-4"
-            >
-              All-Tech For Studying Abroad
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-7xl mx-auto px-4">
-              We have smart features to help you throughout your abroad
-              education journey
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-0">
-            {smartFeatures.map((service, index) => {
-              const isModalCard =
-                service.title === "Test Prep+" ||
-                service.title === "AI College Finder";
-
-              const CardContent = (
-                <div
-                  onClick={() => {
-                    if (isModalCard) {
-                      setService(service.title);
-                      setIsModalOpen(true);
-                    }
-                  }}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col border border-gray-200 hover:border-primary-600 hover:ring-1 hover:ring-primary-600"
-                >
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary-800 transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm sm:text-base mb-4">
-                      {service.description}
-                    </p>
-                  </div>
-                  <div className="p-6 pt-0">
-                    <img src={service.image} alt={service.title} />
-                  </div>
-                </div>
-              );
-
-              return isModalCard ? (
-                <div key={index}>{CardContent}</div>
-              ) : (
-                <Link key={index} href={service.href || "#"}>
-                  {CardContent}
-                </Link>
-              );
-            })}
-          </div>
+    <section className="py-10 bg-gray-50" aria-labelledby="services-heading">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2
+            id="services-heading"
+            className="text-3xl sm:text-4xl font-bold text-primary-800 mb-4"
+          >
+            All-Tech For Studying Abroad
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-7xl mx-auto px-4">
+            We have smart features to help you throughout your abroad education
+            journey
+          </p>
         </div>
-      </section>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-0">
+          {smartFeatures.map((service, index) => {
+            const isModalCard = service.title === "Test Prep+";
+
+            const CardContent = (
+              <div
+                onClick={() => {
+                  if (isModalCard) {
+                    setService(service.title);
+                    setIsModalOpen(true);
+                  }
+                }}
+                className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col border border-gray-200 hover:border-primary-600 hover:ring-1 hover:ring-primary-600"
+              >
+                <div className="p-6 flex-grow">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary-800 transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base mb-4">
+                    {service.description}
+                  </p>
+                </div>
+                <div className="p-6 pt-0">
+                  <img src={service.image} alt={service.title} />
+                </div>
+              </div>
+            );
+
+            return isModalCard ? (
+              <div key={index}>{CardContent}</div>
+            ) : (
+              <Link key={index} href={service.href || "#"}>
+                {CardContent}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
       {isModalOpen && (
         <ConsultationForm
           isOpen={isModalOpen}
@@ -118,7 +113,7 @@ const SmartFeatures = () => {
           service={service}
         />
       )}
-    </>
+    </section>
   );
 };
 

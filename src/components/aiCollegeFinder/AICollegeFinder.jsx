@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import OpenAI from "openai";
 import { motion, AnimatePresence } from "framer-motion";
+import ConsultationForm from "../forms/ConsultationForm";
 import {
   Grid,
   List,
@@ -25,6 +26,8 @@ const AICollegeFinder = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     degree: "bachelor",
@@ -128,6 +131,16 @@ const AICollegeFinder = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleApplyNow = (course) => {
+    setSelectedCourse(course);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCourse(null);
   };
 
   const handleFilterChange = (e) => {
@@ -607,6 +620,14 @@ const AICollegeFinder = () => {
                           </div>
                         </div>
                       )}
+                      <div className="flex justify-end items-center mt-4">
+                        <button
+                          onClick={() => handleApplyNow(course)}
+                          className="bg-primary-800 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                        >
+                          Apply Now
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))
@@ -618,6 +639,17 @@ const AICollegeFinder = () => {
           )}
         </div>
       </main>
+      {isModalOpen && (
+        <ConsultationForm
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          initialEnquiry={{
+            name: selectedCourse?.name,
+            university: selectedCourse?.university,
+            country: selectedCourse?.country,
+          }}
+        />
+      )}
     </div>
   );
 };

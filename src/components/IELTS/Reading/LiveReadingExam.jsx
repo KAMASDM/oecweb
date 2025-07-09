@@ -1,12 +1,181 @@
 "use client";
+import { readingBandValues } from "@/lib/Reading/readingBandValues";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 const Cheerio = require("cheerio");
 
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, answers }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4">
+      <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center mb-4 border-b pb-3">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Confirm Your Answers
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-800 text-3xl font-bold"
+          >
+            &times;
+          </button>
+        </div>
+        <div className="overflow-y-auto pr-2">
+          <p className="mb-4 text-gray-600">
+            Please review your answers before submitting.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {answers[0]?.answers.map((answer, index) => (
+              <div key={index} className="bg-gray-50 border rounded-lg p-3">
+                <h6 className="font-semibold text-gray-700">
+                  Question {index + 1}
+                </h6>
+                <p className="truncate text-sm text-blue-600 font-medium">
+                  {answer.answer || (
+                    <span className="text-red-500">Not Answered</span>
+                  )}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-6 text-right border-t pt-4 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 rounded-lg text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-6 py-2 rounded-lg text-sm font-semibold bg-green-500 text-white hover:bg-green-600"
+          >
+            Confirm & Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ScoreModal = ({ isOpen, onClose, scoreDetails }) => {
+  if (!isOpen || !scoreDetails) return null;
+
+  const { correct, incorrect, skipped, total, results, band } = scoreDetails;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4">
+      <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center mb-4 border-b pb-3">
+          <h2 className="text-2xl font-bold text-gray-800">Your Score</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-800 text-3xl font-bold"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div className="flex justify-around text-center my-4">
+          <div className="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg">
+            <div className="text-2xl font-bold">{total}</div>
+            <div className="text-sm">Total</div>
+          </div>
+          <div className="px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+            <div className="text-2xl font-bold">{correct}</div>
+            <div className="text-sm">Correct</div>
+          </div>
+          <div className="px-4 py-2 bg-red-100 text-red-800 rounded-lg">
+            <div className="text-2xl font-bold">{incorrect}</div>
+            <div className="text-sm">Incorrect</div>
+          </div>
+          <div className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+            <div className="text-2xl font-bold">{skipped}</div>
+            <div className="text-sm">Skipped</div>
+          </div>
+          <div className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg">
+            <div className="text-2xl font-bold">{band}</div>
+            <div className="text-sm">Band</div>
+          </div>
+        </div>
+
+        <div className="overflow-y-auto flex-grow">
+          <table className="w-full text-sm text-left text-gray-600">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0">
+              <tr>
+                <th scope="col" className="px-4 py-3">
+                  Question No.
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Correct Answer
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Your Answer
+                </th>
+                <th scope="col" className="px-4 py-3 text-center">
+                  Result
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((item) => (
+                <tr
+                  key={item.qn}
+                  className="bg-white border-b hover:bg-gray-50"
+                >
+                  <th
+                    scope="row"
+                    className="px-4 py-3 font-medium text-gray-900"
+                  >
+                    {item.qn}
+                  </th>
+                  <td className="px-4 py-3">{item.correctAnswer}</td>
+                  <td
+                    className={`px-4 py-3 ${
+                      item.status === "incorrect" ? "text-red-600" : ""
+                    } ${item.status === "skipped" ? "text-yellow-600" : ""}`}
+                  >
+                    {item.userAnswer}
+                  </td>
+                  <td className="px-4 py-3 text-center text-xl">
+                    {item.status === "correct" && (
+                      <span className="text-green-500">✔</span>
+                    )}
+                    {item.status === "incorrect" && (
+                      <span className="text-red-500">✖</span>
+                    )}
+                    {item.status === "skipped" && (
+                      <span className="text-yellow-500">--</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6 text-right border-t pt-4">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 rounded-lg text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const LiveReadingExam = ({ examData }) => {
+  const router = useRouter();
+  const examId = examData?.id;
   const containerRef = useRef(null);
   const [examAnswer, setExamAnswer] = useState([]);
   const [uniqueIdArr, setUniqueIdArr] = useState([]);
-  const examId = examData?.id;
+  const [scoreDetails, setScoreDetails] = useState(null);
+  const [isScoreModalOpen, setScoreModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const handleAnswerLinking = (e, questionId, next) => {
     const { value, id, checked, type } = e.target;
@@ -53,6 +222,85 @@ const LiveReadingExam = ({ examData }) => {
       }
     }
     setExamAnswer(temp);
+  };
+
+  const handleConfirmSubmit = () => {
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let skippedCount = 0;
+    const resultsTable = [];
+
+    examData.answers.forEach((correctAnswerData, index) => {
+      const studentAnswerData = examAnswer[0]?.answers[index];
+      const studentAnswer = (studentAnswerData?.answer || "").trim();
+      const studentAnswerLower = studentAnswer.toLowerCase();
+      const correctAnswerText = correctAnswerData.answer_text.trim();
+
+      let isCorrect = false;
+
+      if (studentAnswer === "") {
+        skippedCount++;
+        resultsTable.push({
+          qn: index + 1,
+          userAnswer: "Skipped",
+          correctAnswer: correctAnswerText,
+          status: "skipped",
+        });
+        return;
+      }
+
+      if (correctAnswerText.includes(" OR ")) {
+        const correctOptions = correctAnswerText
+          .split(" OR ")
+          .map((option) => option.trim().toLowerCase());
+        if (correctOptions.includes(studentAnswerLower)) {
+          isCorrect = true;
+        }
+      } else if (correctAnswerText.includes(" AND ")) {
+        const correctOptions = correctAnswerText
+          .split(" AND ")
+          .map((option) => option.trim().toLowerCase());
+        if (
+          correctOptions.every((option) => studentAnswerLower.includes(option))
+        ) {
+          isCorrect = true;
+        }
+      } else {
+        if (studentAnswerLower === correctAnswerText.toLowerCase()) {
+          isCorrect = true;
+        }
+      }
+
+      if (isCorrect) {
+        correctCount++;
+        resultsTable.push({
+          qn: index + 1,
+          userAnswer: studentAnswer,
+          correctAnswer: correctAnswerText,
+          status: "correct",
+        });
+      } else {
+        incorrectCount++;
+        resultsTable.push({
+          qn: index + 1,
+          userAnswer: studentAnswer,
+          correctAnswer: correctAnswerText,
+          status: "incorrect",
+        });
+      }
+    });
+
+    setScoreDetails({
+      correct: correctCount,
+      incorrect: incorrectCount,
+      skipped: skippedCount,
+      total: examData.answers.length,
+      results: resultsTable,
+      band: readingBandValues[correctCount],
+    });
+
+    setConfirmationModalOpen(false);
+    setScoreModalOpen(true);
   };
 
   const htmlContent = useMemo(() => {
@@ -188,7 +436,6 @@ const LiveReadingExam = ({ examData }) => {
           <div className="bg-white p-6 rounded-xl shadow-lg h-full overflow-y-auto border border-gray-200 prose max-w-none">
             <div dangerouslySetInnerHTML={{ __html: examData.passage }} />
           </div>
-
           <div
             className="bg-white p-6 rounded-xl shadow-lg h-full overflow-y-auto border border-gray-200"
             ref={containerRef}
@@ -217,16 +464,33 @@ const LiveReadingExam = ({ examData }) => {
               })}
             </div>
             <div className="flex items-center gap-4">
-              <button className="px-6 py-2 rounded-lg text-sm font-semibold bg-yellow-400 text-yellow-900 hover:bg-yellow-500">
-                Review
-              </button>
-              <button className="px-6 py-2 rounded-lg text-sm font-semibold bg-green-500 text-white hover:bg-green-600">
+              <button
+                onClick={() => setConfirmationModalOpen(true)}
+                className="px-6 py-2 rounded-lg text-sm font-semibold bg-green-500 text-white hover:bg-green-600"
+              >
                 Submit
               </button>
             </div>
           </div>
         </footer>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={() => {
+          setConfirmationModalOpen(false);
+          router.push("/test-preparation");
+        }}
+        onConfirm={handleConfirmSubmit}
+        answers={examAnswer}
+      />
+      <ScoreModal
+        isOpen={isScoreModalOpen}
+        onClose={() => {
+          setScoreModalOpen(false);
+          router.push("/test-preparation");
+        }}
+        scoreDetails={scoreDetails}
+      />
     </div>
   );
 };
