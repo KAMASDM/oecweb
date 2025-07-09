@@ -36,10 +36,8 @@ const TestComponentPage = () => {
           </p>
         </div>
       </header>
-      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          {ComponentToRender}
-        </div>
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        {ComponentToRender}
       </div>
     </div>
   );
