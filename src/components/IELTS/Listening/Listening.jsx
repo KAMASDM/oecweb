@@ -1,17 +1,17 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { readingExams } from "@/lib/Reading/readingExams";
+import { listeningExams } from "@/lib/Listening/listeningExams";
 
-const Reading = () => {
+const Listening = () => {
   const examsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
   const indexOfLastExam = currentPage * examsPerPage;
   const indexOfFirstExam = indexOfLastExam - examsPerPage;
-  const currentExams = readingExams.slice(indexOfFirstExam, indexOfLastExam);
+  const currentExams = listeningExams.slice(indexOfFirstExam, indexOfLastExam);
 
-  const totalPages = Math.ceil(readingExams.length / examsPerPage);
+  const totalPages = Math.ceil(listeningExams.length / examsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -85,4 +85,4 @@ const Reading = () => {
   );
 };
 
-export default Reading;
+export default Listening;
