@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { listeningExams } from "@/lib/Listening/listeningExams";
 
 const Listening = () => {
@@ -63,23 +64,28 @@ const Listening = () => {
         </table>
       </div>
       <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span>
+        <span className="text-sm text-gray-700">
           Page {currentPage} of {totalPages}
         </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold p-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous Page"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold p-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next Page"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

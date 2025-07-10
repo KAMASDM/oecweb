@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { readingExams } from "@/lib/Reading/readingExams";
+import { writingExams } from "@/lib/Writing/writingExams";
 
-const Reading = () => {
+const Writing = () => {
   const examsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
   const indexOfLastExam = currentPage * examsPerPage;
   const indexOfFirstExam = indexOfLastExam - examsPerPage;
-  const currentExams = readingExams.slice(indexOfFirstExam, indexOfLastExam);
+  const currentExams = writingExams.slice(indexOfFirstExam, indexOfLastExam);
 
-  const totalPages = Math.ceil(readingExams.length / examsPerPage);
+  const totalPages = Math.ceil(writingExams.length / examsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -91,4 +91,4 @@ const Reading = () => {
   );
 };
 
-export default Reading;
+export default Writing;

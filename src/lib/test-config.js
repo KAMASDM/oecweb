@@ -1,6 +1,7 @@
-import Reading from "@/components/IELTS/Reading/Reading";
-import Listening from "@/components/IELTS/Listening/Listening";
 import { BookOpen, Star, FilePenLine, Ear } from "lucide-react";
+import Reading from "@/components/IELTS/Reading/Reading";
+import Writing from "@/components/IELTS/Writing/Writing";
+import Listening from "@/components/IELTS/Listening/Listening";
 
 export const testConfig = {
   ielts: {
@@ -35,6 +36,7 @@ export const allTestCategories = {
 export const componentMap = {
   ielts: {
     reading: <Reading />,
+    writing: <Writing />,
     listening: <Listening />,
   },
 };
