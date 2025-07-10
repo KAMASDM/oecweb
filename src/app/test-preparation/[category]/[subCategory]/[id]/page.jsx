@@ -1,17 +1,21 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { readingExamsData } from "@/lib/Reading/readingExamsData";
+import { writingExamsData } from "@/lib/Writing/writingExamsData";
 import { listeningExamsData } from "@/lib/Listening/listeningExamsData";
 import LiveReadingExam from "@/components/IELTS/Reading/LiveReadingExam";
+import LiveWritingExam from "@/components/IELTS/Writing/LiveWritingExam";
 import LiveListeningExam from "@/components/IELTS/Listening/LiveListeningExam";
 
 const examDataSources = {
   reading: readingExamsData,
+  writing: writingExamsData,
   listening: listeningExamsData,
 };
 
 const ExamComponents = {
   reading: LiveReadingExam,
+  writing: LiveWritingExam,
   listening: LiveListeningExam,
 };
 
