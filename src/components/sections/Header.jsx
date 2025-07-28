@@ -51,10 +51,6 @@ const Header = () => {
     fetchDropdownData();
   }, []);
 
-  const handleExploreOpen = () => {
-    setIsExploreOpen(true);
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -226,15 +222,14 @@ const Header = () => {
                 <div
                   key={item.name}
                   className="relative"
-                  onMouseEnter={item.hasDropdown ? handleExploreOpen : null}
-                  onMouseLeave={
-                    item.hasDropdown ? () => setIsExploreOpen(false) : null
-                  }
                   ref={item.hasDropdown ? exploreDropdownRef : null}
                 >
                   {item.hasDropdown ? (
                     <>
-                      <button className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2">
+                      <button
+                        onClick={() => setIsExploreOpen(!isExploreOpen)}
+                        className="flex items-center gap-1 text-gray-800 hover:text-primary-800 font-medium transition-colors duration-200 py-2"
+                      >
                         {item.name}
                         <ChevronDown
                           size={16}

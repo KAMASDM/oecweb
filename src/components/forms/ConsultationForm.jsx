@@ -29,7 +29,10 @@ const schema = yup.object().shape({
   current_education: yup
     .string()
     .required("Please select your education level"),
-  enquiry_details: yup.string(),
+  enquiry_details: yup
+    .string()
+    .required("Please enter your message")
+    .min(10, "Must be at least 10 characters"),
 });
 
 const FormInput = ({
