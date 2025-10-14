@@ -77,63 +77,72 @@ const Hero = () => {
   return (
     <>
       <section
-        className="relative mt-20 lg:mt-28 min-h-screen flex items-center justify-center bg-cover bg-center transition-all duration-1000 ease-in-out"
-        style={{
-          backgroundImage: `url(${currentHero.background_image})`,
-        }}
+        className="relative mt-16 sm:mt-20 lg:mt-28 min-h-[70vh] sm:min-h-[80vh] md:min-h-screen flex items-center justify-center transition-all duration-1000 ease-in-out"
         aria-labelledby="hero-heading"
       >
+        {/* Background Image - Responsive */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${currentHero.background_image})`,
+            backgroundPosition: 'center center',
+          }}
+        />
+        
+        {/* Overlay */}
         <div className="absolute inset-0 bg-black/60"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white z-10 py-12">
-          <div className="space-y-4 md:space-y-6 animate-fade-in-up">
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white z-10 py-8 sm:py-12 md:py-16">
+          <div className="space-y-3 sm:space-y-4 md:space-y-6 animate-fade-in-up">
             <h1
               id="hero-heading"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight px-2"
             >
               {currentHero.title}
             </h1>
 
-            <h2 className="text-xl md:text-2xl lg:text-3xl text-secondary-500 font-medium">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-secondary-500 font-medium px-2">
               {currentHero.subtitle}
             </h2>
 
             <div
-              className="text-base md:text-lg text-gray-200 max-w-3xl mx-auto"
+              className="text-sm sm:text-base md:text-lg text-gray-200 max-w-3xl mx-auto px-4 leading-relaxed"
               dangerouslySetInnerHTML={{ __html: currentHero.description }}
             />
           </div>
 
-          <div className="mt-8 md:mt-10">
+          <div className="mt-6 sm:mt-8 md:mt-10 mb-20 sm:mb-6">
             {currentHero.cta_link ? (
               <Link
                 href={currentHero.cta_link}
-                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-base md:text-lg"
+                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-4 py-2.5 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base md:text-lg shadow-lg"
               >
                 {currentHero.cta_text}
-                <ArrowRight size={20} aria-hidden="true" />
+                <ArrowRight size={18} className="sm:w-5 sm:h-5" aria-hidden="true" />
               </Link>
             ) : (
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-base md:text-lg"
+                className="inline-flex items-center gap-2 bg-primary-800 hover:bg-primary-600 text-white px-4 py-2.5 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base md:text-lg shadow-lg"
               >
                 {currentHero.cta_text}
-                <ArrowRight size={20} aria-hidden="true" />
+                <ArrowRight size={18} className="sm:w-5 sm:h-5" aria-hidden="true" />
               </button>
             )}
           </div>
         </div>
 
+        {/* Slide Indicators */}
         {heroSections.length > 1 && (
-          <div className="absolute bottom-6 sm:bottom-8 left-0 right-0 flex justify-center space-x-2 z-10">
+          <div className="absolute bottom-20 sm:bottom-6 md:bottom-8 left-0 right-0 flex justify-center space-x-2 z-10">
             {heroSections.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? "bg-white w-6"
+                    ? "bg-white w-4 sm:w-6"
                     : "bg-white/50 hover:bg-white/75"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}

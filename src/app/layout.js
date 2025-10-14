@@ -1,6 +1,7 @@
 import "./globals.css";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export const metadata = {
   title: "OEC India - Best Overseas Education Consultants for Study Abroad",
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
         <Header />
         {children}
         <Footer />
+        <BottomNavigation />
       </body>
     </html>
   );

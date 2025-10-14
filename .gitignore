@@ -1,3 +1,21 @@
 node_modules
 .next
 .env
+.env.local
+.env*.local
+
+# Test coverage
+coverage/
+*.coverage
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.old.jsx
+*.backup

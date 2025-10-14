@@ -4,6 +4,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply text-gray-900 antialiased;
+  }
+  
+  /* Add padding bottom for mobile devices to prevent content from being hidden by bottom nav */
+  @media (max-width: 768px) {
+    body {
+      @apply pb-20;
+    }
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 @keyframes infinite-scroll {
   from {
     transform: translateX(0);
@@ -27,6 +52,29 @@ select {
   color: #444;
   background: #fcfcfc;
   border: 1px solid #a6a6a6;
+border-radius: 3px;
+margin: 0;
+
+select > option {
+  font-size: 15px;
+  background: #fcfcfc;
+}
+
+textarea {
+  color: #444;
+  background: #fcfcfc;
+  border: 1px solid #a6a6a6;
+  border-radius: 3px;
+  margin: 0;
+}
+
+input {
+  color: #444;
+  background: #fcfcfc;
+  border: 1px solid #a6a6a6;
+  border-radius: 3px;
+  margin: 0;
+}
   border-radius: 3px;
   margin: 0;
 }
