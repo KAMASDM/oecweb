@@ -30,7 +30,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: wss: ws:; frame-ancestors 'self';"
+            value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: http:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: http: data: blob:; style-src 'self' 'unsafe-inline' https: http: data:; img-src 'self' data: blob: https: http:; font-src 'self' data: https: http:; connect-src 'self' https: http: wss: ws: data:; media-src 'self' data: blob: https: http:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; worker-src 'self' blob:; child-src 'self' blob:;"
           },
         ],
       },
@@ -40,7 +40,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: wss: ws:; frame-ancestors 'self';"
+            value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: http:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: http: data: blob:; style-src 'self' 'unsafe-inline' https: http: data:; img-src 'self' data: blob: https: http:; font-src 'self' data: https: http:; connect-src 'self' https: http: wss: ws: data:; media-src 'self' data: blob: https: http:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; worker-src 'self' blob:; child-src 'self' blob:;"
           },
         ],
       },
