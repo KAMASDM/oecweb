@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_app=self.webpackChunkmy_app||[]).push([[817],{817:function(e,i,l){l.r(i);l(2791);var n=l(154),u=l(184);i.default=function(e){return(0,u.jsx)(u.Fragment,{children:(0,u.jsx)(n.Z,{type:"create",title:"Create Enquiry",edit:!1,isFlow:!!e,level:null===e||void 0===e?void 0:e.levelId,intake:null===e||void 0===e?void 0:e.intake,courseId:null===e||void 0===e?void 0:e.courseId,uniId:null===e||void 0===e?void 0:e.uniId})})}}}]);
+//# sourceMappingURL=817.c96dddb2.chunk.js.map

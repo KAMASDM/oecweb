@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ajaxCall from "@/helpers/ajaxCall";
-import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Quote, Play, Pause } from "lucide-react";
 
 const Testimonials = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [testimonials, setTestimonials] = useState([]);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -46,9 +47,23 @@ const Testimonials = () => {
     fetchTestimonials();
   }, []);
 
+  // Auto-scroll effect
+  useEffect(() => {
+    if (testimonials.length <= 1 || isPaused) return;
+
+    const autoScroll = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // Change testimonial every 5 seconds
+
+    return () => clearInterval(autoScroll);
+  }, [testimonials.length, isPaused]);
+
   const nextTestimonial = () => {
     if (testimonials.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    // Briefly pause auto-scroll when user manually navigates
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
   };
 
   const prevTestimonial = () => {
@@ -56,6 +71,16 @@ const Testimonials = () => {
     setCurrentIndex(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
+    // Briefly pause auto-scroll when user manually navigates
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
+  };
+
+  const goToTestimonial = (index) => {
+    setCurrentIndex(index);
+    // Briefly pause auto-scroll when user manually navigates
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 10000); // Resume after 10 seconds
   };
 
   const currentTestimonial = testimonials[currentIndex];
@@ -76,6 +101,21 @@ const Testimonials = () => {
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Why are we the best study abroad consultants?
           </p>
+          {testimonials.length > 1 && (
+            <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
+              {isPaused ? (
+                <span className="flex items-center gap-1">
+                  <Pause className="w-4 h-4" />
+                  Auto-scroll paused
+                </span>
+              ) : (
+                <span className="flex items-center gap-1">
+                  <Play className="w-4 h-4" />
+                  Auto-scrolling every 5 seconds
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {isLoading ? (
@@ -125,10 +165,17 @@ const Testimonials = () => {
           </div>
         ) : (
           <div className="relative">
-            <div className="max-w-6xl mx-auto">
-              <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-800">
+            <div 
+              className="max-w-6xl mx-auto"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onFocus={() => setIsPaused(true)}
+              onBlur={() => setIsPaused(false)}
+              tabIndex={0}
+            >
+              <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-primary-800 transition-all duration-500 ease-in-out">
                 <div className="p-8 md:p-10">
-                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                  <div className="flex flex-col lg:flex-row gap-8 items-start animate-fade-in-up">
                     <div className="flex-shrink-0 w-full lg:w-1/3">
                       <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
                         <div
@@ -205,19 +252,31 @@ const Testimonials = () => {
                 <ChevronLeft className="h-6 w-6" />
               </button>
 
-              <div className="flex space-x-3">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
-                      index === currentIndex
-                        ? "bg-secondary-500 scale-125"
-                        : "bg-secondary-300"
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
+              <div className="flex flex-col items-center space-y-4">
+                {/* Progress indicator for auto-scroll */}
+                {testimonials.length > 1 && !isPaused && (
+                  <div className="w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      key={currentIndex} // Reset animation on each testimonial change
+                      className={`h-full bg-secondary-500 testimonial-progress ${isPaused ? 'paused' : ''}`}
+                    />
+                  </div>
+                )}
+                
+                <div className="flex space-x-3">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToTestimonial(index)}
+                      className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
+                        index === currentIndex
+                          ? "bg-secondary-500 scale-125"
+                          : "bg-secondary-300"
+                      }`}
+                      aria-label={`Go to testimonial ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
 
               <button

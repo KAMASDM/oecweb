@@ -66,8 +66,10 @@ const Universities = () => {
           </div>
         ) : students.length > 0 ? (
           <div className="relative w-full overflow-hidden py-4 group">
-            <div className="flex gap-8 animate-infinite-scroll group-hover:pause-animation">
-              {[...students, ...students].map((student, index) => (
+            <div className="flex gap-8 animate-infinite-scroll-seamless">
+              {/* Create seamless infinite scroll by triplicating the data */}
+              {/* Ensure we have enough cards for smooth animation by repeating 3 times */}
+              {[...students, ...students, ...students].map((student, index) => (
                 <div
                   key={`${student.id}-${index}`}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:!scale-105 flex flex-col w-96 flex-shrink-0"

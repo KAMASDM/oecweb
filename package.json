@@ -10,7 +10,9 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "deploy-crm": "./deploy-crm.sh",
+    "deploy-crm:help": "echo '🚀 CRM Deployment Help:\\n\\n1. Build your React CRM: npm run build\\n2. Deploy to OEC: npm run deploy-crm [build-dir]\\n3. Visit: http://localhost:3000/oeccrm\\n\\nExamples:\\n  npm run deploy-crm          # Uses ./build\\n  npm run deploy-crm ./dist   # Uses ./dist'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

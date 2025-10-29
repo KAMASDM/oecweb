@@ -44,6 +44,51 @@
   width: max-content;
 }
 
+@keyframes infinite-scroll-seamless {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-infinite-scroll-seamless {
+  animation: infinite-scroll-seamless 45s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.animate-infinite-scroll-seamless:hover {
+  animation-play-state: paused;
+}
+
+/* Ensure smooth performance on lower-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .animate-infinite-scroll-seamless {
+    animation-duration: 60s;
+  }
+}
+
+/* Testimonial auto-scroll progress indicator */
+@keyframes testimonial-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.testimonial-progress {
+  animation: testimonial-progress 5s linear;
+}
+
+.testimonial-progress.paused {
+  animation-play-state: paused;
+}
+
 .lv-highlight {
   background-color: #e66234 !important;
 }
