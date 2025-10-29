@@ -8,6 +8,8 @@ import Pagination from "./Pagination";
 import ViewModeToggle from "./ViewModeToggle";
 import SearchBar from "./SearchBar";
 import SkeletonCard from "./SkeletonCard";
+import EducationTrivia from "./EducationTrivia";
+import QuickCoursePreview from "./QuickCoursePreview";
 
 const AICollegeFinder = () => {
   const [viewMode, setViewMode] = useState("grid");
@@ -26,8 +28,10 @@ const AICollegeFinder = () => {
   });
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [courseMetadata, setCourseMetadata] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCourses, setTotalCourses] = useState(0);
+  const [metadata, setMetadata] = useState(null);
   const coursesPerPage = 6;
 
   const getUniversityLogo = (name) => {
@@ -47,6 +51,10 @@ const AICollegeFinder = () => {
     setCurrentPage(1);
 
     try {
+      // Add timeout for faster failure detection
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+
       const response = await fetch("/api/ai-college-finder", {
         method: "POST",
         headers: {
@@ -60,7 +68,10 @@ const AICollegeFinder = () => {
           duration: filters.duration,
           delivery: filters.delivery,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -68,20 +79,39 @@ const AICollegeFinder = () => {
       }
 
       const json = await response.json();
-      const coursesWithLogos = Array.isArray(json.courses)
-        ? json.courses.map((course) => ({
+      
+      // Handle new response structure with metadata
+      const coursesData = json.courses || [];
+      const metadata = json.metadata || {};
+      
+      const coursesWithLogos = Array.isArray(coursesData)
+        ? coursesData.map((course) => ({
             ...course,
             logo: getUniversityLogo(course.university),
           }))
         : [];
+      
       setCourses(coursesWithLogos);
       setTotalCourses(coursesWithLogos.length);
       setTotalPages(Math.ceil(coursesWithLogos.length / coursesPerPage));
+      setCourseMetadata(metadata);
+      
+      // Log metadata for debugging
+      if (metadata.dataSource) {
+        console.log('Course data source:', metadata.dataSource);
+      }
+      if (metadata.disclaimer) {
+        console.log('Data disclaimer:', metadata.disclaimer);
+      }
     } catch (err) {
       console.error("Error fetching data:", err);
-      setError(
-        err.message || "Unable to fetch course data. Please try again later."
-      );
+      if (err.name === 'AbortError') {
+        setError("Request timed out. The AI service is taking longer than expected. Please try again.");
+      } else {
+        setError(
+          err.message || "Unable to fetch course data. Please try again later."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -162,6 +192,10 @@ const AICollegeFinder = () => {
             />
           </div>
 
+          {/* Quick Preview and Interactive Trivia while loading */}
+          {isLoading && <QuickCoursePreview filters={filters} />}
+          <EducationTrivia isLoading={isLoading} />
+
           <div
             className={
               viewMode === "grid"
@@ -209,6 +243,37 @@ const AICollegeFinder = () => {
               )}
             </AnimatePresence>
           </div>
+
+          {/* Data Source Disclaimer */}
+          {!isLoading && courseMetadata && (
+            <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-start space-x-2">
+                <svg className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm text-blue-700">
+                  {courseMetadata.disclaimer && (
+                    <p className="mb-2">{courseMetadata.disclaimer}</p>
+                  )}
+                  {courseMetadata.dataSource && (
+                    <p className="text-blue-600">
+                      <strong>Data Source:</strong> {courseMetadata.dataSource}
+                    </p>
+                  )}
+                  {courseMetadata.searchParameters && (
+                    <div className="mt-2">
+                      <strong>Search Parameters:</strong>{" "}
+                      {Object.entries(courseMetadata.searchParameters).map(([key, value]) => (
+                        <span key={key} className="inline-block bg-blue-100 px-2 py-1 rounded text-xs mr-2 mt-1">
+                          {key}: {value}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {!isLoading && !error && filteredCourses.length > 0 && (
             <Pagination
