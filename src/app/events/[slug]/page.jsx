@@ -2,6 +2,11 @@ import React from "react";
 import EventDetails from "@/components/events/EventDetails";
 import ajaxCall from "@/helpers/ajaxCall";
 
+// Generate static params for events
+export async function generateStaticParams() {
+  return [];
+}
+
 export const generateMetadata = async ({ params }) => {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug;

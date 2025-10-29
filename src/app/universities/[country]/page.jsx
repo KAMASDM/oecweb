@@ -1,6 +1,11 @@
 import React from "react";
 import Universities from "@/components/universities/Universities";
 
+// Generate static params for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 export const Country = async ({ params }) => {
   const resolvedParams = await params;
   const country = resolvedParams?.country;

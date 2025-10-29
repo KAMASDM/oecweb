@@ -1,6 +1,11 @@
 import Courses from "@/components/courses/Courses";
 import React from "react";
 
+// Generate static params for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 export const CoursesPage = async ({ params }) => {
   const resolvedParams = await params;
   const course = resolvedParams?.course;

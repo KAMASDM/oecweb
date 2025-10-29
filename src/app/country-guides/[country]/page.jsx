@@ -2,6 +2,11 @@ import React from "react";
 import ajaxCall from "@/helpers/ajaxCall";
 import CountryPage from "@/components/country/CountryPage";
 
+// Generate static params for country guides
+export async function generateStaticParams() {
+  return [];
+}
+
 export const generateMetadata = async ({ params }) => {
   const resolvedParams = await params;
   const country = resolvedParams?.country;

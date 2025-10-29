@@ -7,6 +7,11 @@ import LiveReadingExam from "@/components/IELTS/Reading/LiveReadingExam";
 import LiveWritingExam from "@/components/IELTS/Writing/LiveWritingExam";
 import LiveListeningExam from "@/components/IELTS/Listening/LiveListeningExam";
 
+// Generate static params for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 const examDataSources = {
   reading: readingExamsData,
   writing: writingExamsData,

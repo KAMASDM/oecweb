@@ -1,0 +1,33 @@
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/oeccrm/*"
+  to = "/crm/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/crm/login"
+  to = "/crm/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/crm/*"
+  to = "/crm/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/courses"
+  to = "/popular-courses"
+  status = 301
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[headers]]
+  for = "/crm/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

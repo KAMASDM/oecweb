@@ -2,6 +2,12 @@ import React from "react";
 import ajaxCall from "@/helpers/ajaxCall";
 import BlogDetails from "@/components/blogs/BlogDetails";
 
+// Generate static params for blog posts
+export async function generateStaticParams() {
+  // Return empty array for now - can be populated with actual blog slugs if needed
+  return [];
+}
+
 export const generateMetadata = async ({ params }) => {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug;

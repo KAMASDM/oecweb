@@ -2,6 +2,11 @@ import React from "react";
 import ajaxCall from "@/helpers/ajaxCall";
 import UniversityDetail from "@/components/universities/UniversityDetail";
 
+// Generate static params for static export
+export async function generateStaticParams() {
+  return [];
+}
+
 export const generateMetadata = async ({ params }) => {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug;
