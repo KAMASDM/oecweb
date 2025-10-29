@@ -71,7 +71,7 @@ const BottomNavigation = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex flex-col items-center justify-center flex-1 h-full relative -mt-6`}
+                  className={`flex flex-col items-center justify-center flex-1 h-full relative -mt-6 z-10`}
                   aria-current={active ? "page" : undefined}
                 >
                   <div
@@ -81,10 +81,12 @@ const BottomNavigation = () => {
                         : "bg-white border-2 border-primary-800 hover:bg-primary-50"
                     }`}
                   >
-                    <img
+                    <Image
                       src="/oec.png"
                       alt="OEC India Home"
-                      className="w-12 h-12 object-contain"
+                      width={48}
+                      height={48}
+                      className="object-contain"
                     />
                   </div>
                   <span
@@ -118,7 +120,7 @@ const BottomNavigation = () => {
                     aria-hidden="true"
                   />
                   {active && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-secondary-500 rounded-full" />
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-secondary-500 rounded-full animate-pulse" />
                   )}
                 </div>
                 <span
@@ -133,17 +135,25 @@ const BottomNavigation = () => {
           })}
         </div>
 
-        {/* Active indicator bar */}
-        <div
-          className="absolute top-0 left-0 h-0.5 bg-secondary-500 transition-all duration-300"
-          style={{
-            width: `${100 / navItems.length}%`,
-            transform: `translateX(${
-              navItems.findIndex((item) => isActive(item.href)) * 100
-            }%)`,
-          }}
-          aria-hidden="true"
-        />
+        {/* Active indicator bar - only show for non-center items */}
+        {(() => {
+          const activeIndex = navItems.findIndex((item) => isActive(item.href));
+          const activeItem = navItems[activeIndex];
+          
+          // Don't show indicator bar for center/home item
+          if (activeItem?.isCenter) return null;
+          
+          return (
+            <div
+              className="absolute top-0 left-0 h-0.5 bg-secondary-500 transition-all duration-300"
+              style={{
+                width: `${100 / navItems.length}%`,
+                transform: `translateX(${activeIndex * 100}%)`,
+              }}
+              aria-hidden="true"
+            />
+          );
+        })()}
       </nav>
     </>
   );

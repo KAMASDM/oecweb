@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import {
   Users,
   FileText,
@@ -103,17 +104,19 @@ export default function StudyAbroadHero() {
               </p>
             </motion.div>
 
-            <motion.button
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative bg-white text-primary-800 font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Explore Premium
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </motion.button>
+            <Link href="/services">
+              <motion.button
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative bg-white text-primary-800 font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Explore Our Services
+                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </motion.button>
+            </Link>
           </motion.div>
 
           <div className="relative">
