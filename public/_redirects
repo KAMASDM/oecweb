@@ -1,0 +1,10 @@
+# CRM static files - don't redirect these
+/oeccrm/static/*  /oeccrm/static/:splat  200
+/oeccrm/manifest.json  /oeccrm/manifest.json  200
+/oeccrm/favicon.ico  /oeccrm/favicon.ico  200
+/oeccrm/service-worker.js  /oeccrm/service-worker.js  200
+/oeccrm/*.js  /oeccrm/:splat.js  200
+/oeccrm/*.map  /oeccrm/:splat.map  200
+
+# CRM routes - serve index.html for all other paths
+/oeccrm/*  /oeccrm/index.html  200

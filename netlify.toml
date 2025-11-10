@@ -4,28 +4,6 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# CRM static files should be served as-is
-[[redirects]]
-  from = "/oeccrm/static/*"
-  to = "/oeccrm/static/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/oeccrm/manifest.json"
-  to = "/oeccrm/manifest.json"
-  status = 200
-
-[[redirects]]
-  from = "/oeccrm/favicon.ico"
-  to = "/oeccrm/favicon.ico"
-  status = 200
-
-# CRM routes - serve index.html for client-side routing
-[[redirects]]
-  from = "/oeccrm/*"
-  to = "/oeccrm/index.html"
-  status = 200
-
 [[redirects]]
   from = "/courses"
   to = "/popular-courses"
