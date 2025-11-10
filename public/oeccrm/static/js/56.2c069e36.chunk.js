@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_app=self.webpackChunkmy_app||[]).push([[56],{4056:function(e,t,a){a.r(t);a(2791),a(6276),a(4707),a(9825);var p=a(5021),n=a(7689),i=a(184);t.default=function(){var e=(0,n.UO)().appID;return(0,i.jsx)(p.Z,{type:"create",title:"Create Application",edit:!1,enqID:e,enqSelectionDisable:!!e})}}}]);
+//# sourceMappingURL=56.2c069e36.chunk.js.map

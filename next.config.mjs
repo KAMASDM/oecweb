@@ -2,16 +2,22 @@
 const nextConfig = {
   async rewrites() {
     return [
-      // When CRM opens in new window, map its asset requests to the crm folder
+      // Specific CRM login route - serve from oeccrm folder
+      {
+        source: '/oeccrm/login',
+        destination: '/oeccrm/index.html',
+      },
+      // All other oeccrm routes for client-side routing
       {
         source: '/oeccrm/:path*',
-        destination: '/crm/:path*',
+        destination: '/oeccrm/index.html',
       },
-      // Handle CRM client-side routing - serve index.html for all CRM routes
+      // Direct access to CRM files (for assets) - also check crm folder as fallback
       {
-        source: '/crm/login',
-        destination: '/crm/index.html',
+        source: '/crm/static/:path*',
+        destination: '/crm/static/:path*',
       },
+      // Handle CRM client-side routing - serve index.html for all other CRM routes
       {
         source: '/crm/:path*',
         destination: '/crm/index.html',
@@ -47,6 +53,16 @@ const nextConfig = {
       {
         // Also for trailing slash
         source: '/oeccrm/',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "script-src * 'unsafe-eval' 'unsafe-inline' data: blob:; default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; font-src * data:; connect-src * data:; media-src * data: blob:; object-src *; base-uri *; frame-ancestors *; worker-src * blob:; child-src * blob:;"
+          },
+        ],
+      },
+      {
+        // CSP for all oeccrm subroutes
+        source: '/oeccrm/:path*',
         headers: [
           {
             key: 'Content-Security-Policy',

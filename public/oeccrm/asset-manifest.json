@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/oeccrm/static/css/main.204391fc.css",
+    "main.js": "/oeccrm/static/js/main.4e609c23.js",
+    "static/js/498.71d2491c.chunk.js": "/oeccrm/static/js/498.71d2491c.chunk.js",
+    "static/js/703.c2b9f0be.chunk.js": "/oeccrm/static/js/703.c2b9f0be.chunk.js",
+    "static/js/513.2c1c4c19.chunk.js": "/oeccrm/static/js/513.2c1c4c19.chunk.js",
+    "static/js/787.28cb0dcd.chunk.js": "/oeccrm/static/js/787.28cb0dcd.chunk.js",
+    "service-worker.js": "/oeccrm/service-worker.js",
+    "index.html": "/oeccrm/index.html",
+    "main.204391fc.css.map": "/oeccrm/static/css/main.204391fc.css.map",
+    "main.4e609c23.js.map": "/oeccrm/static/js/main.4e609c23.js.map",
+    "498.71d2491c.chunk.js.map": "/oeccrm/static/js/498.71d2491c.chunk.js.map",
+    "703.c2b9f0be.chunk.js.map": "/oeccrm/static/js/703.c2b9f0be.chunk.js.map",
+    "513.2c1c4c19.chunk.js.map": "/oeccrm/static/js/513.2c1c4c19.chunk.js.map",
+    "787.28cb0dcd.chunk.js.map": "/oeccrm/static/js/787.28cb0dcd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.204391fc.css",
+    "static/js/main.4e609c23.js"
+  ]
+}
