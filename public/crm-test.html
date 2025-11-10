@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Diagnostic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .success { background: #4CAF50; color: white; }
+        .error { background: #f44336; color: white; }
+        .pending { background: #ff9800; color: white; }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0b7dda; }
+        #console { 
+            background: #1e1e1e; 
+            color: #d4d4d4; 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 OEC CRM Diagnostic Test</h1>
+    
+    <div class="test-box">
+        <h2>File Accessibility Tests</h2>
+        <div id="tests"></div>
+    </div>
+
+    <div class="test-box">
+        <h2>Actions</h2>
+        <button onclick="window.location.href='/oeccrm/index.html'">Open CRM HTML</button>
+        <button onclick="window.location.href='/oeccrm/login'">Open /oeccrm/login</button>
+        <button onclick="window.location.href='/oeccrm'">Open /oeccrm</button>
+        <button onclick="runTests()">Re-run Tests</button>
+    </div>
+
+    <div class="test-box">
+        <h2>Console Output</h2>
+        <div id="console">Waiting for tests...</div>
+    </div>
+
+    <script>
+        const log = (msg, type = 'info') => {
+            const console = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            console.textContent += `[${timestamp}] ${prefix} ${msg}\n`;
+            console.scrollTop = console.scrollHeight;
+        };
+
+        const testUrls = [
+            { name: 'CRM Index HTML', url: '/oeccrm/index.html' },
+            { name: 'Main JavaScript', url: '/oeccrm/static/js/main.4e609c23.js' },
+            { name: 'Main CSS', url: '/oeccrm/static/css/main.204391fc.css' },
+            { name: 'Favicon', url: '/oeccrm/favicon.ico' },
+            { name: 'Manifest', url: '/oeccrm/manifest.json' },
+        ];
+
+        async function testUrl(name, url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                const status = response.status;
+                const statusText = response.ok ? 'success' : 'error';
+                
+                log(`${name}: ${status} ${response.statusText}`, statusText);
+                
+                return {
+                    name,
+                    url,
+                    status,
+                    ok: response.ok
+                };
+            } catch (error) {
+                log(`${name}: FAILED - ${error.message}`, 'error');
+                return {
+                    name,
+                    url,
+                    status: 'ERROR',
+                    ok: false,
+                    error: error.message
+                };
+            }
+        }
+
+        async function runTests() {
+            const testsDiv = document.getElementById('tests');
+            const consoleDiv = document.getElementById('console');
+            
+            consoleDiv.textContent = '';
+            testsDiv.innerHTML = '<p>Running tests...</p>';
+            
+            log('Starting diagnostic tests...');
+            
+            const results = [];
+            for (const test of testUrls) {
+                const result = await testUrl(test.name, test.url);
+                results.push(result);
+            }
+            
+            // Display results
+            testsDiv.innerHTML = results.map(r => `
+                <div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 4px;">
+                    <strong>${r.name}</strong>
+                    <span class="status ${r.ok ? 'success' : 'error'}">${r.status}</span>
+                    <br>
+                    <small style="color: #666;">${r.url}</small>
+                    ${r.error ? `<br><small style="color: red;">${r.error}</small>` : ''}
+                </div>
+            `).join('');
+            
+            const allPassed = results.every(r => r.ok);
+            log(allPassed ? 'All tests passed! ✅' : 'Some tests failed ❌', allPassed ? 'success' : 'error');
+            
+            if (allPassed) {
+                log('Files are loading correctly. If CRM shows blank screen, check browser console for JavaScript errors.', 'info');
+                log('Press F12 to open DevTools and check the Console tab.', 'info');
+            }
+        }
+
+        // Run tests on page load
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>
