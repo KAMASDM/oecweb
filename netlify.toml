@@ -5,26 +5,6 @@
   package = "@netlify/plugin-nextjs"
 
 [[redirects]]
-  from = "/oeccrm/login"
-  to = "/oeccrm/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/oeccrm/*"
-  to = "/oeccrm/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/crm/login"
-  to = "/crm/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/crm/*"
-  to = "/crm/index.html"
-  status = 200
-
-[[redirects]]
   from = "/courses"
   to = "/popular-courses"
   status = 301

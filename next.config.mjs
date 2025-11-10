@@ -7,7 +7,21 @@ const nextConfig = {
         source: '/oeccrm/login',
         destination: '/oeccrm/index.html',
       },
-      // All other oeccrm routes for client-side routing
+      // CRM static files - serve as-is (don't redirect to index.html)
+      {
+        source: '/oeccrm/static/:path*',
+        destination: '/oeccrm/static/:path*',
+      },
+      // CRM manifest and other files
+      {
+        source: '/oeccrm/manifest.json',
+        destination: '/oeccrm/manifest.json',
+      },
+      {
+        source: '/oeccrm/favicon.ico',
+        destination: '/oeccrm/favicon.ico',
+      },
+      // All other oeccrm routes for client-side routing (MUST be after static files)
       {
         source: '/oeccrm/:path*',
         destination: '/oeccrm/index.html',
