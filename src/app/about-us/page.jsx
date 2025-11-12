@@ -59,25 +59,16 @@ const AboutUs = () => {
             <main className="md:col-span-2">
               <article>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                  Our Story: From Vision to Reality
+                  Our Story
                 </h2>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Founded in 2015 with a simple yet powerful vision: to
-                  democratize access to world-class international education for
-                  Indian students. What started as a small consultancy has grown
-                  into India's most trusted overseas education partner, guiding
-                  over 2,000 students to their dream universities across the
-                  globe.
+                  Overseas Education Center (OEC) was established with the core objective of helping students in achieving their dreams of overseas education. Since conception in 2003, we have worked to develop our expertise for overseas education and visa formalities. Over the years we have also created a robust network with leading institutions worldwide that gives us the ability to provide better education services to our students.
                 </p>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Our founder, Rajesh Mehta, experienced firsthand the
-                  challenges of navigating the complex overseas education
-                  landscape. After successfully completing his MBA from Wharton
-                  and working in international admissions, he recognized the gap
-                  between student aspirations and the guidance available. This
-                  inspired him to create OEC India - a consultancy that would
-                  combine deep industry expertise with genuine care for student
-                  success.
+                  OEC was founded by Mr Jagat Patel, a graduate of Webster University from the United Kingdom. He is a well-known personality in the education industry in the South Asia region. Before he founded OEC, Mr Jagat Patel spent many years working with the University of Bedfordshire Regional Representatives Office (South-West India). He has an unparalleled knowledge of overseas education and the challenges involved.
+                </p>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  Apart from his work at OEC, Mr Jagat Patel is also involved in managing the India office for Bath Spa University as the Regional Director. A sister concern of OEC manages the Regional setup for leading Australian and UK universities.
                 </p>
 
                 <section className="mt-12">
@@ -140,7 +131,7 @@ const AboutUs = () => {
                   </h2>
                   <ul className="space-y-2">
                     {[
-                      "2,000+ students successfully placed in top universities worldwide",
+                      "20,000+ students successfully placed in top universities worldwide",
                       "95% visa success rate across all countries",
                       "$50M+ in scholarships secured for our students",
                       "500+ university partnerships across 15 countries",
@@ -162,8 +153,8 @@ const AboutUs = () => {
                 </h3>
                 <ul className="divide-y divide-gray-200">
                   {[
-                    ["Founded", "2015"],
-                    ["Students Placed", "2,000+"],
+                    ["Founded", "2003"],
+                    ["Students Placed", "20,000+"],
                     ["Countries", "15+"],
                     ["University Partners", "500+"],
                     ["Team Size", "25+ Experts"],
@@ -186,8 +177,8 @@ const AboutUs = () => {
                     "ICEF Agency Certified",
                     "British Council Trained",
                     "NAFSA Member",
-                    "IELTS Official Test Partner",
-                    "TOEFL Authorized Partner",
+                    "IELTS Coaching Center",
+                    "TOEFL Coaching Center",
                   ].map((item, index) => (
                     <li key={index} className="py-3">
                       {item}
@@ -233,50 +224,51 @@ const AboutUs = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
               {
-                initials: "RM",
-                name: "Rajesh Mehta",
+                initials: "JP",
+                name: "Jagat Patel",
                 role: "Founder & CEO",
-                bio: "MBA from Wharton, Former International Admissions Officer. 15+ years of experience helping students navigate global education opportunities.",
+                bio: "MBA from OEC was founded by Mr Jagat Patel, a graduate of Webster University from the United Kingdom. He is a well-known personality in the education industry in the South Asia region. Before he founded OEC, Mr Jagat Patel spent many years working with the University of Bedfordshire Regional Representatives Office (South-West India). He has an unparalleled knowledge of overseas education and the challenges involved.",
                 expertise:
-                  "USA Universities, MBA Programs, Scholarship Strategy",
+                  "Strategic Leadership, Global University Partnerships",
               },
               {
-                initials: "PS",
-                name: "Priya Sharma",
-                role: "Director - UK & Europe",
-                bio: "Masters from Oxford, Former British Council Officer. Specialist in UK university applications and European education systems.",
+                initials: "NP",
+                name: "Neha Parmar",
+                role: "OEC Global Manager",
+                bio: "With a deep understanding of the global education landscape, Neha is committed to empowering students to achieve their academic goals. Her leadership is instrumental in driving the mission of oecindia.com, connecting students with world-class educational opportunities and paving the way for their future success.",
                 expertise: "UK Universities, European Programs, Visa Guidance",
               },
               {
-                initials: "AK",
-                name: "Amit Kumar",
-                role: "Senior Counselor - Canada",
-                bio: "Engineering graduate from University of Toronto. Specialist in Canadian immigration and technical programs.",
+                initials: "BO",
+                name: "Bhavana Oberoi",
+                role: "UK Admissions Head",
+                bio: "Bhavana's role involves meticulously overseeing all UK-bound applications, ensuring that each student's profile is presented effectively to maximize their chances of acceptance. She manages relations with UK partner universities and stays current with the latest trends and policy changes in UK higher education and visa regulations.",
                 expertise:
-                  "Canada Universities, Engineering Programs, Immigration",
+                  "UK Universities, UK Admissions, Student Visas",
               },
               {
-                initials: "SK",
-                name: "Sneha Krishnan",
-                role: "Director - Australia & New Zealand",
-                bio: "Masters from University of Melbourne. Expert in Australian education system and student visa processes.",
+                initials: "PC",
+                name: "Priti Mehta-Commissariat",
+                role: "Student Counsellor",
+                bio: "Priti is dedicated to helping students navigate the complexities of the education system. With a focus on personalized guidance, she ensures that each student finds the right path for their academic journey.",
                 expertise:
-                  "Australia Universities, Health Sciences, Student Visas",
+                  "US, Canada, Europe Admissions, Student Counseling",
+              },
+              
+              {
+                initials: "JJ",
+                name: "Jyoti Jha",
+                role: "UK Admissions",
+                bio: "Jyoti specializes in managing UK admissions, ensuring that each application is tailored to highlight the student's strengths and align with university expectations.",
+                expertise: "UK Universities, UK Admissions, Student Visas",
               },
               {
-                initials: "VG",
-                name: "Dr. Vikram Gupta",
-                role: "Academic Director",
-                bio: "PhD from Stanford, Former Professor. Specialist in research programs, PhD applications, and academic career guidance.",
+                initials: "HP",
+                name: "Harsh Patel",
+                role: "Marketing and Sales Head",
+                bio: "Harsh leads our marketing and sales initiatives with a focus on student engagement and outreach. With a background in digital marketing and a passion for education, he drives strategies that connect students with OEC's services and values.",
                 expertise:
-                  "PhD Programs, Research Opportunities, Academic Writing",
-              },
-              {
-                initials: "NT",
-                name: "Neha Tandon",
-                role: "Financial Aid Specialist",
-                bio: "MBA in Finance, Former Bank Manager. Expert in education loans, scholarships, and financial planning for international students.",
-                expertise: "Education Loans, Scholarships, Financial Planning",
+                  "Digital Marketing, Student Outreach",
               },
             ].map((member, index) => (
               <article

@@ -197,7 +197,7 @@ const Header = () => {
           </div>
           <div className="hidden md:flex items-center gap-2 text-primary-100 text-sm">
             <GraduationCap size={16} />
-            <span>Join 2,000+ students studying abroad!</span>
+            <span>Aspire. Apply. Achieve.</span>
           </div>
         </div>
       </div>
