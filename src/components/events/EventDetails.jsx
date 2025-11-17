@@ -4,6 +4,7 @@ import Link from "next/link";
 import moment from "moment";
 import ajaxCall from "@/helpers/ajaxCall";
 import { notFound } from "next/navigation";
+import ConsultationForm from "@/components/forms/ConsultationForm";
 import {
   Calendar as CalendarIcon,
   MapPin,
@@ -16,17 +17,51 @@ import {
   FacebookIcon,
   TwitterIcon,
   InstagramIcon,
+  MessageCircle,
 } from "lucide-react";
 
 const EventDetailPage = ({ slug }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [eventData, setEventData] = useState(null);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
   const formatTimeRange = (startTime, endTime) => {
     return `${moment(startTime, "HH:mm:ss").format("h:mm A")} – ${moment(
       endTime,
       "HH:mm:ss"
     ).format("h:mm A")}`;
+  };
+
+  // Extract country from event title or description
+  const getEventCountry = (event) => {
+    if (!event) return null;
+    
+    const title = event.title?.toLowerCase() || '';
+    const category = event.category_name?.toLowerCase() || '';
+    const description = event.short_description?.toLowerCase() || '';
+    
+    const countryKeywords = {
+      'united kingdom': ['uk', 'united kingdom', 'britain', 'british'],
+      'usa': ['usa', 'united states', 'america', 'american'],
+      'canada': ['canada', 'canadian'],
+      'australia': ['australia', 'australian'],
+      'germany': ['germany', 'german'],
+      'france': ['france', 'french'],
+      'ireland': ['ireland', 'irish'],
+      'new zealand': ['new zealand'],
+    };
+
+    for (const [country, keywords] of Object.entries(countryKeywords)) {
+      if (keywords.some(keyword => 
+        title.includes(keyword) || 
+        category.includes(keyword) || 
+        description.includes(keyword)
+      )) {
+        return country;
+      }
+    }
+    
+    return null;
   };
 
   // Convert Google Maps share link to embed URL
@@ -188,6 +223,17 @@ const EventDetailPage = ({ slug }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
             <div className="lg:w-2/3">
+              {/* Featured Image */}
+              {eventData.featured_image && (
+                <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                  <img
+                    src={eventData.featured_image}
+                    alt={eventData.title}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              )}
+
               <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
                 <div className="p-6 md:p-8">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -325,89 +371,127 @@ const EventDetailPage = ({ slug }) => {
             </div>
 
             <div className="lg:w-1/3">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden sticky top-28 mb-8">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-gray-900">
-                      {eventData.registration_fee === "0.00" ||
-                      !eventData.registration_fee
-                        ? "FREE"
-                        : `₹${eventData.registration_fee}`}
-                    </span>
-                    <span className="text-sm text-gray-500">per person</span>
-                  </div>
-                  {eventData.is_registration_required && (
-                    <a
-                      href={eventData.registration_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-primary-800 hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
-                    >
-                      Register Now
-                      <ChevronRight className="h-5 w-5" />
-                    </a>
-                  )}
-                  {eventData.max_participants && (
-                    <div className="text-center text-sm text-gray-500 mb-4">
-                      Limited to {eventData.max_participants} participants
+              <div className="lg:sticky lg:top-28 space-y-8">
+                {/* Event Details Card */}
+                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-2xl font-bold text-gray-900">
+                        {eventData.registration_fee === "0.00" ||
+                        !eventData.registration_fee
+                          ? "FREE"
+                          : `₹${eventData.registration_fee}`}
+                      </span>
+                      <span className="text-sm text-gray-500">per person</span>
                     </div>
-                  )}
-                  {eventData.registration_deadline && (
-                    <div className="text-center text-sm text-gray-500 mb-4">
-                      Registration deadline:{" "}
-                      {moment(eventData.registration_deadline).format(
-                        "MMMM D, YYYY h:mm A"
-                      )}
-                    </div>
-                  )}
-                  <div className="border-t border-gray-200 pt-4">
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      Event Details
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <CalendarIcon className="h-5 w-5 text-secondary-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {moment(eventData.start_date).format(
-                              "MMMM D, YYYY"
-                            )}
-                            {eventData.end_date &&
-                              ` - ${moment(eventData.end_date).format(
+                    {eventData.is_registration_required && (
+                      <>
+                        {eventData.registration_link ? (
+                          <a
+                            href={eventData.registration_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full bg-primary-800 hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
+                          >
+                            Register Now
+                            <ChevronRight className="h-5 w-5" />
+                          </a>
+                        ) : (
+                          <button
+                            onClick={() => setShowRegistrationForm(true)}
+                            className="w-full bg-primary-800 hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-bold text-lg transition-colors mb-4 flex items-center justify-center gap-2"
+                          >
+                            Register Now
+                            <ChevronRight className="h-5 w-5" />
+                          </button>
+                        )}
+                      </>
+                    )}
+                    {eventData.max_participants && (
+                      <div className="text-center text-sm text-gray-500 mb-4">
+                        Limited to {eventData.max_participants} participants
+                      </div>
+                    )}
+                    {eventData.registration_deadline && (
+                      <div className="text-center text-sm text-gray-500 mb-4">
+                        Registration deadline:{" "}
+                        {moment(eventData.registration_deadline).format(
+                          "MMMM D, YYYY h:mm A"
+                        )}
+                      </div>
+                    )}
+                    <div className="border-t border-gray-200 pt-4">
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Event Details
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CalendarIcon className="h-5 w-5 text-secondary-500 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {moment(eventData.start_date).format(
                                 "MMMM D, YYYY"
-                              )}`}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {formatTimeRange(
-                              eventData.start_time,
-                              eventData.end_time
-                            )}
+                              )}
+                              {eventData.end_date &&
+                                ` - ${moment(eventData.end_date).format(
+                                  "MMMM D, YYYY"
+                                )}`}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {formatTimeRange(
+                                eventData.start_time,
+                                eventData.end_time
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <MapPin className="h-5 w-5 text-secondary-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {eventData.is_online
-                              ? "Online Event"
-                              : eventData.venue_name}
-                          </div>
-                          {!eventData.is_online && eventData.venue_address && (
-                            <div className="text-sm text-gray-500">
-                              {eventData.venue_address}
+                        <div className="flex items-start gap-3">
+                          <MapPin className="h-5 w-5 text-secondary-500 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {eventData.is_online
+                                ? "Online Event"
+                                : eventData.venue_name}
                             </div>
-                          )}
+                            {!eventData.is_online && eventData.venue_address && (
+                              <div className="text-sm text-gray-500">
+                                {eventData.venue_address}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Location Map */}
-              <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                <div className="p-6">
+                {/* Registration Form */}
+                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="p-6">
+                    <div className="mb-6 text-center">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {eventData.title}
+                      </h3>
+                      <div className="flex items-center justify-center gap-2 text-gray-600">
+                        <MessageCircle className="h-5 w-5 text-primary-600" />
+                        <span className="font-semibold">Register for This Event</span>
+                      </div>
+                    </div>
+                    <ConsultationForm 
+                      inline={true}
+                      defaultCountry={getEventCountry(eventData)}
+                      initialEnquiry={{
+                        name: eventData.title,
+                        university: eventData.venue_name,
+                        country: eventData.venue_address,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Location Map */}
+                <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="p-6">
                   <h3 className="font-semibold text-gray-900 mb-4">
                     Location
                   </h3>
@@ -472,41 +556,25 @@ const EventDetailPage = ({ slug }) => {
                   )}
                 </div>
               </div>
-
-              <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                <div className="p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4">
-                    Share This Event
-                  </h3>
-                  <div className="flex justify-between">
-                    <Link
-                      href="https://www.facebook.com/oecbaroda"
-                      target="_blank"
-                      className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors"
-                    >
-                      <FacebookIcon />
-                    </Link>
-                    <Link
-                      href="https://x.com/oec_india"
-                      target="_blank"
-                      className="w-12 h-12 rounded-full bg-blue-100 text-blue-400 flex items-center justify-center hover:bg-blue-200 transition-colors"
-                    >
-                      <TwitterIcon />
-                    </Link>
-                    <Link
-                      href="https://www.instagram.com/oecindia"
-                      target="_blank"
-                      className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors"
-                    >
-                      <InstagramIcon />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Registration Form Modal */}
+      {showRegistrationForm && (
+        <ConsultationForm 
+          isOpen={showRegistrationForm}
+          onClose={() => setShowRegistrationForm(false)}
+          defaultCountry={getEventCountry(eventData)}
+          initialEnquiry={{
+            name: eventData.title,
+            university: eventData.venue_name,
+            country: eventData.venue_address,
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -123,13 +123,14 @@ const FormTextarea = ({ label, name, register, error, placeholder }) => (
   </div>
 );
 
-const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry }) => {
+const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry, defaultCountry, inline = false }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [countries, setCountries] = useState([]);
-  const [countriesLoading, setCountriesLoading] = useState(true);
+  const [countriesLoading, setCountriesLoading] = useState(!inline); // Only load on init for modals
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const {
     register,
@@ -146,22 +147,35 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry }) => {
       initialEnquiry?.name &&
       initialEnquiry?.university &&
       initialEnquiry?.country &&
-      isOpen
+      (isOpen || inline)
     ) {
-      const message = `I am interested in the "${initialEnquiry.name}" course at ${initialEnquiry.university}, ${initialEnquiry.country}. Please provide more details.`;
+      const message = `I am interested in the "${initialEnquiry.name}" event at ${initialEnquiry.university}. Please provide more details.`;
       setValue("enquiry_details", message);
     }
-  }, [initialEnquiry, isOpen, setValue]);
+  }, [initialEnquiry, isOpen, inline, setValue]);
 
   useEffect(() => {
-    if (isOpen) {
+    // For modal: fetch immediately when opened
+    // For inline: fetch only after user interaction
+    if (isOpen || (inline && hasInteracted)) {
       setCountriesLoading(true);
       const fetchCountries = async () => {
         try {
           const response = await ajaxCall("/academics/academics/countries/", {
             method: "GET",
           });
-          setCountries(response.data?.results || []);
+          const countriesData = response.data?.results || [];
+          setCountries(countriesData);
+          
+          // Set default country if provided
+          if (defaultCountry && countriesData.length > 0) {
+            const defaultCountryObj = countriesData.find(
+              c => c.name.toLowerCase() === defaultCountry.toLowerCase()
+            );
+            if (defaultCountryObj) {
+              setValue("country_interested", defaultCountryObj.id.toString());
+            }
+          }
         } catch (e) {
           console.error("Error fetching countries:", e);
         } finally {
@@ -170,15 +184,21 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry }) => {
       };
       fetchCountries();
     }
-  }, [isOpen]);
+  }, [isOpen, defaultCountry, setValue, inline, hasInteracted]);
 
   const handleFormSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
+      // If there's an event context (initialEnquiry with event name), modify the name field
+      const submitData = { ...data };
+      if (initialEnquiry?.name && data.name) {
+        submitData.name = `${initialEnquiry.name} - ${data.name}`;
+      }
+      
       const response = await ajaxCall("/enquiry/enquiries/", {
         method: "POST",
-        data,
+        data: submitData,
       });
       if (response.status === 201 || response.status === 200) {
         setIsSuccess(true);
@@ -217,168 +237,84 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry }) => {
     reset();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !inline) return null;
+
+  const handleFormInteraction = () => {
+    if (inline && !hasInteracted) {
+      setHasInteracted(true);
+    }
+  };
+
+  const innerContent = (
+    <div className={inline ? "" : "p-6 md:p-8"}>
+      {isSuccess ? (
+        <div className="text-center py-12">
+          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Thank You!</h3>
+          <p className="text-gray-600 mb-6">Your consultation request has been sent. We'll be in touch soon.</p>
+          <button onClick={handleAnotherInquiry} className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">Book Another</button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate onFocus={handleFormInteraction}>
+          {!inline && (
+            <h3 className="text-2xl font-semibold text-primary-800 mb-6 flex items-center">
+              <MessageCircle className="h-6 w-6 mr-3 text-primary-600" />
+              Book Your Free Consultation
+            </h3>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <FormInput label="Name" name="name" register={register} error={errors.name} placeholder="Your full name" disabled={countriesLoading || isSubmitting} />
+            <FormInput label="Email" name="email" type="email" register={register} error={errors.email} placeholder="you@example.com" disabled={countriesLoading || isSubmitting} />
+            <FormInput label="Phone" name="phone" type="tel" register={register} error={errors.phone} placeholder="Your phone number" disabled={countriesLoading || isSubmitting} />
+
+            <FormSelect label="Country Interested" name="country_interested" register={register} error={errors.country_interested} disabled={countriesLoading || isSubmitting}>
+              <option value="">{countriesLoading ? "Loading countries..." : "Select Country"}</option>
+              {!countriesLoading && countries.map((country) => (<option key={country.id} value={country.id}>{country.name}</option>))}
+            </FormSelect>
+
+            <FormSelect label="Interested Intake" name="interested_intake" register={register} error={errors.interested_intake} disabled={countriesLoading || isSubmitting}>
+              <option value="">Select Intake</option>
+              <option value="spring">Spring (January-March)</option>
+              <option value="summer">Summer (April-June)</option>
+              <option value="fall">Fall (September-November)</option>
+              <option value="winter">Winter (December-February)</option>
+              <option value="not-sure">Not sure</option>
+            </FormSelect>
+
+            <FormSelect label="Current Education" name="current_education" register={register} error={errors.current_education} disabled={countriesLoading || isSubmitting}>
+              <option value="">Select Education Level</option>
+              <option value="high_school">High School</option>
+              <option value="bachelors_ongoing">Bachelor's (Ongoing)</option>
+              <option value="bachelors_completed">Bachelor's (Completed)</option>
+              <option value="masters_ongoing">Master's (Ongoing)</option>
+              <option value="masters_completed">Master's (Completed)</option>
+              <option value="other">Other</option>
+            </FormSelect>
+          </div>
+
+          <FormTextarea label="Message" name="enquiry_details" register={register} error={errors.enquiry_details} placeholder="Tell us more about your study plans or any specific questions you have." />
+
+          <div className="text-center mt-6">
+            <button type="submit" disabled={countriesLoading || isSubmitting} className="w-full md:w-auto bg-primary-800 hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-10 rounded-lg transition-colors inline-flex items-center justify-center">
+              {isSubmitting ? (<><Loader2 className="h-5 w-5 mr-2 animate-spin" />Submitting...</>) : ("Submit")}
+            </button>
+            {submitError && (<div className="mt-4 text-red-600 bg-red-100 border border-red-300 rounded-lg p-3 flex items-center justify-center text-sm" aria-live="assertive"><AlertTriangle className="h-5 w-5 mr-2" />{submitError}</div>)}
+          </div>
+        </form>
+      )}
+    </div>
+  );
+
+  if (inline) return innerContent;
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true">
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300 ease-out transform scale-95 opacity-0 animate-fade-in-scale">
-        <button
-          onClick={handleClose}
-          className="absolute top-3 right-3 p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors z-10"
-          aria-label="Close"
-        >
+        <button onClick={handleClose} className="absolute top-3 right-3 p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors z-10" aria-label="Close">
           <X className="h-6 w-6" />
         </button>
 
-        <div className="p-6 md:p-8">
-          {isSuccess ? (
-            <div className="text-center py-12">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                Thank You!
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Your consultation request has been sent. We'll be in touch soon.
-              </p>
-              <button
-                onClick={handleAnotherInquiry}
-                className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-              >
-                Book Another
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-              <h3 className="text-2xl font-semibold text-primary-800 mb-6 flex items-center">
-                <MessageCircle className="h-6 w-6 mr-3 text-primary-600" />
-                Book Your Free Consultation
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                <FormInput
-                  label="Name"
-                  name="name"
-                  register={register}
-                  error={errors.name}
-                  placeholder="Your full name"
-                  disabled={countriesLoading || isSubmitting}
-                />
-                <FormInput
-                  label="Email"
-                  name="email"
-                  type="email"
-                  register={register}
-                  error={errors.email}
-                  placeholder="you@example.com"
-                  disabled={countriesLoading || isSubmitting}
-                />
-                <FormInput
-                  label="Phone"
-                  name="phone"
-                  type="tel"
-                  register={register}
-                  error={errors.phone}
-                  placeholder="Your phone number"
-                  disabled={countriesLoading || isSubmitting}
-                />
-
-                <FormSelect
-                  label="Country Interested"
-                  name="country_interested"
-                  register={register}
-                  error={errors.country_interested}
-                  disabled={countriesLoading || isSubmitting}
-                >
-                  <option value="">
-                    {countriesLoading
-                      ? "Loading countries..."
-                      : "Select Country"}
-                  </option>
-                  {!countriesLoading &&
-                    countries.map((country) => (
-                      <option key={country.id} value={country.id}>
-                        {country.name}
-                      </option>
-                    ))}
-                </FormSelect>
-
-                <FormSelect
-                  label="Interested Intake"
-                  name="interested_intake"
-                  register={register}
-                  error={errors.interested_intake}
-                  disabled={countriesLoading || isSubmitting}
-                >
-                  <option value="">Select Intake</option>
-                  <option value="spring">Spring (January-March)</option>
-                  <option value="summer">Summer (April-June)</option>
-                  <option value="fall">Fall (September-November)</option>
-                  <option value="winter">Winter (December-February)</option>
-                  <option value="not-sure">Not sure</option>
-                </FormSelect>
-
-                <FormSelect
-                  label="Current Education"
-                  name="current_education"
-                  register={register}
-                  error={errors.current_education}
-                  disabled={countriesLoading || isSubmitting}
-                >
-                  <option value="">Select Education Level</option>
-                  <option value="high_school">High School</option>
-                  <option value="bachelors_ongoing">
-                    Bachelor's (Ongoing)
-                  </option>
-                  <option value="bachelors_completed">
-                    Bachelor's (Completed)
-                  </option>
-                  <option value="masters_ongoing">Master's (Ongoing)</option>
-                  <option value="masters_completed">
-                    Master's (Completed)
-                  </option>
-                  <option value="other">Other</option>
-                </FormSelect>
-              </div>
-
-              <FormTextarea
-                label="Message"
-                name="enquiry_details"
-                register={register}
-                error={errors.enquiry_details}
-                placeholder="Tell us more about your study plans or any specific questions you have."
-              />
-
-              <div className="text-center mt-6">
-                <button
-                  type="submit"
-                  disabled={countriesLoading || isSubmitting}
-                  className="w-full md:w-auto bg-primary-800 hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-10 rounded-lg transition-colors inline-flex items-center justify-center"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    "Submit"
-                  )}
-                </button>
-                {submitError && (
-                  <div
-                    className="mt-4 text-red-600 bg-red-100 border border-red-300 rounded-lg p-3 flex items-center justify-center text-sm"
-                    aria-live="assertive"
-                  >
-                    <AlertTriangle className="h-5 w-5 mr-2" />
-                    {submitError}
-                  </div>
-                )}
-              </div>
-            </form>
-          )}
-        </div>
+        {innerContent}
       </div>
       <style jsx>{`
         @keyframes fadeInScale {

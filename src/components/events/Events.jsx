@@ -61,6 +61,36 @@ const Events = () => {
     setShowRegistrationModal(true);
   };
 
+  // Extract country from event title or description
+  const getEventCountry = (event) => {
+    const title = event.title?.toLowerCase() || '';
+    const category = event.category_name?.toLowerCase() || '';
+    const description = event.short_description?.toLowerCase() || '';
+    
+    const countryKeywords = {
+      'united kingdom': ['uk', 'united kingdom', 'britain', 'british'],
+      'usa': ['usa', 'united states', 'america', 'american'],
+      'canada': ['canada', 'canadian'],
+      'australia': ['australia', 'australian'],
+      'germany': ['germany', 'german'],
+      'france': ['france', 'french'],
+      'ireland': ['ireland', 'irish'],
+      'new zealand': ['new zealand'],
+    };
+
+    for (const [country, keywords] of Object.entries(countryKeywords)) {
+      if (keywords.some(keyword => 
+        title.includes(keyword) || 
+        category.includes(keyword) || 
+        description.includes(keyword)
+      )) {
+        return country;
+      }
+    }
+    
+    return null;
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       setIsLoading(true);
@@ -651,90 +681,31 @@ const Events = () => {
             </p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <ConsultationForm />
+            <ConsultationForm inline={true} />
           </div>
         </div>
       </section>
 
       {/* Registration Modal */}
       {showRegistrationModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-          >
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                  <MessageCircle className="h-6 w-6 text-primary-600" />
-                  Register for Event
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">{selectedEvent.title}</p>
-              </div>
-              <button
-                onClick={() => setShowRegistrationModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Close registration form"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6">
-              <div className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6">
-                <h3 className="font-semibold text-primary-900 mb-2">{selectedEvent.title}</h3>
-                <div className="flex flex-wrap gap-4 text-sm text-primary-700">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {moment(selectedEvent.event_date).format("MMMM D, YYYY")}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    {moment(selectedEvent.start_time, "HH:mm:ss").format("h:mm A")}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4" />
-                    {selectedEvent.venue_name || "Online"}
-                  </div>
-                </div>
-              </div>
-              <ConsultationForm onSuccess={() => setShowRegistrationModal(false)} />
-            </div>
-          </motion.div>
-        </div>
+        <ConsultationForm 
+          isOpen={showRegistrationModal}
+          onClose={() => setShowRegistrationModal(false)}
+          defaultCountry={getEventCountry(selectedEvent)}
+          initialEnquiry={{
+            name: selectedEvent.title,
+            university: selectedEvent.venue_name,
+            country: selectedEvent.venue_address,
+          }}
+        />
       )}
 
       {/* Floating Registration Form */}
       {showFloatingForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-          >
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                  <MessageCircle className="h-6 w-6 text-primary-600" />
-                  Register for Events
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">Fill out the form to register for our upcoming events</p>
-              </div>
-              <button
-                onClick={() => setShowFloatingForm(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Close registration form"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6">
-              <ConsultationForm onSuccess={() => setShowFloatingForm(false)} />
-            </div>
-          </motion.div>
-        </div>
+        <ConsultationForm 
+          isOpen={showFloatingForm}
+          onClose={() => setShowFloatingForm(false)}
+        />
       )}
     </div>
   );
