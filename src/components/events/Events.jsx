@@ -4,6 +4,7 @@ import moment from "moment";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ajaxCall from "@/helpers/ajaxCall";
+import ConsultationForm from "@/components/forms/ConsultationForm";
 import {
   Calendar,
   MapPin,
@@ -15,6 +16,8 @@ import {
   Ticket,
   ChevronDown,
   ChevronUp,
+  MessageCircle,
+  X,
 } from "lucide-react";
 
 const dateFilters = [
@@ -37,6 +40,13 @@ const Events = () => {
   const [dateFilter, setDateFilter] = useState("upcoming");
   const [expandedEvent, setExpandedEvent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleRegister = (event) => {
+    setSelectedEvent(event);
+    setShowRegistrationModal(true);
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -402,6 +412,7 @@ const Events = () => {
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => handleRegister(event)}
                             className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700"
                           >
                             Register Now
@@ -525,6 +536,7 @@ const Events = () => {
                                   <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
+                                    onClick={() => handleRegister(event)}
                                     className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700"
                                   >
                                     Register Now
@@ -613,6 +625,72 @@ const Events = () => {
           )}
         </div>
       </main>
+
+      {/* Event Registration Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Register for Our Events
+            </h2>
+            <p className="text-lg text-gray-600">
+              Fill out the form below to register for upcoming events and get personalized guidance
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <ConsultationForm />
+          </div>
+        </div>
+      </section>
+
+      {/* Registration Modal */}
+      {showRegistrationModal && selectedEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <MessageCircle className="h-6 w-6 text-primary-600" />
+                  Register for Event
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">{selectedEvent.title}</p>
+              </div>
+              <button
+                onClick={() => setShowRegistrationModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close registration form"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6">
+                <h3 className="font-semibold text-primary-900 mb-2">{selectedEvent.title}</h3>
+                <div className="flex flex-wrap gap-4 text-sm text-primary-700">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    {moment(selectedEvent.event_date).format("MMMM D, YYYY")}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {moment(selectedEvent.start_time, "HH:mm:ss").format("h:mm A")}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    {selectedEvent.venue_name || "Online"}
+                  </div>
+                </div>
+              </div>
+              <ConsultationForm onSuccess={() => setShowRegistrationModal(false)} />
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

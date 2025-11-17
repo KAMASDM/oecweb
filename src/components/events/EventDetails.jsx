@@ -29,6 +29,34 @@ const EventDetailPage = ({ slug }) => {
     ).format("h:mm A")}`;
   };
 
+  // Convert Google Maps share link to embed URL
+  const getEmbedUrl = (url) => {
+    if (!url) return null;
+    
+    // If it's already an embed URL, return it
+    if (url.includes('/embed')) return url;
+    
+    // Extract place ID or coordinates from Google Maps share link
+    // Format: https://maps.app.goo.gl/xkwCMPcHtNLT9oZb8
+    if (url.includes('maps.app.goo.gl') || url.includes('goo.gl')) {
+      // For shortened URLs, we can't directly convert, but we can use the URL as is
+      // Google Maps will redirect, but for iframe we need to use place query
+      return `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.6193516383254!2d77.5945627!3d12.9349911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU2JzA2LjAiTiA3N8KwMzUnNDAuNCJF!5e0!3m2!1sen!2sin!4v1234567890!5m2!1sen!2sin&q=${encodeURIComponent(url)}`;
+    }
+    
+    // If it's a regular Google Maps URL
+    if (url.includes('google.com/maps')) {
+      // Extract query or place info
+      const urlObj = new URL(url);
+      const q = urlObj.searchParams.get('q');
+      if (q) {
+        return `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(q)}`;
+      }
+    }
+    
+    return url;
+  };
+
   useEffect(() => {
     const fetchEvent = async () => {
       setIsLoading(true);
@@ -303,13 +331,25 @@ const EventDetailPage = ({ slug }) => {
                   <div className="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden mb-4">
                     {eventData.google_map_url ? (
                       <iframe
-                        src={eventData.google_map_url}
+                        src={getEmbedUrl(eventData.google_map_url) || `https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
                         width="100%"
                         height="400"
                         style={{ border: 0 }}
                         allowFullScreen=""
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
+                        title={`Map of ${eventData.venue_name}`}
+                      ></iframe>
+                    ) : eventData.venue_address || eventData.venue_name ? (
+                      <iframe
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
+                        width="100%"
+                        height="400"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`Map of ${eventData.venue_name}`}
                       ></iframe>
                     ) : (
                       <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
