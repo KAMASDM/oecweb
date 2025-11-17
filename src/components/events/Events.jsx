@@ -42,6 +42,19 @@ const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showFloatingForm, setShowFloatingForm] = useState(false);
+
+  // Check for #register hash in URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash === '#register') {
+        setShowFloatingForm(true);
+        // Remove hash from URL without triggering page reload
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+  }, []);
 
   const handleRegister = (event) => {
     setSelectedEvent(event);
@@ -687,6 +700,38 @@ const Events = () => {
                 </div>
               </div>
               <ConsultationForm onSuccess={() => setShowRegistrationModal(false)} />
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Floating Registration Form */}
+      {showFloatingForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <MessageCircle className="h-6 w-6 text-primary-600" />
+                  Register for Events
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">Fill out the form to register for our upcoming events</p>
+              </div>
+              <button
+                onClick={() => setShowFloatingForm(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close registration form"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <ConsultationForm onSuccess={() => setShowFloatingForm(false)} />
             </div>
           </motion.div>
         </div>

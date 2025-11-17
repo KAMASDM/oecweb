@@ -174,13 +174,12 @@ const Events = () => {
                       View Details
                       <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
                     </Link>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                    <Link
+                      href="/events#register"
+                      className="px-4 py-2 bg-primary-800 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors inline-block text-center"
                     >
                       Register Now
-                    </motion.button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>

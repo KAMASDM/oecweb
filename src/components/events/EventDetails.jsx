@@ -322,73 +322,6 @@ const EventDetailPage = ({ slug }) => {
                   </div>
                 </div>
               </div>
-
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Location
-                  </h2>
-                  <div className="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden mb-4">
-                    {eventData.google_map_url ? (
-                      <iframe
-                        src={getEmbedUrl(eventData.google_map_url) || `https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
-                        width="100%"
-                        height="400"
-                        style={{ border: 0 }}
-                        allowFullScreen=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title={`Map of ${eventData.venue_name}`}
-                      ></iframe>
-                    ) : eventData.venue_address || eventData.venue_name ? (
-                      <iframe
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
-                        width="100%"
-                        height="400"
-                        style={{ border: 0 }}
-                        allowFullScreen=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title={`Map of ${eventData.venue_name}`}
-                      ></iframe>
-                    ) : (
-                      <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                        <MapPin className="h-12 w-12 text-secondary-500" />
-                        <span className="ml-2 text-gray-600">
-                          {eventData.is_online
-                            ? "This is an online event"
-                            : `Map of ${eventData.venue_name}`}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  {!eventData.is_online && (
-                    <>
-                      <p className="text-gray-600 mb-2">
-                        <strong>Venue:</strong> {eventData.venue_name}
-                      </p>
-                      {eventData.venue_address && (
-                        <p className="text-gray-600">
-                          <strong>Address:</strong> {eventData.venue_address}
-                        </p>
-                      )}
-                    </>
-                  )}
-                  {eventData.is_online && eventData.meeting_link && (
-                    <p className="text-gray-600">
-                      <strong>Meeting Link:</strong>{" "}
-                      <a
-                        href={eventData.meeting_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-800 hover:underline"
-                      >
-                        {eventData.meeting_link}
-                      </a>
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
 
             <div className="lg:w-1/3">
@@ -469,6 +402,74 @@ const EventDetailPage = ({ slug }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Location Map */}
+              <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 mb-4">
+                    Location
+                  </h3>
+                  <div className="bg-gray-100 rounded-lg overflow-hidden mb-4">
+                    {eventData.google_map_url ? (
+                      <iframe
+                        src={getEmbedUrl(eventData.google_map_url) || `https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
+                        width="100%"
+                        height="250"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`Map of ${eventData.venue_name}`}
+                      ></iframe>
+                    ) : eventData.venue_address || eventData.venue_name ? (
+                      <iframe
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(eventData.venue_address || eventData.venue_name)}&output=embed`}
+                        width="100%"
+                        height="250"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`Map of ${eventData.venue_name}`}
+                      ></iframe>
+                    ) : (
+                      <div className="w-full h-48 bg-gray-200 flex flex-col items-center justify-center">
+                        <MapPin className="h-8 w-8 text-secondary-500" />
+                        <span className="mt-2 text-sm text-gray-600">
+                          {eventData.is_online
+                            ? "This is an online event"
+                            : "Location map unavailable"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {!eventData.is_online && (
+                    <>
+                      <p className="text-sm text-gray-600 mb-2">
+                        <strong>Venue:</strong> {eventData.venue_name}
+                      </p>
+                      {eventData.venue_address && (
+                        <p className="text-sm text-gray-600">
+                          <strong>Address:</strong> {eventData.venue_address}
+                        </p>
+                      )}
+                    </>
+                  )}
+                  {eventData.is_online && eventData.meeting_link && (
+                    <p className="text-sm text-gray-600">
+                      <strong>Meeting Link:</strong>{" "}
+                      <a
+                        href={eventData.meeting_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary-800 hover:underline break-all"
+                      >
+                        Join Online
+                      </a>
+                    </p>
+                  )}
                 </div>
               </div>
 
