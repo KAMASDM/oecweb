@@ -150,7 +150,7 @@ const CourseCard = ({ course, viewMode, onApplyNow }) => {
             onClick={() => onApplyNow(course)}
             className="bg-primary-800 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
-            Apply Now
+            Enquiry Now
           </button>
         </div>
       </div>

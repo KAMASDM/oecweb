@@ -1,5 +1,5 @@
 import React from "react";
-import AICollegeFinder from "@/components/aiCollegeFinder/AICollegeFinder";
+import StepperCollegeFinder from "@/components/aiCollegeFinder/StepperCollegeFinder";
 
 export const metadata = {
   title: "AI College Finder | OEC India",
@@ -38,7 +38,7 @@ export const metadata = {
 };
 
 const AICollegeFinderPage = () => {
-  return <AICollegeFinder />;
+  return <StepperCollegeFinder />;
 };
 
 export default AICollegeFinderPage;
