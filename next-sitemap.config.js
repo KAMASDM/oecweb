@@ -7,6 +7,8 @@ module.exports = {
   generateIndexSitemap: false,
   exclude: [
     "/server-sitemap.xml",
+    "/crm-launcher",
+    "/oeccrm",
     "/",
     "/blog",
     "/about-us",
