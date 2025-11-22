@@ -21,26 +21,36 @@ const Testimonials = () => {
     const fetchTestimonials = async () => {
       setIsLoading(true);
       try {
-        const response = await ajaxCall("/testimonials/testimonials/", {
-          method: "GET",
-        });
-        console.log("response testimonials :::", response);
-        if (response?.data?.results?.length > 0) {
-          const formattedData = response.data.results.map((item) => ({
+        let allResults = [];
+        let nextUrl = "/testimonials/testimonials/";
+
+        // Loop through all paginated results
+        while (nextUrl) {
+          const response = await ajaxCall(nextUrl, {
+            method: "GET",
+          });
+          
+          if (response?.data?.results?.length > 0) {
+            allResults = [...allResults, ...response.data.results];
+          }
+          
+          // Get the next page URL, or null if no more pages
+          nextUrl = response?.data?.next || null;
+        }
+
+        console.log("All testimonials fetched:", allResults.length);
+        
+        if (allResults.length > 0) {
+          const formattedData = allResults.map((item) => ({
             id: item.id,
             name: item.name,
             program: item.designation,
             outcome: item.company,
-            // image: item.name
-            //   .split(" ")
-            //   .map((n) => n[0])
-            //   .join(""),
-            image:
-              item.image ||
-              item.name
-                .split(" ")
-                .map((n) => n[0])
-                .join(""),
+            image: item.image,
+            initials: item.name
+              .split(" ")
+              .map((n) => n[0])
+              .join(""),
             rating: item.rating,
             text: item.content,
             results:
@@ -202,13 +212,10 @@ const Testimonials = () => {
                   <div className="flex flex-col lg:flex-row gap-8 items-start animate-fade-in-up">
                     <div className="flex-shrink-0 w-full lg:w-1/3">
                       <div className="flex flex-col md:flex-row lg:flex-col items-center gap-6">
-                        {isValidUrl(currentTestimonial?.image) ? (
-                          // safe to use next/image (host must still be allowed in next.config)
-                          <Image
+                        {currentTestimonial?.image ? (
+                          <img
                             src={currentTestimonial.image}
                             alt={currentTestimonial.name || "testimonial"}
-                            width={100}
-                            height={100}
                             className="w-32 h-32 rounded-full object-cover"
                           />
                         ) : (
@@ -216,28 +223,23 @@ const Testimonials = () => {
                             className="w-32 h-32 rounded-full flex items-center justify-center text-3xl font-bold text-white bg-secondary-500"
                             aria-hidden="true"
                           >
-                            {/* If the API provided initials text (e.g. "AS"), show it, otherwise derive from name */}
-                            {typeof currentTestimonial?.image === "string" &&
-                            currentTestimonial.image.length > 0
-                              ? currentTestimonial.image
-                              : (currentTestimonial?.name || "")
-                                  .split(" ")
-                                  .map((n) => n[0] || "")
-                                  .slice(0, 2)
-                                  .join("")
-                                  .toUpperCase()}
+                            {currentTestimonial?.initials?.toUpperCase() || ""}
                           </div>
                         )}
                         <div className="text-center lg:text-left">
                           <h3 className="text-2xl font-semibold mb-1 text-primary-900">
                             {currentTestimonial.name}
                           </h3>
-                          <p className="text-primary-700 mb-2">
-                            {currentTestimonial.program}
-                          </p>
-                          <p className="text-sm text-primary-700 mb-4">
-                            {currentTestimonial.outcome}
-                          </p>
+                          {currentTestimonial.program && (
+                            <p className="text-primary-700 mb-2">
+                              {currentTestimonial.program}
+                            </p>
+                          )}
+                          {currentTestimonial.outcome && (
+                            <p className="text-sm text-primary-700 mb-4">
+                              {currentTestimonial.outcome}
+                            </p>
+                          )}
                           <div
                             className="flex justify-center lg:justify-start space-x-1 mb-4"
                             aria-label={`Rating: ${currentTestimonial.rating} out of 5 stars`}
@@ -296,34 +298,17 @@ const Testimonials = () => {
                 <ChevronLeft className="h-6 w-6" />
               </button>
 
-              <div className="flex flex-col items-center space-y-4">
-                {/* Progress indicator for auto-scroll */}
-                {testimonials.length > 1 && !isPaused && (
-                  <div className="w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      key={currentIndex} // Reset animation on each testimonial change
-                      className={`h-full bg-secondary-500 testimonial-progress ${
-                        isPaused ? "paused" : ""
-                      }`}
-                    />
-                  </div>
-                )}
-
-                <div className="flex space-x-3">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToTestimonial(index)}
-                      className={`w-4 h-4 rounded-full transition-all duration-200 focus:outline-none ${
-                        index === currentIndex
-                          ? "bg-secondary-500 scale-125"
-                          : "bg-secondary-300"
-                      }`}
-                      aria-label={`Go to testimonial ${index + 1}`}
-                    />
-                  ))}
+              {/* Progress indicator for auto-scroll */}
+              {testimonials.length > 1 && !isPaused && (
+                <div className="w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    key={currentIndex} // Reset animation on each testimonial change
+                    className={`h-full bg-secondary-500 testimonial-progress ${
+                      isPaused ? "paused" : ""
+                    }`}
+                  />
                 </div>
-              </div>
+              )}
 
               <button
                 onClick={nextTestimonial}
