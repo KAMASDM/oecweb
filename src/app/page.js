@@ -6,6 +6,39 @@ import SmartFeatures from "@/components/sections/SmartFeatures";
 import ExplorePremium from "@/components/sections/ExplorePremium";
 import FloatingCTA from "@/components/ui/FloatingCTA";
 
+export const metadata = {
+  title: "OEC India - Best Overseas Education Consultants for Study Abroad",
+  description: "India's top overseas education consultants offering free counseling, admissions, and visa assistance to help your study abroad dream.",
+  openGraph: {
+    title: "OEC India - Best Overseas Education Consultants for Study Abroad",
+    description: "India's top overseas education consultants offering free counseling, admissions, and visa assistance to help your study abroad dream.",
+    images: [
+      {
+        url: "https://oecindia.com/oec.png",
+        width: 800,
+        height: 600,
+        alt: "OEC India",
+      },
+    ],
+    siteName: "OEC India",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OEC India - Best Overseas Education Consultants for Study Abroad",
+    description: "India's top overseas education consultants offering free counseling, admissions, and visa assistance to help your study abroad dream.",
+    images: [
+      {
+        url: "https://oecindia.com/oec.png",
+        width: 800,
+        height: 600,
+        alt: "OEC India",
+      },
+    ],
+  },
+};
+
 export default function Home() {
   
   const homePageSchema = {

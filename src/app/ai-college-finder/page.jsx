@@ -2,11 +2,11 @@ import React from "react";
 import StepperCollegeFinder from "@/components/aiCollegeFinder/StepperCollegeFinder";
 
 export const metadata = {
-  title: "AI College Finder | OEC India",
+  title: "AI College Finder | Best Universities For You | OEC India",
   description:
     "Discover the best universities for your study abroad dream with OEC India's AI-powered college finder.",
   openGraph: {
-    title: "AI College Finder | OEC India",
+    title: "AI College Finder | Best Universities For You | OEC India",
     description:
       "Discover the best universities for your study abroad dream with OEC India's AI-powered college finder.",
     images: [
@@ -23,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI College Finder | OEC India",
+    title: "AI College Finder | Best Universities For You | OEC India",
     description:
       "Discover the best universities for your study abroad dream with OEC India's AI-powered college finder.",
     images: [
