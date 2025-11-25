@@ -190,10 +190,12 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry, defaultCou
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      // If there's an event context (initialEnquiry with event name), modify the name field
+      // If there's an event context (initialEnquiry with event name), prepend event info to enquiry_details
       const submitData = { ...data };
-      if (initialEnquiry?.name && data.name) {
-        submitData.name = `${initialEnquiry.name} - ${data.name}`;
+      if (initialEnquiry?.name) {
+        // Prepend event information to the enquiry details instead of the name field
+        const eventInfo = `Event: ${initialEnquiry.name}${initialEnquiry.university ? ` | Venue: ${initialEnquiry.university}` : ''}\n\n`;
+        submitData.enquiry_details = eventInfo + data.enquiry_details;
       }
       
       const response = await ajaxCall("/enquiry/enquiries/", {
