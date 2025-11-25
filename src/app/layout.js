@@ -9,7 +9,7 @@ export const metadata = {
   "OEC India helps students achieve their dream of studying abroad. Get expert guidance on university selection, visas, scholarships & more for the UK, USA, Canada, Australia & Europe.",
   icons: {
     icon: [
-      { url: "/oec.png" },
+      { url: "/OEC.png" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
@@ -18,7 +18,7 @@ export const metadata = {
       sizes: "180x180",
       type: "image/png",
     },
-    shortcut: "/oec.png",
+    shortcut: "/OEC.png",
   },
   openGraph: {
     title: "OEC India - Best Overseas Education Consultants for Study Abroad",
@@ -26,7 +26,7 @@ export const metadata = {
       "OEC India helps students achieve their dream of studying abroad. Get expert guidance on university selection, visas, scholarships & more for the UK, USA, Canada, Australia & Europe.",
     images: [
       {
-        url: "https://oecindia.com/oec.png",
+        url: "https://oecindia.com/OEC.png",
         width: 800,
         height: 600,
         alt: "OEC India",
@@ -43,7 +43,7 @@ export const metadata = {
       "OEC India helps students achieve their dream of studying abroad. Get expert guidance on university selection, visas, scholarships & more for the UK, USA, Canada, Australia & Europe.",
     images: [
       {
-        url: "https://oecindia.com/oec.png",
+        url: "https://oecindia.com/OEC.png",
         width: 800,
         height: 600,
         alt: "OEC India",
