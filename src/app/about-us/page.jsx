@@ -174,7 +174,7 @@ const AboutUs = () => {
                 </h3>
                 <ul className="divide-y divide-gray-200 text-primary-700">
                   {[
-                    "ICEF Agency Certified",
+                    
                     "British Council Trained",
                     "NAFSA Member",
                     "IELTS Coaching Center",
