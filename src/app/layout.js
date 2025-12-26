@@ -84,12 +84,19 @@ export default function RootLayout({ children }) {
             src="https://www.facebook.com/tr?id=864579596089023&ev=PageView&noscript=1"
           />
         </noscript>
+        <script
+          async
+          defer
+          crossOrigin="anonymous"
+          src="https://www-cdn.icef.com/scripts/iasbadgeid.js"
+        />
       </head>
       <body>
         <Header />
         {children}
         <Footer />
         <BottomNavigation />
+        <span id="iasBadge" data-account-id="6964"></span>
       </body>
     </html>
   );
