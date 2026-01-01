@@ -1,22 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    root: process.cwd(),
+  },
   images: {
-    domains: ['sweekarme.in', 'anantsoftcomputing.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'sweekarme.in',
-        pathname: '/:path*',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'anantsoftcomputing.com',
-        pathname: '/:path*',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'www.sweekarme.in',
-        pathname: '/:path*',
+        pathname: '/**',
       },
     ],
   },
