@@ -10,7 +10,7 @@
   status = 301
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20.18.1"
 
 [[headers]]
   for = "/crm/*"
