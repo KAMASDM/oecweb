@@ -215,7 +215,7 @@ const FAQs = () => {
                     {filteredFaqs.map((faq) => (
                       <div
                         key={faq.id}
-                        className="bg-white rounded-lg shadow overflow-hidden"
+                        className="bg-white rounded-lg shadow"
                       >
                         <button
                           onClick={() => toggleFaq(faq.id)}
@@ -240,9 +240,12 @@ const FAQs = () => {
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.3 }}
-                              className="px-6 pb-6 text-gray-600"
+                              className="px-6 pb-6 text-gray-600 overflow-visible"
                             >
-                              <p>{faq.answer_preview}</p>
+                              <div 
+                                className="prose prose-gray max-w-none leading-relaxed whitespace-pre-wrap break-words"
+                                dangerouslySetInnerHTML={{ __html: faq.answer || faq.answer_preview }} 
+                              />
                             </motion.div>
                           )}
                         </AnimatePresence>

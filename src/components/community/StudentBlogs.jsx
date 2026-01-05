@@ -29,16 +29,22 @@ const StudentBlogs = () => {
         setCategories(categoryResults);
 
         if (categoryResults.length > 0) {
-          const shuffledCategories = [...categoryResults].sort(
-            () => 0.5 - Math.random()
-          );
+          // Fisher-Yates shuffle for consistent shuffling
+          const shuffledCategories = [...categoryResults];
+          for (let i = shuffledCategories.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledCategories[i], shuffledCategories[j]] = [shuffledCategories[j], shuffledCategories[i]];
+          }
           setPopularCategories(shuffledCategories.slice(0, 4));
         }
 
         if (blogResults.length > 0) {
-          const shuffledBlogs = [...blogResults].sort(
-            () => 0.5 - Math.random()
-          );
+          // Fisher-Yates shuffle for consistent shuffling
+          const shuffledBlogs = [...blogResults];
+          for (let i = shuffledBlogs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledBlogs[i], shuffledBlogs[j]] = [shuffledBlogs[j], shuffledBlogs[i]];
+          }
           setFeaturedBlogs(shuffledBlogs.slice(0, 3));
         }
       } catch (error) {

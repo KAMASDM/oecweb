@@ -28,9 +28,14 @@ const company = [
 ];
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(2026);
   const [services, setServices] = useState([]);
   const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    // Set current year on client side to avoid hydration mismatch
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   useEffect(() => {
     const fetchServices = async () => {

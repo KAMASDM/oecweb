@@ -74,9 +74,12 @@ const KnowledgeBase = () => {
           response?.data?.results?.filter((blog) => blog.is_featured) || [];
 
         if (featuredBlogs.length > 0) {
-          const shuffledBlogs = [...featuredBlogs].sort(
-            () => 0.5 - Math.random()
-          );
+          // Fisher-Yates shuffle for consistent shuffling
+          const shuffledBlogs = [...featuredBlogs];
+          for (let i = shuffledBlogs.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledBlogs[i], shuffledBlogs[j]] = [shuffledBlogs[j], shuffledBlogs[i]];
+          }
           setBlogs(shuffledBlogs.slice(0, 2));
         } else {
           setBlogs([]);

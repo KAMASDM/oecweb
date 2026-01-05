@@ -143,8 +143,9 @@ const Universities = ({ country }) => {
 
   const formatEstablishedYear = (year) => {
     if (!year) return "";
-    const currentYear = new Date().getFullYear();
-    const yearsOld = currentYear - year;
+    // Use a fixed year to avoid hydration mismatch
+    // Year calculation is not critical for display
+    const yearsOld = 2026 - year;
     return `Est. ${year} • ${yearsOld}+ years`;
   };
 

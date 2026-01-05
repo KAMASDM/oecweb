@@ -181,7 +181,7 @@ export default function CRMPage() {
             
             <div className="text-center">
               <a
-                href={`${typeof window !== 'undefined' ? window.location.origin : ''}/crm/login`}
+                href="/crm/login"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary-600 hover:text-primary-800 text-sm font-medium inline-flex items-center gap-1"

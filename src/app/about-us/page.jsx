@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Handshake, ShieldCheck, Clock, GraduationCap } from "lucide-react";
 
 export const metadata = {
@@ -172,9 +173,24 @@ const AboutUs = () => {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Certifications
                 </h3>
+                
+                {/* ICEF Accreditation Badge */}
+                <div className="mb-6 flex justify-center">
+                  <div className="relative w-48 h-48">
+                    <Image
+                      src="/icef-badge.png"
+                      alt="ICEF Accredited - Agency Status #6964 - Trusted Agency"
+                      width={192}
+                      height={192}
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+                
                 <ul className="divide-y divide-gray-200 text-primary-700">
                   {[
-                    
+                    "ICEF Accredited Agency (#6964)",
                     "British Council Trained",
                     "NAFSA Member",
                     "IELTS Coaching Center",

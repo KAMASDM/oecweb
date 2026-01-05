@@ -89,23 +89,30 @@ const ExpandableSection = ({ title, children }) => {
 
 const renderKeyPoints = (htmlString) => {
   if (typeof window === "undefined") {
+    // Return null during SSR
     return null;
   }
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = htmlString;
+  
+  try {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlString;
 
-  const listItems = tempDiv.querySelectorAll("li");
+    const listItems = tempDiv.querySelectorAll("li");
 
-  return (
-    <ul className="space-y-3">
-      {Array.from(listItems).map((item, index) => (
-        <li key={index} className="flex items-start">
-          <Check className="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-          <span className="text-gray-700">{item.textContent}</span>
-        </li>
-      ))}
-    </ul>
-  );
+    return (
+      <ul className="space-y-3">
+        {Array.from(listItems).map((item, index) => (
+          <li key={index} className="flex items-start">
+            <Check className="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+            <span className="text-gray-700">{item.textContent}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  } catch (error) {
+    console.error("Error rendering key points:", error);
+    return null;
+  }
 };
 
 const ServicesSkeleton = () => (
@@ -198,22 +205,14 @@ const Services = () => {
           const descriptions = {};
 
           const defaultBannerImages = {
-            "university-selection":
-              "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop",
-            "visa-assistance":
-              "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=400&fit=crop",
-            "application-support":
-              "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop",
-            "test-preparation":
-              "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop",
-            "scholarship-guidance":
-              "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=400&fit=crop",
-            "pre-departure-briefing":
-              "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=400&fit=crop",
-            "career-counseling":
-              "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=400&fit=crop",
-            "education-loans":
-              "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=400&fit=crop",
+            "university-selection": "/Universities.png",
+            "visa-assistance": "/OEC.png",
+            "application-support": "/CollegeFinder.png",
+            "test-preparation": "/TestPrep.png",
+            "scholarship-guidance": "/Finance.png",
+            "pre-departure-briefing": "/Events.png",
+            "career-counseling": "/Connect.png",
+            "education-loans": "/Finance.png",
           };
 
           servicesFromApi.forEach((service) => {

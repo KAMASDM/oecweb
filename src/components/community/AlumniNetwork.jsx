@@ -100,9 +100,12 @@ const AlumniNetwork = () => {
         if (response?.data?.results?.length > 0) {
           setAlumnis(response.data.results);
 
-          const shuffled = [...response.data.results].sort(
-            () => 0.5 - Math.random()
-          );
+          // Fisher-Yates shuffle for consistent shuffling
+          const shuffled = [...response.data.results];
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
           setFeaturedAlumnis(shuffled.slice(0, 3));
         } else {
           setAlumnis([]);
