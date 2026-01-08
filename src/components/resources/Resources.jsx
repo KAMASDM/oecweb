@@ -68,17 +68,31 @@ const Resources = () => {
   const filteredResources = resources.filter((resource) => {
     const matchesTab =
       activeTab === "all" ||
-      resource.category_name.toLowerCase() === activeTab.toLowerCase();
+      (resource.category_name && resource.category_name.toLowerCase().trim() === activeTab.toLowerCase().trim());
     const matchesCountry =
       selectedCountry === "all" ||
-      resource.country_name
-        .toLowerCase()
-        .includes(selectedCountry.toLowerCase());
+      (resource.country_name && resource.country_name.toLowerCase().trim() === selectedCountry.toLowerCase().trim());
     const matchesSearch = resource.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      ? resource.title.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    
+    console.log("Resource:", resource.title, {
+      matchesTab,
+      matchesCountry,
+      matchesSearch,
+      category: resource.category_name,
+      country: resource.country_name,
+      activeTab,
+      selectedCountry
+    });
+    
     return matchesTab && matchesCountry && matchesSearch;
   });
+
+  console.log("Selected Country:", selectedCountry);
+  console.log("Active Tab:", activeTab);
+  console.log("Search Query:", searchQuery);
+  console.log("Filtered resources count:", filteredResources.length);
 
   const handleDownload = (pdfUrl, title) => {
     const link = document.createElement("a");
@@ -180,32 +194,6 @@ const Resources = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-              </div>
-
-              <div className="flex flex-wrap gap-2 mb-6">
-                <button
-                  className={`px-4 py-2 rounded-full ${
-                    activeTab === "all"
-                      ? "bg-primary-800 text-white"
-                      : "bg-primary-100 text-primary-800 hover:bg-primary-200 border border-primary-800"
-                  }`}
-                  onClick={() => setActiveTab("all")}
-                >
-                  All Resources
-                </button>
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    className={`px-4 py-2 rounded-full ${
-                      activeTab === category.slug
-                        ? "bg-primary-800 text-white"
-                        : "bg-primary-100 text-primary-800 hover:bg-primary-200 border border-primary-800"
-                    }`}
-                    onClick={() => setActiveTab(category.slug)}
-                  >
-                    {category.name}
-                  </button>
-                ))}
               </div>
             </div>
 
