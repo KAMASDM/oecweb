@@ -102,15 +102,15 @@ const Footer = () => {
               </Link>
             </div>
             <p className="text-white mb-4 text-sm">
-              Your trusted partner for international education with 10 years of
-              experience and 2,000+ successful placements.
+              Your trusted partner for international education with 20+ years of
+              experience and 20,000+ successful placements.
             </p>
             <div className="space-y-2 text-sm">
               <p>
-                <strong>Established:</strong> 2015
+                <strong>Established:</strong> 2003
               </p>
               <p>
-                <strong>Students Placed:</strong> 2,000+
+                <strong>Students Placed:</strong> 20,000+
               </p>
               <p>
                 <strong>Countries:</strong> {countries.length}+
