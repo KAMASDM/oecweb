@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import News from "./News";
 import Blogs from "./Blogs";
 import Courses from "./Courses";
 import ajaxCall from "@/helpers/ajaxCall";
@@ -62,7 +61,6 @@ const tabs = [
   { id: "overview", name: "Overview", icon: GraduationCap },
   { id: "blogs", name: "Blogs", icon: Newspaper },
   { id: "courses", name: "Courses", icon: BookOpenCheck },
-  { id: "latest-news", name: "Latest News", icon: Newspaper },
 ];
 
 const RenderHtmlContent = ({ html }) => {
@@ -175,9 +173,6 @@ const CountryPage = ({ normalCountry }) => {
         )}
         {activeTab === "blogs" && <Blogs country={normalCountry} />}
         {activeTab === "courses" && <Courses country={normalCountry} />}
-        {activeTab === "latest-news" && (
-          <News activeTab={activeTab} countryData={countryData} />
-        )}
       </main>
     </div>
   );
