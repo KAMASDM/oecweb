@@ -42,17 +42,29 @@ const Universities = ({ country }) => {
     const fetchUniversities = async () => {
       setIsLoading(true);
       try {
-        const response = await ajaxCall("/academics/academics/universities/", {
-          method: "GET",
-        });
+        let allUniversities = [];
+        let page = 1;
+        let hasNextPage = true;
 
-        if (response?.data?.results?.length > 0) {
-          setUniversities(response.data.results);
-        } else {
-          setUniversities([]);
+        while (hasNextPage) {
+          const response = await ajaxCall(
+            `/academics/academics/universities/?page=${page}`,
+            {
+              method: "GET",
+            }
+          );
+
+          const results = response?.data?.results || [];
+          allUniversities = [...allUniversities, ...results];
+
+          hasNextPage = !!response?.data?.next;
+          page += 1;
         }
+
+        setUniversities(allUniversities);
       } catch (error) {
         console.log("Error fetching universities:", error);
+        setUniversities([]);
       } finally {
         setIsLoading(false);
       }
@@ -64,17 +76,29 @@ const Universities = ({ country }) => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await ajaxCall("/academics/academics/countries/", {
-          method: "GET",
-        });
+        let allCountries = [];
+        let page = 1;
+        let hasNextPage = true;
 
-        if (response?.data?.results?.length > 0) {
-          setCountries(response.data.results);
-        } else {
-          setCountries([]);
+        while (hasNextPage) {
+          const response = await ajaxCall(
+            `/academics/academics/countries/?page=${page}`,
+            {
+              method: "GET",
+            }
+          );
+
+          const results = response?.data?.results || [];
+          allCountries = [...allCountries, ...results];
+
+          hasNextPage = !!response?.data?.next;
+          page += 1;
         }
+
+        setCountries(allCountries);
       } catch (error) {
         console.log("Error fetching countries:", error);
+        setCountries([]);
       }
     };
 
