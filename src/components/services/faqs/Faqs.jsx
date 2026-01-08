@@ -97,7 +97,7 @@ const FAQSection = ({ activeSection }) => {
             <FAQItem
               key={faq.id}
               question={faq.question}
-              answer={faq.answer_preview}
+              answer={faq.answer}
               isOpen={openFAQ === faq.id}
               onToggle={() => setOpenFAQ(openFAQ === faq.id ? null : faq.id)}
             />
