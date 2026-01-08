@@ -227,9 +227,7 @@ const UniversityDetail = ({ slug }) => {
                     <img
                       src={university.banner_image}
                       alt={`${university.name} campus`}
-                      fill
-                      className="object-cover"
-                      priority
+                      className="object-cover w-full h-full"
                     />
                   </div>
                 </motion.div>
