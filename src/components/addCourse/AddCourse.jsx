@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState, useMemo } from "react";
-import OpenAI from "openai";
 import ajaxCall from "@/helpers/ajaxCall";
 
 const initialFormData = {
@@ -48,10 +47,6 @@ const AddCourse = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
 
   const initiateAiFetch = async () => {
-    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
-      setError("OpenAI API key not configured.");
-      return;
-    }
     if (!formData.university_name || !formData.category_name) {
       return;
     }
@@ -59,46 +54,25 @@ const AddCourse = () => {
     setError(null);
     setIsFetching(true);
 
-    const openai = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-      dangerouslyAllowBrowser: true,
-    });
-
-    const comprehensivePrompt = `
-      Your task is to act as a highly accurate academic data specialist.
-      1. First, find an official course page on the website of "${formData.university_name}" for a program that fits the category "${formData.category_name}".
-      2. Once you have found the specific, official course webpage, extract the following information directly from that page. Prioritize accuracy above all else. Do not invent or infer data that is not present on the page.
-      3. Return a single, valid JSON object with the following keys. If a specific piece of information cannot be found on the official course page, use an empty string "" as the value.
-
-      The JSON object must have these keys: "name", "description", "curriculum", "career_prospects", "admission_requirements", "tuition_fee", "other_fees", "currency", "min_gpa", "ielts_score", "toefl_score", "gre_required", "gmat_required", "is_scholarship_available", "meta_title", "meta_description", "duration", "duration_unit", and "intakes".
-
-      **JSON Field Instructions:**
-      - "name": The official, full name of the course as listed on the page.
-      - "description": A detailed overview from the page. At the end, you **must** include the full URL of the official course page you used as your source. For example: "For more information, visit: [URL]".
-      - "curriculum": A summary of the course structure or list of modules, taken directly from the source.
-      - "career_prospects": A summary of potential career prospects, taken directly from the source.
-      - "admission_requirements": A summary of admission requirements, taken directly from the source.
-      - "tuition_fee": The specific tuition fee amount. Should be a number.
-      - "currency": The currency code for the fee (e.g., USD, CAD).
-      - "min_gpa": The minimum required GPA. Should be a number.
-      - "ielts_score": The required IELTS score. Should be a number.
-      - "toefl_score": The required TOEFL score. Should be a number.
-      - "gre_required", "gmat_required", "is_scholarship_available": Must be true or false.
-      - "meta_title": A concise, SEO-friendly title, not more than 60 characters, based on the course name and university.
-      - "meta_description": A short description, not more than 160 characters, based on the course description and university.
-      - "intakes": An object with boolean keys for "spring", "fall", "summer", and "winter" based on the application deadlines or start dates mentioned.
-      - "duration": A number representing the course length.
-      - "duration_unit": The unit for the duration ("years", "months", or "weeks").
-    `;
-
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: comprehensivePrompt }],
-        response_format: { type: "json_object" },
+      // Use the server-side API route instead of calling OpenAI directly
+      const response = await fetch("/api/ai-course-extractor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          universityName: formData.university_name,
+          categoryName: formData.category_name,
+        }),
       });
 
-      const json = JSON.parse(response.choices[0].message.content);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch course data");
+      }
+
+      const json = await response.json();
       const courseSlug = (json.name || "")
         .toLowerCase()
         .replace(/\s+/g, "-")
@@ -125,13 +99,14 @@ const AddCourse = () => {
         meta_description: json.meta_description || "",
         duration: json.duration || "",
         duration_unit: json.duration_unit || "years",
-        intake_spring: json.intakes?.spring || false,
-        intake_fall: json.intakes?.fall || false,
-        intake_summer: json.intakes?.summer || false,
-        intake_winter: json.intakes?.winter || false,
+        // Parse intakes from comma-separated string or object
+        intake_spring: typeof json.intakes === 'string' ? json.intakes.toLowerCase().includes('spring') : (json.intakes?.spring || false),
+        intake_fall: typeof json.intakes === 'string' ? json.intakes.toLowerCase().includes('fall') : (json.intakes?.fall || false),
+        intake_summer: typeof json.intakes === 'string' ? json.intakes.toLowerCase().includes('summer') : (json.intakes?.summer || false),
+        intake_winter: typeof json.intakes === 'string' ? json.intakes.toLowerCase().includes('winter') : (json.intakes?.winter || false),
       }));
     } catch (err) {
-      console.error("Error fetching data from OpenAI:", err);
+      console.error("Error fetching data from API:", err);
       setError(
         "Unable to fetch course data. The AI may have had trouble finding the course or formatting the response. Please try different categories or check the console."
       );

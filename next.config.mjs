@@ -20,14 +20,38 @@ const nextConfig = {
         hostname: 'www.sweekarme.in',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.oecindia.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'oecindia.com',
+        pathname: '/**',
+      },
     ],
   },
   async rewrites() {
     return [
+      // Proxy for external logo URL to serve local logo
+      {
+        source: '/assets/images/finalpic.png',
+        destination: '/OEC.png',
+      },
       // Specific CRM login route - serve from oeccrm folder
       {
         source: '/oeccrm/login',
         destination: '/oeccrm/index.html',
+      },
+      // CRM logo files
+      {
+        source: '/oeccrm/logo.png',
+        destination: '/oeccrm/logo.png',
+      },
+      {
+        source: '/oeccrm/finalpic.png',
+        destination: '/oeccrm/finalpic.png',
       },
       // CRM static files - serve as-is (don't redirect to index.html)
       {

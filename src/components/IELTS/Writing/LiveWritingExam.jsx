@@ -118,49 +118,43 @@ const LiveWritingExam = ({ examData }) => {
     // Sanitize the passage to remove HTML tags for the prompt
     const cleanPassage = examData.passage.replace(/<[^>]*>/g, " ");
 
-    // Construct a detailed prompt for the OpenAI API
-    const gptBody = {
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: `Analyze the following IELTS Writing Task 1 response according to the official IELTS assessment criteria. Be strict in your evaluation, and provide band scores in .5 increments (e.g., 6.0, 6.5, 7.0).`,
-        },
-        {
-          role: "user",
-          content: `Task Prompt: ${cleanPassage}`,
-        },
-        {
-          role: "user",
-          content: `Student's Answer: ${answer}`,
-        },
-        {
-          role: "user",
-          content: `Provide detailed feedback for each of the four criteria (Task Achievement, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy). Format the feedback in HTML using <h4> for each criterion heading and <p> for the explanation. At the very end, provide the final band score in the format: #Band: [score].`,
-        },
-      ],
-    };
-
     try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      // Use the server-side API route instead of calling OpenAI directly
+      const res = await fetch("/api/ai-writing-feedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         },
-        body: JSON.stringify(gptBody),
+        body: JSON.stringify({
+          task: "Task 1",
+          prompt: cleanPassage,
+          answer: answer,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error(`API error: ${res.statusText}`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `API error: ${res.statusText}`);
       }
 
       const data = await res.json();
-      const gptResponse = data?.choices?.[0]?.message?.content || "";
-
+      
+      // Format the feedback data as HTML
       let formattedFeedback = "<p>Could not retrieve feedback.</p>";
-
-      formattedFeedback = gptResponse;
+      
+      if (data) {
+        formattedFeedback = `
+          <h4>Task Achievement</h4>
+          <p>${data.taskAchievement || 'N/A'}</p>
+          <h4>Coherence and Cohesion</h4>
+          <p>${data.coherence || 'N/A'}</p>
+          <h4>Lexical Resource</h4>
+          <p>${data.lexicalResource || 'N/A'}</p>
+          <h4>Grammatical Range and Accuracy</h4>
+          <p>${data.grammar || 'N/A'}</p>
+          <p><strong>#Band: ${data.bandScore || 'N/A'}</strong></p>
+        `;
+      }
 
       setSubmissionDetails({
         feedback: formattedFeedback,

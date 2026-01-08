@@ -10,7 +10,7 @@ export default function CRMPage() {
     // Check if CRM build exists
     const checkCRMBuild = async () => {
       try {
-        const response = await fetch('/crm/index.html');
+        const response = await fetch('/oeccrm/index.html');
         if (response.ok) {
           setCrmExists(true);
           
@@ -31,7 +31,7 @@ export default function CRMPage() {
 
   const openCRMWindow = () => {
     // Use current origin to ensure correct port
-    const crmUrl = `${window.location.origin}/crm/login`;
+    const crmUrl = `${window.location.origin}/oeccrm/login`;
     const windowFeatures = 'width=1400,height=900,scrollbars=yes,resizable=yes,location=yes,menubar=yes,toolbar=yes';
     
     const crmWindow = window.open(crmUrl, 'OEC_CRM', windowFeatures);
@@ -181,7 +181,7 @@ export default function CRMPage() {
             
             <div className="text-center">
               <a
-                href="/crm/login"
+                href="/oeccrm/login"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary-600 hover:text-primary-800 text-sm font-medium inline-flex items-center gap-1"
