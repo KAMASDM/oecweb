@@ -85,7 +85,7 @@ const CountryPage = ({ normalCountry }) => {
         });
         if (response?.data?.results?.length > 0) {
           const data = response.data.results.find(
-            (country) => country.name === normalCountry
+            (country) => country.name.toLowerCase() === normalCountry.toLowerCase()
           );
           setCountryData(data);
         } else {
