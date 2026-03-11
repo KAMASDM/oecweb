@@ -1,4 +1,15 @@
-# CRM static files - don't redirect these
+# CRM (/crm/) static files - serve as-is
+/crm/static/*  /crm/static/:splat  200
+/crm/manifest.json  /crm/manifest.json  200
+/crm/service-worker.js  /crm/service-worker.js  200
+/crm/workbox-*.js  /crm/workbox-:splat.js  200
+/crm/sw.js  /crm/sw.js  200
+
+# CRM (/crm/) SPA routing - serve index.html for all app routes
+/crm  /crm/index.html  200
+/crm/*  /crm/index.html  200
+
+# oeccrm static files - don't redirect these
 /oeccrm/static/*  /oeccrm/static/:splat  200
 /oeccrm/manifest.json  /oeccrm/manifest.json  200
 /oeccrm/favicon.ico  /oeccrm/favicon.ico  200
@@ -6,5 +17,5 @@
 /oeccrm/*.js  /oeccrm/:splat.js  200
 /oeccrm/*.map  /oeccrm/:splat.map  200
 
-# CRM routes - serve index.html for all other paths
+# oeccrm routes - serve index.html for all other paths
 /oeccrm/*  /oeccrm/index.html  200

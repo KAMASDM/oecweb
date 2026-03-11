@@ -77,10 +77,24 @@ const nextConfig = {
         source: '/oeccrm/:path*',
         destination: '/oeccrm/index.html',
       },
-      // Direct access to CRM files (for assets) - also check crm folder as fallback
+      // Exact CRM root (no trailing slash)
+      {
+        source: '/crm',
+        destination: '/crm/index.html',
+      },
+      // CRM static assets - serve as-is
       {
         source: '/crm/static/:path*',
         destination: '/crm/static/:path*',
+      },
+      // CRM manifest, icons, service worker - serve as-is
+      {
+        source: '/crm/manifest.json',
+        destination: '/crm/manifest.json',
+      },
+      {
+        source: '/crm/service-worker.js',
+        destination: '/crm/service-worker.js',
       },
       // Handle CRM client-side routing - serve index.html for all other CRM routes
       {
@@ -92,8 +106,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Apply these headers to all CRM files
-        source: '/crm/:path*',
+        // Cache CRM static hashed assets aggressively (safe - filenames are content-hashed)
+        source: '/crm/static/:path*',
         headers: [
           {
             key: 'Cache-Control',
