@@ -12,6 +12,7 @@ import {
   X,
   CheckCircle,
 } from "lucide-react";
+import { filterAndSortCountries, EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -123,7 +124,15 @@ const FormTextarea = ({ label, name, register, error, placeholder }) => (
   </div>
 );
 
-const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry, defaultCountry, inline = false }) => {
+const ConsultationForm = ({
+  isOpen,
+  onClose,
+  service,
+  initialEnquiry,
+  defaultCountry,
+  inline = false,
+  countryAllowlist = EVENTS_LANDING_COUNTRY_ALLOWLIST,
+}) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -165,11 +174,15 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry, defaultCou
             method: "GET",
           });
           const countriesData = response.data?.results || [];
-          setCountries(countriesData);
+          const filteredCountries = filterAndSortCountries(
+            countriesData,
+            countryAllowlist
+          );
+          setCountries(filteredCountries);
           
           // Set default country if provided
-          if (defaultCountry && countriesData.length > 0) {
-            const defaultCountryObj = countriesData.find(
+          if (defaultCountry && filteredCountries.length > 0) {
+            const defaultCountryObj = filteredCountries.find(
               c => c.name.toLowerCase() === defaultCountry.toLowerCase()
             );
             if (defaultCountryObj) {
@@ -184,7 +197,7 @@ const ConsultationForm = ({ isOpen, onClose, service, initialEnquiry, defaultCou
       };
       fetchCountries();
     }
-  }, [isOpen, defaultCountry, setValue, inline, hasInteracted]);
+  }, [isOpen, defaultCountry, setValue, inline, hasInteracted, countryAllowlist]);
 
   const handleFormSubmit = async (data) => {
     setIsSubmitting(true);

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ConsultationForm from "../forms/ConsultationForm";
+import { EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 
 const smartFeatures = [
   {
@@ -111,6 +112,7 @@ const SmartFeatures = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           service={service}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
         />
       )}
     </section>

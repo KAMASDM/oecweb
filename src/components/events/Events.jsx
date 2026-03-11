@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import ajaxCall from "@/helpers/ajaxCall";
 import ConsultationForm from "@/components/forms/ConsultationForm";
+import { EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 import {
   Calendar,
   MapPin,
@@ -681,7 +682,10 @@ const Events = () => {
             </p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <ConsultationForm inline={true} />
+            <ConsultationForm
+              inline={true}
+              countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
+            />
           </div>
         </div>
       </section>
@@ -691,6 +695,7 @@ const Events = () => {
         <ConsultationForm 
           isOpen={showRegistrationModal}
           onClose={() => setShowRegistrationModal(false)}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
           defaultCountry={getEventCountry(selectedEvent)}
           initialEnquiry={{
             name: selectedEvent.title,
@@ -705,6 +710,7 @@ const Events = () => {
         <ConsultationForm 
           isOpen={showFloatingForm}
           onClose={() => setShowFloatingForm(false)}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
         />
       )}
     </div>

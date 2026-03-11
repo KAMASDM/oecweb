@@ -34,6 +34,11 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      // World Education Fair 2026 standalone page
+      {
+        source: '/world-education-fair',
+        destination: '/world-education-fair.html',
+      },
       // Proxy for external logo URL to serve local logo
       {
         source: '/assets/images/finalpic.png',

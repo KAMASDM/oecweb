@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Education Fair 2026 | OEC India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --p800: #172d65;
+    --p700: #3a4e72;
+    --p600: #46608d;
+    --p500: #5979a8;
+    --p200: #d1dbe8;
+    --p100: #eaeff4;
+    --p50:  #f5f7fa;
+    --s600: #d44920;
+    --s500: #e66234;
+    --s400: #f5835d;
+    --s200: #fcd3c1;
+    --s100: #fdebe3;
+    --s50:  #fef6f2;
+    --g900: #1a1a1a;
+    --g700: #454545;
+    --g600: #5c5c5c;
+    --g200: #e2e2e2;
+    --g100: #f2f2f2;
+    --g50:  #f9f9f9;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; color: var(--g900); background: #fff; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── TOP BAR ── */
+  .topbar { background: var(--p800); padding: 9px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .topbar-left { display: flex; gap: 20px; flex-wrap: wrap; }
+  .topbar a { color: #fff; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px; transition: opacity .2s; }
+  .topbar a:hover { opacity: .75; }
+  .topbar-right { color: var(--p200); font-size: 12.5px; display: flex; align-items: center; gap: 6px; }
+  svg.icon { width: 13px; height: 13px; flex-shrink: 0; }
+
+  /* ── NAV ── */
+  nav { position: sticky; top: 0; z-index: 200; background: #fff; border-bottom: 1px solid var(--g200); padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 6px rgba(0,0,0,.07); }
+  .nav-brand { display: flex; align-items: center; gap: 11px; }
+  .nav-brand .logo-wrap { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .nav-brand .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+  /* SVG fallback logo shown if image fails */
+  .nav-brand .logo-svg { display: none; width: 52px; height: 52px; background: var(--p800); border-radius: 8px; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nav-brand .logo-svg span { color: #fff; font-size: 14px; font-weight: 800; letter-spacing: -0.5px; }
+  .nav-brand-name { font-size: 15px; font-weight: 700; color: var(--p800); line-height: 1.2; }
+  .nav-brand-sub { font-size: 11px; color: var(--g600); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-links { display: flex; gap: 22px; }
+  .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--g700); transition: color .2s; }
+  .nav-links a:hover { color: var(--p800); }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border-radius: 8px; padding: 11px 24px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all .2s; border: none; white-space: nowrap; }
+  .btn-primary { background: var(--p800); color: #fff; }
+  .btn-primary:hover { background: var(--p700); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(23,45,101,.3); }
+  .btn-orange { background: var(--s500); color: #fff; }
+  .btn-orange:hover { background: var(--s600); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(230,98,52,.35); }
+  .btn-ghost-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.45); }
+  .btn-ghost-white:hover { background: rgba(255,255,255,.1); border-color: #fff; }
+
+  /* ── HERO ── */
+  .hero { background: var(--p800); padding: 72px 0 0; position: relative; overflow: hidden; }
+  .hero-overlay { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 80% 30%, rgba(70,96,141,.5), transparent 60%), radial-gradient(ellipse at 10% 85%, rgba(23,45,101,.85), transparent 50%); }
+  .hero-grid-lines { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 48px 48px; }
+  .hero-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 430px; gap: 56px; align-items: start; }
+
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(230,98,52,.15); border: 1px solid rgba(230,98,52,.4); border-radius: 40px; padding: 6px 16px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--s400); margin-bottom: 20px; }
+  .badge-dot { width: 7px; height: 7px; background: var(--s500); border-radius: 50%; flex-shrink: 0; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(1.4)} }
+
+  .hero h1 { font-size: clamp(38px, 4.2vw, 62px); font-weight: 800; line-height: 1.1; color: #fff; margin-bottom: 16px; }
+  .hero h1 .hl { color: var(--s400); display: block; }
+  .hero-desc { font-size: 16px; line-height: 1.8; color: rgba(255,255,255,.72); max-width: 490px; margin-bottom: 32px; }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+  .hero-facts { display: flex; gap: 24px; flex-wrap: wrap; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.12); }
+  .hero-fact { display: flex; align-items: center; gap: 10px; }
+  .fact-icon { width: 38px; height: 38px; flex-shrink: 0; background: rgba(255,255,255,.09); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .fact-text strong { font-size: 13.5px; font-weight: 700; color: #fff; display: block; }
+  .fact-text span { font-size: 11.5px; color: rgba(255,255,255,.57); }
+
+  /* ── EVENT CARD ── */
+  .event-card { background: #fff; border-radius: 16px; box-shadow: 0 24px 60px rgba(0,0,0,.28); overflow: hidden; }
+  .ec-head { background: var(--s500); color: #fff; padding: 18px 28px; text-align: center; }
+  .ec-head h3 { font-size: 17px; font-weight: 700; }
+  .ec-head p { font-size: 12px; opacity: .82; margin-top: 2px; }
+  .ec-body { padding: 8px 26px 24px; }
+  .ec-row { display: flex; align-items: flex-start; gap: 13px; padding: 13px 0; border-bottom: 1px solid var(--g100); }
+  .ec-row:last-of-type { border-bottom: none; }
+  .ec-ico { width: 40px; height: 40px; flex-shrink: 0; background: var(--p50); border: 1px solid var(--p200); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .ec-lbl { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--g600); font-weight: 600; margin-bottom: 3px; }
+  .ec-val { font-size: 14.5px; font-weight: 600; color: var(--p800); line-height: 1.35; }
+  .ec-val small { font-size: 12px; font-weight: 400; color: var(--g600); display: block; margin-top: 2px; }
+  .cd-wrap { background: var(--p50); border: 1px solid var(--p200); border-radius: 11px; padding: 15px 14px; margin: 12px 0 16px; }
+  .cd-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--p600); font-weight: 700; text-align: center; margin-bottom: 10px; }
+  .cd-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+  .cd-cell { text-align: center; }
+  .cd-num { font-size: 28px; font-weight: 800; color: var(--p800); line-height: 1; }
+  .cd-unit { font-size: 9px; letter-spacing: .07em; text-transform: uppercase; color: var(--g600); margin-top: 2px; }
+  .ec-body .btn { width: 100%; font-size: 14px; padding: 13px; border-radius: 9px; }
+
+  /* ── WAVE ── */
+  .wave { display: block; width: 100%; margin-bottom: -3px; }
+
+  /* ── STATS ── */
+  .stats-bar { background: #fff; border-bottom: 1px solid var(--g200); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .stat-cell { text-align: center; padding: 16px 34px; }
+  .stat-n { font-size: 29px; font-weight: 800; color: var(--p800); line-height: 1; }
+  .stat-n em { color: var(--s500); font-style: normal; }
+  .stat-d { font-size: 12px; color: var(--g600); margin-top: 3px; }
+  .stat-line { width: 1px; height: 36px; background: var(--g200); }
+
+  /* ── LAYOUT HELPERS ── */
+  .section { padding: 80px 0; }
+  .section-alt { background: var(--g50); }
+  .section-dark { background: var(--p800); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+  .sh { margin-bottom: 48px; }
+  .tag { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; color: var(--s500); margin-bottom: 10px; }
+  .tag-light { color: var(--s400); }
+  .sh h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 800; color: var(--p800); line-height: 1.15; margin-bottom: 12px; }
+  .sh h2.white { color: #fff; }
+  .sh p { font-size: 15.5px; color: var(--g600); line-height: 1.75; max-width: 520px; }
+  .sh p.white { color: rgba(255,255,255,.7); }
+
+  /* ── BENEFIT CARDS ── */
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+  .bcard { background: #fff; border: 1px solid var(--g200); border-radius: 12px; padding: 26px; transition: all .25s; position: relative; overflow: hidden; }
+  .bcard::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--s500); transform: scaleX(0); transform-origin: left; transition: transform .3s; border-radius: 12px 12px 0 0; }
+  .bcard:hover { border-color: var(--p200); box-shadow: 0 8px 32px rgba(23,45,101,.1); transform: translateY(-3px); }
+  .bcard:hover::after { transform: scaleX(1); }
+  .bcard-ico { font-size: 26px; margin-bottom: 14px; }
+  .bcard h3 { font-size: 16px; font-weight: 700; color: var(--p800); margin-bottom: 8px; }
+  .bcard p { font-size: 13.5px; color: var(--g600); line-height: 1.7; }
+
+  /* ── CHIPS ── */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--g200); border-radius: 40px; padding: 8px 17px; font-size: 13.5px; font-weight: 500; color: var(--p800); transition: all .2s; }
+  .chip:hover { border-color: var(--p500); background: var(--p50); }
+
+  /* ── WHO CARDS ── */
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+  .wcard { text-align: center; background: #fff; border: 1px solid var(--g200); border-radius: 12px; padding: 26px 16px; transition: all .25s; }
+  .wcard:hover { border-color: var(--s200); background: var(--s50); transform: translateY(-3px); }
+  .wcard .em { font-size: 34px; margin-bottom: 12px; }
+  .wcard h3 { font-size: 14.5px; font-weight: 700; color: var(--p800); margin-bottom: 6px; }
+  .wcard p { font-size: 12.5px; color: var(--g600); line-height: 1.65; }
+
+  /* ── VENUE ── */
+  .venue-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; }
+  .map-box { border-radius: 14px; overflow: hidden; border: 1px solid var(--g200); aspect-ratio: 4/3; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+  .map-box iframe { width: 100%; height: 100%; border: none; display: block; }
+  .vrow { display: flex; align-items: flex-start; gap: 13px; padding: 14px 0; border-bottom: 1px solid var(--g100); }
+  .vrow:last-child { border-bottom: none; }
+  .vico { width: 40px; height: 40px; flex-shrink: 0; background: var(--p50); border: 1px solid var(--p200); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .vlbl { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--s500); font-weight: 700; margin-bottom: 3px; }
+  .vval { font-size: 15px; font-weight: 600; color: var(--p800); line-height: 1.35; }
+  .vval small { font-size: 12.5px; font-weight: 400; color: var(--g600); display: block; margin-top: 2px; }
+
+  /* ── REGISTER SECTION ── */
+  .reg-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+  .perks-list { display: flex; flex-direction: column; gap: 13px; margin-top: 26px; }
+  .perk { display: flex; align-items: flex-start; gap: 11px; }
+  .perk-chk { width: 22px; height: 22px; flex-shrink: 0; background: var(--s500); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 700; margin-top: 1px; }
+  .perk p { font-size: 14.5px; color: rgba(255,255,255,.82); line-height: 1.5; }
+  .trust-strip { margin-top: 36px; padding: 20px 22px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 13px; }
+  .trust-top { display: flex; align-items: center; gap: 13px; margin-bottom: 9px; }
+  .trust-logo { width: 44px; height: 44px; object-fit: contain; border-radius: 7px; }
+  /* fallback OEC pill if image blocked */
+  .trust-logo-fallback { display: none; width: 44px; height: 44px; background: rgba(255,255,255,.15); border-radius: 7px; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; letter-spacing: -0.5px; flex-shrink: 0; }
+  .trust-name { font-size: 15px; font-weight: 700; color: #fff; }
+  .trust-sub { font-size: 11.5px; color: rgba(255,255,255,.52); margin-top: 1px; }
+  .trust-body { font-size: 13px; color: rgba(255,255,255,.68); line-height: 1.65; }
+
+  /* ── FORM BOX ── */
+  .form-box { background: #fff; border-radius: 18px; padding: 36px; box-shadow: 0 20px 60px rgba(0,0,0,.22); }
+  .form-box h3 { font-size: 21px; font-weight: 800; color: var(--p800); margin-bottom: 4px; }
+  .form-box .sub { font-size: 13px; color: var(--g600); margin-bottom: 24px; }
+  .fr { margin-bottom: 14px; }
+  .fr label { display: block; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; font-weight: 600; color: var(--g700); margin-bottom: 6px; }
+  .fr .req { color: var(--s500); }
+  .fr input, .fr select, .fr textarea {
+    width: 100%; background: var(--g50); border: 1.5px solid var(--g200);
+    border-radius: 8px; padding: 11px 13px;
+    font-family: 'Inter', sans-serif; font-size: 14px; color: var(--g900);
+    outline: none; transition: border-color .2s, box-shadow .2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .fr input:focus, .fr select:focus, .fr textarea:focus { border-color: var(--p500); box-shadow: 0 0 0 3px rgba(89,121,168,.15); background: #fff; }
+  .fr input::placeholder, .fr textarea::placeholder { color: #bbb; }
+  .fr textarea { resize: vertical; min-height: 80px; }
+  .fr select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+  .fr .field-err { font-size: 11.5px; color: #e53e3e; margin-top: 5px; display: none; }
+  .fr.invalid input, .fr.invalid select, .fr.invalid textarea { border-color: #e53e3e; }
+  .fr.invalid .field-err { display: block; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .form-box .btn-submit { width: 100%; font-size: 15px; padding: 14px; border-radius: 10px; margin-top: 6px; position: relative; }
+  .btn-submit .spinner { display: none; width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-submit.loading .btn-label { display: none; }
+  .btn-submit.loading .spinner { display: block; }
+  .form-note { font-size: 11.5px; color: var(--g600); text-align: center; margin-top: 10px; }
+  .api-error { display: none; background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-bottom: 14px; }
+  .api-error.show { display: block; }
+
+  /* ── SUCCESS STATE ── */
+  .form-success { display: none; text-align: center; padding: 10px 0; }
+  .success-ring { width: 72px; height: 72px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 32px; }
+  .form-success h3 { font-size: 22px; font-weight: 700; color: var(--p800); margin-bottom: 10px; }
+  .form-success p { font-size: 14px; color: var(--g600); line-height: 1.7; }
+  .form-success .ref { display: inline-block; margin-top: 14px; background: var(--p50); border: 1px solid var(--p200); border-radius: 8px; padding: 8px 16px; font-size: 13px; color: var(--p800); font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--p800); color: #fff; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 56px 40px 28px; }
+  .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(230,98,52,.3); }
+  .f-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .f-brand-logo { width: 52px; height: 52px; object-fit: contain; border-radius: 8px; }
+  .f-brand-fallback { display: none; width: 52px; height: 52px; background: rgba(255,255,255,.12); border-radius: 8px; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .f-brand-name { font-size: 15px; font-weight: 700; }
+  .f-brand-sub { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
+  .f-desc { font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.75; margin-bottom: 14px; }
+  .f-meta { font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+  .f-meta span { color: rgba(255,255,255,.6); }
+  .socials { display: flex; gap: 9px; margin-top: 16px; }
+  .soc-btn { width: 34px; height: 34px; background: rgba(255,255,255,.08); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: var(--s400); font-size: 13px; font-weight: 700; transition: background .2s, color .2s; }
+  .soc-btn:hover { background: var(--s500); color: #fff; }
+  .f-col h4 { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.45); margin-bottom: 14px; }
+  .f-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .f-col ul a { font-size: 13px; color: rgba(255,255,255,.7); transition: color .2s; }
+  .f-col ul a:hover { color: #fff; }
+  .footer-bottom { padding-top: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .fcopy { font-size: 12px; color: rgba(255,255,255,.38); }
+  .fpolicy { display: flex; gap: 18px; }
+  .fpolicy a { font-size: 12px; color: rgba(255,255,255,.38); }
+  .fpolicy a:hover { color: rgba(255,255,255,.7); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .event-card { max-width: 460px; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .venue-layout { grid-template-columns: 1fr; }
+    .reg-layout { grid-template-columns: 1fr; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .topbar, nav, .wrap { padding-left: 20px; padding-right: 20px; }
+    .hero-inner { padding: 0 20px; }
+    .nav-links { display: none; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .stat-line { display: none; }
+    .stat-cell { padding: 14px 16px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .section { padding: 60px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="tel:+919327581167">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+      +91 93275 81167
+    </a>
+    <a href="tel:+918905570642">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+      +91 89055 70642
+    </a>
+    <a href="mailto:uk@oecindia.com">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+      uk@oecindia.com
+    </a>
+  </div>
+  <div class="topbar-right">
+    <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+    Aspire. Apply. Achieve.
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://oecindia.com" class="nav-brand" id="navBrand">
+    <div class="logo-wrap">
+      <img src="https://www.oecindia.com/OEC.png" alt="OEC India" id="navLogo" onerror="this.style.display='none';document.getElementById('navLogoFallback').style.display='flex'">
+    </div>
+    <div class="logo-svg" id="navLogoFallback">
+      <span>OEC</span>
+    </div>
+    <div>
+      <div class="nav-brand-name">OEC India</div>
+      <div class="nav-brand-sub">Overseas Education Consultants</div>
+    </div>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about">Why Attend</a>
+      <a href="#destinations">Destinations</a>
+      <a href="#venue">Venue</a>
+      <a href="https://oecindia.com" target="_blank">oecindia.com ↗</a>
+    </div>
+    <a href="#register" class="btn btn-orange">Register Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-inner">
+    <!-- Left copy -->
+    <div>
+      <div class="hero-badge"><span class="badge-dot"></span>OEC India Presents</div>
+      <h1>World<span class="hl">Education Fair</span>2026</h1>
+      <p class="hero-desc">Meet admissions officers from 500+ top universities worldwide, discover scholarships, and get personalised counselling — all under one roof, completely free.</p>
+      <div class="hero-btns">
+        <a href="#register" class="btn btn-orange">Register for Free →</a>
+        <a href="#about" class="btn btn-ghost-white">Learn More</a>
+      </div>
+      <div class="hero-facts">
+        <div class="hero-fact"><div class="fact-icon">🎟️</div><div class="fact-text"><strong>Free Entry</strong><span>No cost whatsoever</span></div></div>
+        <div class="hero-fact"><div class="fact-icon">🏛️</div><div class="fact-text"><strong>500+ Universities</strong><span>Top institutions</span></div></div>
+        <div class="hero-fact"><div class="fact-icon">🌍</div><div class="fact-text"><strong>15+ Countries</strong><span>Represented</span></div></div>
+        <div class="hero-fact"><div class="fact-icon">👨‍💼</div><div class="fact-text"><strong>Expert Counsellors</strong><span>On-spot guidance</span></div></div>
+      </div>
+    </div>
+
+    <!-- Event card -->
+    <div class="event-card">
+      <div class="ec-head">
+        <h3>Event Details</h3>
+        <p>World Education Fair 2026 · Vadodara</p>
+      </div>
+      <div class="ec-body">
+        <div class="ec-row">
+          <div class="ec-ico">📅</div>
+          <div><div class="ec-lbl">Date</div><div class="ec-val">Thursday, 9th April 2026<small>Mark your calendar!</small></div></div>
+        </div>
+        <div class="ec-row">
+          <div class="ec-ico">⏰</div>
+          <div><div class="ec-lbl">Timings</div><div class="ec-val">11:00 AM – 5:00 PM<small>Doors open at 10:45 AM</small></div></div>
+        </div>
+        <div class="ec-row">
+          <div class="ec-ico">🏨</div>
+          <div><div class="ec-lbl">Venue</div><div class="ec-val">Fairfield by Marriott<small>Alkapuri, Vadodara, Gujarat</small></div></div>
+        </div>
+        <div class="ec-row">
+          <div class="ec-ico">🎟️</div>
+          <div><div class="ec-lbl">Entry</div><div class="ec-val">Completely Free<small>Pre-register for priority access</small></div></div>
+        </div>
+        <!-- Countdown -->
+        <div class="cd-wrap">
+          <div class="cd-title">⏳ Countdown to the Fair</div>
+          <div class="cd-row">
+            <div class="cd-cell"><div class="cd-num" id="cd-d">--</div><div class="cd-unit">Days</div></div>
+            <div class="cd-cell"><div class="cd-num" id="cd-h">--</div><div class="cd-unit">Hours</div></div>
+            <div class="cd-cell"><div class="cd-num" id="cd-m">--</div><div class="cd-unit">Mins</div></div>
+            <div class="cd-cell"><div class="cd-num" id="cd-s">--</div><div class="cd-unit">Secs</div></div>
+          </div>
+        </div>
+        <a href="#register" class="btn btn-orange">Secure My Free Spot →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- wave -->
+  <svg class="wave" viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,40 C400,70 1040,10 1440,40 L1440,56 L0,56 Z" fill="#ffffff"/>
+  </svg>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-cell"><div class="stat-n">500<em>+</em></div><div class="stat-d">Global Universities</div></div>
+  <div class="stat-line"></div>
+  <div class="stat-cell"><div class="stat-n">15<em>+</em></div><div class="stat-d">Countries Represented</div></div>
+  <div class="stat-line"></div>
+  <div class="stat-cell"><div class="stat-n">₹<em>0</em></div><div class="stat-d">Entry Fee</div></div>
+  <div class="stat-line"></div>
+  <div class="stat-cell"><div class="stat-n">6 <em>Hrs</em></div><div class="stat-d">Of Opportunity</div></div>
+  <div class="stat-line"></div>
+  <div class="stat-cell"><div class="stat-n">95<em>%</em></div><div class="stat-d">Visa Success Rate</div></div>
+  <div class="stat-line"></div>
+  <div class="stat-cell"><div class="stat-n">20K<em>+</em></div><div class="stat-d">Students Placed by OEC</div></div>
+</div>
+
+<!-- WHY ATTEND -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="sh">
+      <div class="tag">Why Attend?</div>
+      <h2>Everything You Need, In One Day</h2>
+      <p>One event. Hundreds of opportunities. The World Education Fair 2026 gives every aspiring student a clear, confident path to their dream university abroad.</p>
+    </div>
+    <div class="grid-3">
+      <div class="bcard"><div class="bcard-ico">🎓</div><h3>Meet University Reps</h3><p>Face-to-face time with admissions officers from top universities across UK, USA, Canada, Australia, Europe and beyond.</p></div>
+      <div class="bcard"><div class="bcard-ico">💰</div><h3>Discover Scholarships</h3><p>OEC India has helped students unlock over $50M in scholarships. Learn which ones you qualify for on the spot.</p></div>
+      <div class="bcard"><div class="bcard-ico">📝</div><h3>On-Spot Counselling</h3><p>Personalised profile evaluation from OEC's 25+ expert counsellors. Walk out with a clear, tailored application strategy.</p></div>
+      <div class="bcard"><div class="bcard-ico">🛂</div><h3>Visa Guidance</h3><p>Understand visa requirements, documentation, and timelines from experts who maintain a 95% visa success rate.</p></div>
+      <div class="bcard"><div class="bcard-ico">🤖</div><h3>AI College Finder</h3><p>Try OEC India's AI-powered college matching tool live at the event — find programs matching your goals and budget.</p></div>
+      <div class="bcard"><div class="bcard-ico">🌐</div><h3>Network & Connect</h3><p>Meet aspirants, OEC alumni now studying abroad, and industry mentors. Build the network you'll need internationally.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS -->
+<section class="section section-alt" id="destinations">
+  <div class="wrap">
+    <div class="sh">
+      <div class="tag">Study Destinations</div>
+      <h2>Explore Opportunities Across the Globe</h2>
+      <p>Representatives from institutions in 15+ countries will be at the fair, ready to walk you through programs, intakes, and applications.</p>
+    </div>
+    <div class="chips">
+      <div class="chip">🇬🇧 United Kingdom</div>
+      <div class="chip">🇺🇸 United States</div>
+      <div class="chip">🇨🇦 Canada</div>
+      <div class="chip">🇦🇺 Australia</div>
+      <div class="chip">🇩🇪 Germany</div>
+      <div class="chip">🇳🇱 Netherlands</div>
+      <div class="chip">🇮🇪 Ireland</div>
+      <div class="chip">🇳🇿 New Zealand</div>
+      <div class="chip">🇫🇷 France</div>
+      <div class="chip">🇸🇬 Singapore</div>
+      <div class="chip">🇨🇭 Switzerland</div>
+      <div class="chip">🇮🇹 Italy</div>
+      <div class="chip">🇸🇪 Sweden</div>
+      <div class="chip">🇦🇪 UAE</div>
+      <div class="chip">🇭🇺 Hungary</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO SHOULD ATTEND -->
+<section class="section">
+  <div class="wrap">
+    <div class="sh">
+      <div class="tag">Who Should Attend?</div>
+      <h2>This Fair is For You</h2>
+    </div>
+    <div class="grid-4">
+      <div class="wcard"><div class="em">🧑‍🎓</div><h3>UG / PG Students</h3><p>Explore bachelor's and master's programs at hundreds of global universities.</p></div>
+      <div class="wcard"><div class="em">👨‍💼</div><h3>Working Professionals</h3><p>Considering an MBA or upskilling abroad? Get expert advice on your options.</p></div>
+      <div class="wcard"><div class="em">👨‍👩‍👧</div><h3>Parents</h3><p>Understand costs, safety, accommodation, and the full overseas education process.</p></div>
+      <div class="wcard"><div class="em">📚</div><h3>Diploma Holders</h3><p>Discover pathway programs and lateral entry options at top foreign universities.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VENUE -->
+<section class="section section-alt" id="venue">
+  <div class="wrap">
+    <div class="sh">
+      <div class="tag">Venue</div>
+      <h2>Find Us at Fairfield by Marriott</h2>
+      <p>Centrally located in Alkapuri — one of Vadodara's most accessible and well-connected neighbourhoods.</p>
+    </div>
+    <div class="venue-layout">
+      <div class="map-box">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3691.827!2d73.1758!3d22.3119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395fc5fa91a79a01%3A0xd5a43b6dc55d2b84!2sFairfield%20by%20Marriott%20Vadodara!5e0!3m2!1sen!2sin!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div>
+        <div class="vrow"><div class="vico">🏨</div><div><div class="vlbl">Hotel</div><div class="vval">Fairfield by Marriott<small>Premium Marriott property with conference facilities</small></div></div></div>
+        <div class="vrow"><div class="vico">📍</div><div><div class="vlbl">Address</div><div class="vval">Alkapuri, Vadodara<small>Gujarat 390007, India</small></div></div></div>
+        <div class="vrow"><div class="vico">📅</div><div><div class="vlbl">Date & Time</div><div class="vval">9th April 2026, 11:00 AM – 5:00 PM<small>6 hours of guided exploration & expert sessions</small></div></div></div>
+        <div class="vrow"><div class="vico">🚗</div><div><div class="vlbl">Parking</div><div class="vval">Ample parking available<small>Easily accessible from all parts of Vadodara</small></div></div></div>
+        <div class="vrow"><div class="vico">☎️</div><div><div class="vlbl">Enquiries</div><div class="vval">+91 93275 81167 | +91 89055 70642<small>uk@oecindia.com · Mon–Sat, 9 AM – 7 PM</small></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section class="section section-dark" id="register">
+  <div class="wrap">
+    <div class="reg-layout">
+      <!-- Left: pitch -->
+      <div>
+        <div class="tag tag-light">Reserve Your Spot</div>
+        <h2 class="white" style="font-size:clamp(26px,3vw,40px);font-weight:800;line-height:1.15;margin-bottom:12px;color:#fff;">Registration is<br>100% Free</h2>
+        <p style="font-size:15.5px;color:rgba(255,255,255,.7);line-height:1.75;max-width:460px;">Pre-register to secure priority entry and exclusive counselling slots with OEC India's experts on 9th April 2026.</p>
+        <div class="perks-list">
+          <div class="perk"><div class="perk-chk">✓</div><p>Priority entry & reserved 1-on-1 counselling slots</p></div>
+          <div class="perk"><div class="perk-chk">✓</div><p>Exclusive scholarship discovery sessions</p></div>
+          <div class="perk"><div class="perk-chk">✓</div><p>Instant confirmation via WhatsApp & Email</p></div>
+          <div class="perk"><div class="perk-chk">✓</div><p>Free AI profile evaluation at the event</p></div>
+          <div class="perk"><div class="perk-chk">✓</div><p>Access to 500+ university representatives</p></div>
+        </div>
+        <div class="trust-strip">
+          <div class="trust-top">
+            <img src="https://www.oecindia.com/OEC.png" alt="OEC India" class="trust-logo"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="trust-logo-fallback">OEC</div>
+            <div>
+              <div class="trust-name">OEC India</div>
+              <div class="trust-sub">Trusted since 2003 · ICEF Accredited Agency #6964</div>
+            </div>
+          </div>
+          <div class="trust-body">20,000+ successful student placements · 95% visa success rate · $50M+ in scholarships secured for Indian students</div>
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <div class="form-box">
+        <h3>Register for Free</h3>
+        <p class="sub">Fill in your details — we'll confirm your spot instantly.</p>
+
+        <div class="api-error" id="apiError">Something went wrong. Please try again or call us at +91 93275 81167.</div>
+
+        <div id="regForm">
+          <div class="grid-2">
+            <div class="fr" id="fr-fname">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="inp-fname" placeholder="Rahul" maxlength="80">
+              <div class="field-err">Please enter your first name.</div>
+            </div>
+            <div class="fr" id="fr-lname">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="inp-lname" placeholder="Sharma" maxlength="80">
+              <div class="field-err">Please enter your last name.</div>
+            </div>
+          </div>
+
+          <div class="fr" id="fr-email">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="inp-email" placeholder="rahul@email.com">
+            <div class="field-err">Please enter a valid email address.</div>
+          </div>
+
+          <div class="fr" id="fr-phone">
+            <label>Mobile Number <span class="req">*</span></label>
+            <input type="tel" id="inp-phone" placeholder="+91 98765 43210" maxlength="15">
+            <div class="field-err">Please enter a 10-digit phone number.</div>
+          </div>
+
+          <div class="grid-2">
+            <div class="fr" id="fr-country">
+              <label>Preferred Country <span class="req">*</span></label>
+              <select id="inp-country">
+                <option value="">— Select country —</option>
+                <option value="1">🇬🇧 United Kingdom</option>
+                <option value="2">🇺🇸 United States</option>
+                <option value="3">🇦🇺 Australia</option>
+                <option value="4">🇦🇪 UAE</option>
+                <option value="12">🇭🇺 Hungary</option>
+                <option value="5">🇨🇦 Canada</option>
+                <option value="6">🇩🇪 Germany</option>
+                <option value="7">🇮🇪 Ireland</option>
+                <option value="8">🇳🇿 New Zealand</option>
+                <option value="9">🇫🇷 France</option>
+                <option value="10">🇳🇱 Netherlands</option>
+                <option value="11">🇸🇬 Singapore</option>
+              </select>
+              <div class="field-err">Please select a country.</div>
+            </div>
+            <div class="fr" id="fr-intake">
+              <label>Preferred Intake <span class="req">*</span></label>
+              <select id="inp-intake">
+                <option value="">— Select intake —</option>
+                <option value="fall">Fall (Sep–Oct)</option>
+                <option value="spring">Spring (Jan–Feb)</option>
+                <option value="summer">Summer (May–Jun)</option>
+                <option value="winter">Winter (Dec)</option>
+              </select>
+              <div class="field-err">Please select an intake.</div>
+            </div>
+          </div>
+
+          <div class="fr" id="fr-edu">
+            <label>Current Education Level <span class="req">*</span></label>
+            <select id="inp-edu">
+              <option value="">— Select level —</option>
+              <option value="high_school">Class 12 / High School</option>
+              <option value="bachelors_ongoing">Bachelor's (Pursuing)</option>
+              <option value="bachelors_completed">Bachelor's (Completed)</option>
+              <option value="masters_ongoing">Master's (Pursuing)</option>
+              <option value="masters_completed">Master's (Completed)</option>
+              <option value="diploma">Diploma</option>
+              <option value="other">Other / Working Professional</option>
+            </select>
+            <div class="field-err">Please select your education level.</div>
+          </div>
+
+          <div class="fr">
+            <label>Message / Specific Requirements</label>
+            <textarea id="inp-msg" placeholder="Tell us what you're looking for — e.g. MBA in UK, PhD in Australia, nursing programs..." rows="3"></textarea>
+          </div>
+
+          <button class="btn btn-orange btn-submit" id="submitBtn" onclick="submitEnquiry()">
+            <span class="btn-label">Confirm My Registration →</span>
+            <div class="spinner"></div>
+          </button>
+          <p class="form-note">🔒 Your information is secure and will only be used to assist your study abroad journey.</p>
+        </div>
+
+        <!-- Success state -->
+        <div class="form-success" id="formSuccess">
+          <div class="success-ring">🎉</div>
+          <h3>You're Registered!</h3>
+          <p>Your spot at the <strong>World Education Fair 2026</strong> is confirmed!<br>We'll send a confirmation to your email and WhatsApp shortly.</p>
+          <p style="margin-top:12px;font-size:14px;color:#5c5c5c;">See you on <strong>9th April 2026</strong> at Fairfield by Marriott, Alkapuri, Vadodara.</p>
+          <div class="ref" id="refId"></div>
+          <div style="margin-top:20px;">
+            <a href="https://oecindia.com" class="btn btn-primary" style="display:inline-flex;">Visit OEC India →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="f-brand-row">
+          <img src="https://www.oecindia.com/oec.png" alt="OEC India" class="f-brand-logo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="f-brand-fallback">OEC</div>
+          <div>
+            <div class="f-brand-name">OEC India</div>
+            <div class="f-brand-sub">Overseas Education Consultants</div>
+          </div>
+        </div>
+        <p class="f-desc">Your trusted partner for international education with 20+ years of experience and 20,000+ successful placements.</p>
+        <div class="f-meta">
+          <div><strong>Established: </strong><span>2003</span></div>
+          <div><strong>Students Placed: </strong><span>20,000+</span></div>
+          <div><strong>Countries: </strong><span>15+</span></div>
+          <div><strong>Success Rate: </strong><span>95%</span></div>
+        </div>
+        <div class="socials">
+          <a class="soc-btn" href="https://www.facebook.com/oecbaroda" target="_blank">f</a>
+          <a class="soc-btn" href="https://www.instagram.com/oecindia" target="_blank">ig</a>
+          <a class="soc-btn" href="https://x.com/oec_india" target="_blank">𝕏</a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://oecindia.com/about-us">About Us</a></li>
+          <li><a href="https://oecindia.com/services">Services</a></li>
+          <li><a href="https://oecindia.com/universities">Universities</a></li>
+          <li><a href="https://oecindia.com/courses">Courses</a></li>
+          <li><a href="https://oecindia.com/events">Events</a></li>
+          <li><a href="https://oecindia.com/contact-us">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://oecindia.com/faqs">FAQs</a></li>
+          <li><a href="https://oecindia.com/blog">Blog & Articles</a></li>
+          <li><a href="https://oecindia.com/resources">Resources</a></li>
+          <li><a href="https://oecindia.com/ai-college-finder">AI College Finder</a></li>
+          <li><a href="https://oecindia.com/finance">Finance & Loans</a></li>
+          <li><a href="https://oecindia.com/community">Community</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">2nd Floor, Prestige Building<br>Race Course Circle, Vadodara 390007</a></li>
+          <li><a href="tel:+919327581167">+91 93275 81167</a></li>
+          <li><a href="tel:+918905570642">+91 89055 70642</a></li>
+          <li><a href="mailto:uk@oecindia.com">uk@oecindia.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="fcopy">© 2026 OEC India. All rights reserved. | World Education Fair is an initiative by Overseas Education Center, Vadodara.</div>
+      <div class="fpolicy">
+        <a href="https://oecindia.com/privacy-policy">Privacy Policy</a>
+        <a href="https://oecindia.com/terms-and-conditions">Terms & Conditions</a>
+        <a href="https://oecindia.com/disclaimer">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── COUNTDOWN ── */
+function tick() {
+  const t = new Date('2026-04-09T11:00:00+05:30').getTime() - Date.now();
+  if (t <= 0) { ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00'); return; }
+  document.getElementById('cd-d').textContent = String(Math.floor(t/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(Math.floor((t%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor((t%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(Math.floor((t%60000)/1000)).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+
+/* ── VALIDATION HELPERS ── */
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function isValidPhone(p) { return /^\+?[\d\s\-]{10,15}$/.test(p.replace(/\s/g,'')); }
+
+function setErr(id, show) {
+  const el = document.getElementById('fr-' + id);
+  if (!el) return;
+  el.classList.toggle('invalid', show);
+}
+
+function validate() {
+  const fname   = document.getElementById('inp-fname').value.trim();
+  const lname   = document.getElementById('inp-lname').value.trim();
+  const email   = document.getElementById('inp-email').value.trim();
+  const phone   = document.getElementById('inp-phone').value.trim();
+  const country = document.getElementById('inp-country').value;
+  const intake  = document.getElementById('inp-intake').value;
+  const edu     = document.getElementById('inp-edu').value;
+
+  let ok = true;
+  setErr('fname',   !fname);   if (!fname)   ok = false;
+  setErr('lname',   !lname);   if (!lname)   ok = false;
+  setErr('email',   !isValidEmail(email)); if (!isValidEmail(email)) ok = false;
+  setErr('phone',   !isValidPhone(phone)); if (!isValidPhone(phone)) ok = false;
+  setErr('country', !country); if (!country) ok = false;
+  setErr('intake',  !intake);  if (!intake)  ok = false;
+  setErr('edu',     !edu);     if (!edu)     ok = false;
+  return ok;
+}
+
+/* ── SUBMIT ── */
+async function submitEnquiry() {
+  if (!validate()) return;
+
+  const fname   = document.getElementById('inp-fname').value.trim();
+  const lname   = document.getElementById('inp-lname').value.trim();
+  const email   = document.getElementById('inp-email').value.trim();
+  const phone   = document.getElementById('inp-phone').value.trim().replace(/\s/g,'');
+  const country = document.getElementById('inp-country').value;
+  const intake  = document.getElementById('inp-intake').value;
+  const edu     = document.getElementById('inp-edu').value;
+  const msg     = document.getElementById('inp-msg').value.trim();
+
+  // Prefix name with event tag as required
+  const fullName = `[KRI][World Education Fair 2026] ${fname} ${lname}`;
+
+  // Build enquiry_details — combine event context + any message
+  const details = msg
+    ? `Registered at World Education Fair 2026 (Fairfield by Marriott, Alkapuri, Vadodara | 9 April 2026). Message: ${msg}`
+    : `Registered at World Education Fair 2026 | Fairfield by Marriott, Alkapuri, Vadodara | 9 April 2026`;
+
+  const payload = {
+    name: fullName,
+    email: email,
+    phone: phone,
+    country_interested: country,
+    current_education: edu,
+    interested_intake: intake,
+    enquiry_details: details
+  };
+
+  const btn = document.getElementById('submitBtn');
+  const errBox = document.getElementById('apiError');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  errBox.classList.remove('show');
+
+  try {
+    const resp = await fetch('https://sweekarme.in/oecweb/api/enquiry/enquiries/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json();
+
+    if (resp.ok && data.success) {
+      document.getElementById('regForm').style.display = 'none';
+      const suc = document.getElementById('formSuccess');
+      suc.style.display = 'block';
+      if (data.enquiry_id) {
+        document.getElementById('refId').textContent = `Reference ID: #${data.enquiry_id}`;
+      }
+      // Scroll into view
+      suc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      throw new Error(data.message || 'Submission failed');
+    }
+  } catch (err) {
+    errBox.textContent = `Unable to submit: ${err.message}. Please try again or call +91 93275 81167.`;
+    errBox.classList.add('show');
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+/* ── LIVE CLEAR ERRORS ── */
+['inp-fname','inp-lname','inp-email','inp-phone','inp-country','inp-intake','inp-edu'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const key = id.replace('inp-','');
+  el.addEventListener('input', () => setErr(key, false));
+  el.addEventListener('change', () => setErr(key, false));
+});
+</script>
+</body>
+</html>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import ajaxCall from "@/helpers/ajaxCall";
 import ConsultationForm from "../forms/ConsultationForm";
+import { EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
@@ -155,6 +156,7 @@ const Hero = () => {
         <ConsultationForm
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
         />
       )}
     </>

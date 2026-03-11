@@ -5,6 +5,7 @@ import moment from "moment";
 import ajaxCall from "@/helpers/ajaxCall";
 import { notFound } from "next/navigation";
 import ConsultationForm from "@/components/forms/ConsultationForm";
+import { EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 import {
   Calendar as CalendarIcon,
   MapPin,
@@ -479,6 +480,7 @@ const EventDetailPage = ({ slug }) => {
                     </div>
                     <ConsultationForm 
                       inline={true}
+                      countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
                       defaultCountry={getEventCountry(eventData)}
                       initialEnquiry={{
                         name: eventData.title,
@@ -567,6 +569,7 @@ const EventDetailPage = ({ slug }) => {
         <ConsultationForm 
           isOpen={showRegistrationForm}
           onClose={() => setShowRegistrationForm(false)}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
           defaultCountry={getEventCountry(eventData)}
           initialEnquiry={{
             name: eventData.title,

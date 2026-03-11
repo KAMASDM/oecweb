@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle, X } from "lucide-react";
 import ConsultationForm from "../forms/ConsultationForm";
+import { EVENTS_LANDING_COUNTRY_ALLOWLIST } from "@/lib/countryAllowlists";
 
 const FloatingCTA = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -62,6 +63,7 @@ const FloatingCTA = () => {
         <ConsultationForm
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          countryAllowlist={EVENTS_LANDING_COUNTRY_ALLOWLIST}
         />
       )}
     </>
