@@ -199,6 +199,12 @@ const ConsultationForm = ({
     }
   }, [isOpen, defaultCountry, setValue, inline, hasInteracted, countryAllowlist]);
 
+  useEffect(() => {
+    if (isSuccess && typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "PageView");
+    }
+  }, [isSuccess]);
+
   const handleFormSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmitError(null);
