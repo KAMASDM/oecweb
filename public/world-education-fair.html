@@ -795,16 +795,9 @@ async function submitEnquiry() {
     const data = await resp.json();
 
     if (resp.ok && data.success) {
-      document.getElementById('regForm').style.display = 'none';
-      const suc = document.getElementById('formSuccess');
-      suc.style.display = 'block';
-      if (data.enquiry_id) {
-        document.getElementById('refId').textContent = `Reference ID: #${data.enquiry_id}`;
-      }
-      // Track Lead conversion
-      if (typeof fbq === 'function') { fbq('track', 'Lead'); }
-      // Scroll into view
-      suc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const thankYouUrl = '/world-education-fair-thank-you' +
+        (data.enquiry_id ? '?ref=' + encodeURIComponent(data.enquiry_id) : '');
+      window.location.href = thankYouUrl;
     } else {
       throw new Error(data.message || 'Submission failed');
     }
