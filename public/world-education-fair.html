@@ -284,6 +284,30 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
+<!-- Meta Pixel Advanced Matching: once the user blurs the email or
+     phone field we re-init the pixel with that hashed data. Meta
+     normalises and SHA-256 hashes automatically when using fbq().   -->
+<script>
+(function () {
+  function reinitWithUserData() {
+    var em = (document.getElementById('inp-email')  || {}).value || '';
+    var ph = (document.getElementById('inp-phone')  || {}).value || '';
+    ph = ph.replace(/[\s\-\(\)]/g, '');
+    if (!em && !ph) return;
+    var userData = {};
+    if (em) userData.em = em.toLowerCase().trim();
+    if (ph) userData.ph = ph;
+    fbq('init', '1494158195608551', userData);
+  }
+
+  // Re-init after user fills in email or phone (blur event)
+  ['inp-email', 'inp-phone'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('blur', reinitWithUserData, { once: true });
+  });
+})();
+</script>
+
 </head>
 <body>
 
@@ -298,9 +322,9 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
       +91 89055 70642
     </a>
-    <a href="mailto:uk@oecindia.com">
+    <a href="/cdn-cgi/l/email-protection#4c39270c23292f252228252d622f2321">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
-      uk@oecindia.com
+      <span class="__cf_email__" data-cfemail="097c6249666c6a60676d6068276a6664">[email&#160;protected]</span>
     </a>
   </div>
   <div class="topbar-right">
@@ -495,7 +519,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
         <div class="vrow"><div class="vico">📍</div><div><div class="vlbl">Address</div><div class="vval">Alkapuri, Vadodara<small>Gujarat 390007, India</small></div></div></div>
         <div class="vrow"><div class="vico">📅</div><div><div class="vlbl">Date & Time</div><div class="vval">9th April 2026, 11:00 AM – 5:00 PM<small>6 hours of guided exploration & expert sessions</small></div></div></div>
         <div class="vrow"><div class="vico">🚗</div><div><div class="vlbl">Parking</div><div class="vval">Ample parking available<small>Easily accessible from all parts of Vadodara</small></div></div></div>
-        <div class="vrow"><div class="vico">☎️</div><div><div class="vlbl">Enquiries</div><div class="vval">+91 93275 81167 | +91 89055 70642<small>uk@oecindia.com · Mon–Sat, 9 AM – 7 PM</small></div></div></div>
+        <div class="vrow"><div class="vico">☎️</div><div><div class="vlbl">Enquiries</div><div class="vval">+91 93275 81167 | +91 89055 70642<small><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9de8f6ddf2f8fef4f3f9f4fcb3fef2f0">[email&#160;protected]</a> · Mon–Sat, 9 AM – 7 PM</small></div></div></div>
       </div>
     </div>
   </div>
@@ -691,7 +715,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
           <li><a href="#">2nd Floor, Prestige Building<br>Race Course Circle, Vadodara 390007</a></li>
           <li><a href="tel:+919327581167">+91 93275 81167</a></li>
           <li><a href="tel:+918905570642">+91 89055 70642</a></li>
-          <li><a href="mailto:uk@oecindia.com">uk@oecindia.com</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#dca9b79cb3b9bfb5b2b8b5bdf2bfb3b1"><span class="__cf_email__" data-cfemail="14617f547b71777d7a707d753a777b79">[email&#160;protected]</span></a></li>
         </ul>
       </div>
     </div>
@@ -706,7 +730,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── COUNTDOWN ── */
 function tick() {
   const t = new Date('2026-04-09T11:00:00+05:30').getTime() - Date.now();
@@ -797,7 +821,25 @@ async function submitEnquiry() {
     if (resp.ok && data.success) {
       const thankYouUrl = '/world-education-fair-thank-you' +
         (data.enquiry_id ? '?ref=' + encodeURIComponent(data.enquiry_id) : '');
-      window.location.href = thankYouUrl;
+
+      // ── META PIXEL: fire Lead conversion before navigating away ──────────
+      // We pass the enquiry_id as eventID so it can be deduplicated against
+      // a server-side Conversions API call if one is added later.
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+          content_name:     'World Education Fair 2026',
+          content_category: 'Education Event Registration',
+          value:            0,
+          currency:         'INR'
+        }, {
+          eventID: data.enquiry_id ? String(data.enquiry_id) : undefined
+        });
+      }
+
+      // 350 ms grace period lets the pixel beacon dispatch before the page
+      // navigates. beacon() is non-blocking but we still give it a moment.
+      setTimeout(() => { window.location.href = thankYouUrl; }, 350);
+
     } else {
       throw new Error(data.message || 'Submission failed');
     }
@@ -809,14 +851,47 @@ async function submitEnquiry() {
   }
 }
 
-/* ── LIVE CLEAR ERRORS ── */
-['inp-fname','inp-lname','inp-email','inp-phone','inp-country','inp-intake','inp-edu'].forEach(id => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const key = id.replace('inp-','');
-  el.addEventListener('input', () => setErr(key, false));
-  el.addEventListener('change', () => setErr(key, false));
-});
+/* ── META PIXEL: ViewContent — fires once when the register section
+   scrolls into the viewport. This tells Meta the user showed intent
+   to register, useful for warm audience retargeting even if they
+   don't complete the form. ─────────────────────────────────────── */
+(function () {
+  var regSection = document.getElementById('register');
+  if (!regSection || typeof fbq !== 'function') return;
+
+  var fired = false;
+  var observer = new IntersectionObserver(function (entries) {
+    if (!fired && entries[0].isIntersecting) {
+      fired = true;
+      fbq('track', 'ViewContent', {
+        content_name:     'World Education Fair 2026 – Registration Form',
+        content_category: 'Education Event',
+        value:            0,
+        currency:         'INR'
+      });
+      observer.disconnect();
+    }
+  }, { threshold: 0.3 });
+
+  observer.observe(regSection);
+})();
+
+/* ── META PIXEL: Schedule — fires when a user clicks any
+   "Register" / "Secure My Spot" CTA button (before form submit).
+   Signals strong intent; great for lookalike audiences. ──────── */
+(function () {
+  if (typeof fbq !== 'function') return;
+
+  document.querySelectorAll('a[href="#register"], a[href="#register"] *').forEach(function (el) {
+    el.addEventListener('click', function () {
+      fbq('track', 'Schedule', {
+        content_name: 'World Education Fair 2026',
+        content_category: 'Education Event'
+      });
+    }, { once: true });
+  });
+})();
+
 </script>
 </body>
 </html>
