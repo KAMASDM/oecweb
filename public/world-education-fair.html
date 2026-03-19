@@ -284,29 +284,6 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
-<!-- Meta Pixel Advanced Matching: once the user blurs the email or
-     phone field we re-init the pixel with that hashed data. Meta
-     normalises and SHA-256 hashes automatically when using fbq().   -->
-<script>
-(function () {
-  function reinitWithUserData() {
-    var em = (document.getElementById('inp-email')  || {}).value || '';
-    var ph = (document.getElementById('inp-phone')  || {}).value || '';
-    ph = ph.replace(/[\s\-\(\)]/g, '');
-    if (!em && !ph) return;
-    var userData = {};
-    if (em) userData.em = em.toLowerCase().trim();
-    if (ph) userData.ph = ph;
-    fbq('init', '1494158195608551', userData);
-  }
-
-  // Re-init after user fills in email or phone (blur event)
-  ['inp-email', 'inp-phone'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) el.addEventListener('blur', reinitWithUserData, { once: true });
-  });
-})();
-</script>
 
 </head>
 <body>
