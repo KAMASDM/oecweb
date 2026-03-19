@@ -776,6 +776,20 @@ function validate() {
 async function submitEnquiry() {
   if (!validate()) return;
 
+  // ── META PIXEL: fire Lead immediately on valid form submit ──────────────
+  // Fired here (before the API call) so it is never blocked by a network
+  // error, CORS issue, or slow API response. The thank-you page fires the
+  // same event with a matching eventID so Meta deduplicates them.
+  var _leadEventID = 'wef-' + Date.now();
+  if (typeof fbq === 'function') {
+    fbq('track', 'Lead', {
+      content_name:     'World Education Fair 2026',
+      content_category: 'Education Event Registration',
+      value:            0,
+      currency:         'INR'
+    }, { eventID: _leadEventID });
+  }
+
   const fname   = document.getElementById('inp-fname').value.trim();
   const lname   = document.getElementById('inp-lname').value.trim();
   const email   = document.getElementById('inp-email').value.trim();
@@ -819,28 +833,14 @@ async function submitEnquiry() {
     const data = await resp.json();
 
     if (resp.ok) {
-      const eventID = data.enquiry_id ? String(data.enquiry_id) : ('wef-' + Date.now());
+      const eventID = data.enquiry_id ? String(data.enquiry_id) : _leadEventID;
       const thankYouUrl = '/world-education-fair-thank-you.html' +
         '?ref=' + encodeURIComponent(eventID) +
         '&eid=' + encodeURIComponent(eventID);
 
-      // ── META PIXEL: fire Lead conversion before navigating away ──────────
-      // eventID is shared with the thank-you page so Meta can deduplicate
-      // if both pages fire Lead (browser-side dedup via matching eventID).
-      if (typeof fbq === 'function') {
-        fbq('track', 'Lead', {
-          content_name:     'World Education Fair 2026',
-          content_category: 'Education Event Registration',
-          value:            0,
-          currency:         'INR'
-        }, {
-          eventID: eventID
-        });
-      }
-
-      // 500 ms grace period lets the pixel beacon dispatch before the page
-      // navigates. beacon() is non-blocking but we still give it a moment.
-      setTimeout(() => { window.location.href = thankYouUrl; }, 500);
+      // Lead already fired above — just navigate to thank-you page.
+      // The thank-you page fires Lead with the same eventID so Meta deduplicates.
+      setTimeout(() => { window.location.href = thankYouUrl; }, 300);
 
     } else {
       throw new Error(data.message || 'Submission failed');
