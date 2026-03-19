@@ -818,13 +818,15 @@ async function submitEnquiry() {
 
     const data = await resp.json();
 
-    if (resp.ok && data.success) {
-      const thankYouUrl = '/world-education-fair-thank-you' +
-        (data.enquiry_id ? '?ref=' + encodeURIComponent(data.enquiry_id) : '');
+    if (resp.ok) {
+      const eventID = data.enquiry_id ? String(data.enquiry_id) : ('wef-' + Date.now());
+      const thankYouUrl = '/world-education-fair-thank-you.html' +
+        '?ref=' + encodeURIComponent(eventID) +
+        '&eid=' + encodeURIComponent(eventID);
 
       // ── META PIXEL: fire Lead conversion before navigating away ──────────
-      // We pass the enquiry_id as eventID so it can be deduplicated against
-      // a server-side Conversions API call if one is added later.
+      // eventID is shared with the thank-you page so Meta can deduplicate
+      // if both pages fire Lead (browser-side dedup via matching eventID).
       if (typeof fbq === 'function') {
         fbq('track', 'Lead', {
           content_name:     'World Education Fair 2026',
@@ -832,13 +834,13 @@ async function submitEnquiry() {
           value:            0,
           currency:         'INR'
         }, {
-          eventID: data.enquiry_id ? String(data.enquiry_id) : undefined
+          eventID: eventID
         });
       }
 
-      // 350 ms grace period lets the pixel beacon dispatch before the page
+      // 500 ms grace period lets the pixel beacon dispatch before the page
       // navigates. beacon() is non-blocking but we still give it a moment.
-      setTimeout(() => { window.location.href = thankYouUrl; }, 350);
+      setTimeout(() => { window.location.href = thankYouUrl; }, 500);
 
     } else {
       throw new Error(data.message || 'Submission failed');

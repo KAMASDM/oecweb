@@ -20,7 +20,17 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1494158195608551');
 fbq('track', 'PageView');
-fbq('track', 'Lead');
+// Read the eventID passed from the registration form (?eid=...) so Meta
+// can deduplicate this Lead against the one fired on the form page.
+(function () {
+  var eid = new URLSearchParams(window.location.search).get('eid') || undefined;
+  fbq('track', 'Lead', {
+    content_name:     'World Education Fair 2026',
+    content_category: 'Education Event Registration',
+    value:            0,
+    currency:         'INR'
+  }, { eventID: eid });
+})();
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1494158195608551&ev=Lead&noscript=1"
