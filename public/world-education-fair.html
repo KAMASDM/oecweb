@@ -322,9 +322,9 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
       +91 89055 70642
     </a>
-    <a href="/cdn-cgi/l/email-protection#4c39270c23292f252228252d622f2321">
+    <a href="mailto:uk@oecindia.com">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
-      <span class="__cf_email__" data-cfemail="097c6249666c6a60676d6068276a6664">[email&#160;protected]</span>
+      uk@oecindia.com
     </a>
   </div>
   <div class="topbar-right">
@@ -519,7 +519,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
         <div class="vrow"><div class="vico">📍</div><div><div class="vlbl">Address</div><div class="vval">Alkapuri, Vadodara<small>Gujarat 390007, India</small></div></div></div>
         <div class="vrow"><div class="vico">📅</div><div><div class="vlbl">Date & Time</div><div class="vval">9th April 2026, 11:00 AM – 5:00 PM<small>6 hours of guided exploration & expert sessions</small></div></div></div>
         <div class="vrow"><div class="vico">🚗</div><div><div class="vlbl">Parking</div><div class="vval">Ample parking available<small>Easily accessible from all parts of Vadodara</small></div></div></div>
-        <div class="vrow"><div class="vico">☎️</div><div><div class="vlbl">Enquiries</div><div class="vval">+91 93275 81167 | +91 89055 70642<small><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9de8f6ddf2f8fef4f3f9f4fcb3fef2f0">[email&#160;protected]</a> · Mon–Sat, 9 AM – 7 PM</small></div></div></div>
+        <div class="vrow"><div class="vico">☎️</div><div><div class="vlbl">Enquiries</div><div class="vval">+91 93275 81167 | +91 89055 70642<small><a href="mailto:uk@oecindia.com">uk@oecindia.com</a> · Mon–Sat, 9 AM – 7 PM</small></div></div></div>
       </div>
     </div>
   </div>
@@ -592,15 +592,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
             <div class="fr" id="fr-country">
               <label>Preferred Country <span class="req">*</span></label>
               <select id="inp-country">
-                <option value="">— Select country —</option>
-                <option value="1">🇬🇧 United Kingdom</option>
-                <option value="2">🇺🇸 United States</option>
-                <option value="3">🇦🇺 Australia</option>
-                <option value="4">🇦🇪 Dubai</option>
-                <option value="5">🇨🇦 Canada</option>
-                <option value="6">🇩🇪 Germany</option>
-                <option value="8">🇳🇿 New Zealand</option>
-                
+                <option value="">Loading countries…</option>
               </select>
               <div class="field-err">Please select a country.</div>
             </div>
@@ -715,7 +707,7 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
           <li><a href="#">2nd Floor, Prestige Building<br>Race Course Circle, Vadodara 390007</a></li>
           <li><a href="tel:+919327581167">+91 93275 81167</a></li>
           <li><a href="tel:+918905570642">+91 89055 70642</a></li>
-          <li><a href="/cdn-cgi/l/email-protection#dca9b79cb3b9bfb5b2b8b5bdf2bfb3b1"><span class="__cf_email__" data-cfemail="14617f547b71777d7a707d753a777b79">[email&#160;protected]</span></a></li>
+          <li><a href="mailto:uk@oecindia.com">uk@oecindia.com</a></li>
         </ul>
       </div>
     </div>
@@ -730,7 +722,33 @@ src="https://www.facebook.com/tr?id=1494158195608551&ev=PageView&noscript=1"
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+/* ── LOAD COUNTRIES FROM API ── */
+(function () {
+  var COUNTRY_ALLOWLIST = ['united kingdom','united states','australia','canada','germany','new zealand','ireland','netherlands','new zealand','singapore','france','uae','dubai','italy','sweden','hungary'];
+  var selectEl = document.getElementById('inp-country');
+  fetch('https://sweekarme.in/oecweb/api/academics/academics/countries/')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var results = (data.results || data || []);
+      // Filter to popular study destinations only
+      var filtered = results.filter(function (c) {
+        return COUNTRY_ALLOWLIST.indexOf(c.name.toLowerCase()) !== -1;
+      });
+      if (!filtered.length) filtered = results.slice(0, 20);
+      selectEl.innerHTML = '<option value="">— Select country —</option>';
+      filtered.forEach(function (c) {
+        var opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        selectEl.appendChild(opt);
+      });
+    })
+    .catch(function () {
+      selectEl.innerHTML = '<option value="">— Select country —</option>';
+    });
+})();
+
 /* ── COUNTDOWN ── */
 function tick() {
   const t = new Date('2026-04-09T11:00:00+05:30').getTime() - Date.now();
