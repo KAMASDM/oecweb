@@ -192,6 +192,8 @@ const Footer = () => {
               <li>
                 <a
                   href="/student_and_parent_guide_to_choosing_an_education_agent.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white hover:text-white transition-colors duration-200 text-sm"
                 >
                   Student Guide to Choosing an Education Agent
