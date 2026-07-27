@@ -88,7 +88,7 @@ const Footer = () => {
           Footer navigation
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           <div className="lg:col-span-1">
             <div className="flex-shrink-0">
               <Link href="/" className="flex items-center">
@@ -183,6 +183,20 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-4">For Students</h3>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="/student_and_parent_guide_to_choosing_an_education_agent.pdf"
+                  className="text-white hover:text-white transition-colors duration-200 text-sm"
+                >
+                  Student Guide to Choosing an Education Agent
+                </a>
+              </li>
             </ul>
           </div>
 
