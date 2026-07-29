@@ -57,6 +57,22 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-JSB9CJKLF9"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-JSB9CJKLF9');
+            `,
+          }}
+        />
         <meta
           name="google-site-verification"
           content="BBEJORnmYafy3WXKp8YM_vAEOoWDnJp7kh2XtH4-6LI"
